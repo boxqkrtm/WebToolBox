@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -64,7 +66,7 @@ const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef, level = 
 
   return (
     <div className={`ml-4 my-2 relative ${level > 0 ? 'border-l pl-4' : ''}`} ref={nodeRef}>
-      <div className={`flex items-center bg-white ${level > 0 ? 'sticky top-0 z-10' : ''}`} style={{top: `${level * 40}px`}}>
+      <div className={`flex items-center bg-white ${level > 0 ? 'sticky z-10' : ''}`} style={{top: `${level * 40}px`}}>
         <Button onClick={handleToggle} variant="ghost" size="sm">
           {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </Button>
@@ -94,7 +96,7 @@ const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef, level = 
   );
 };
 
-const TetrioReplayEditor = () => {
+export default function TetrioReplayEditor() {
   const [json, setJson] = useState({});
   const [error, setError] = useState('');
   const [filename, setFilename] = useState('');
@@ -231,6 +233,4 @@ const TetrioReplayEditor = () => {
       </CardFooter>
     </Card>
   );
-};
-
-export default TetrioReplayEditor;
+}
