@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
 
-const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef }) => {
+const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef, level = 0 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(JSON.stringify(data));
@@ -63,8 +63,8 @@ const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef }) => {
   const isEmpty = Object.keys(data).length === 0;
 
   return (
-    <div className="ml-4 my-2" ref={nodeRef}>
-      <div className="flex items-center">
+    <div className={`ml-4 my-2 relative ${level > 0 ? 'border-l pl-4' : ''}`} ref={nodeRef}>
+      <div className={`flex items-center bg-white ${level > 0 ? 'sticky top-0 z-10' : ''}`} style={{top: `${level * 40}px`}}>
         <Button onClick={handleToggle} variant="ghost" size="sm">
           {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </Button>
@@ -84,6 +84,7 @@ const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef }) => {
                 onDelete={onDelete}
                 onAdd={onAdd}
                 scrollToRef={scrollToRef}
+                level={level + 1}
               />
             </div>
           ))}
@@ -213,7 +214,7 @@ const TetrioReplayEditor = () => {
               path={[]}
               onUpdate={handleUpdate}
               onDelete={handleDelete}
-              onAdd={handleAdd}
+              onAdd={onAdd}
               scrollToRef={scrollToRef}
             />
           </div>
