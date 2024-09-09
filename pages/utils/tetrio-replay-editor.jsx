@@ -66,7 +66,7 @@ const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef, level = 
 
   return (
     <div className={`ml-4 my-2 relative ${level > 0 ? 'border-l pl-4' : ''}`} ref={nodeRef}>
-      <div className={`flex items-center bg-white ${level > 0 ? 'sticky z-10' : ''}`} style={{top: `${level * 40}px`}}>
+      <div className={`flex items-center bg-white ${level > 0 ? 'sticky z-10' : ''}`} style={{ top: `${level * 40}px` }}>
         <Button onClick={handleToggle} variant="ghost" size="sm">
           {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
         </Button>
@@ -216,7 +216,7 @@ export default function TetrioReplayEditor() {
               path={[]}
               onUpdate={handleUpdate}
               onDelete={handleDelete}
-              onAdd={onAdd}
+              onAdd={handleAdd}
               scrollToRef={scrollToRef}
             />
           </div>
