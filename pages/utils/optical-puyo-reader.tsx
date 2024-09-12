@@ -166,7 +166,7 @@ export default function Component() {
     };
 
     let chain = '';
-    for (let y = 11; y >= 0; y--) {
+    for (let y = 0; y <= 11; y++) {
       for (let x = 0; x < 6; x++) {
         chain += colorMap[categoryGrid[x][y]];
       }
