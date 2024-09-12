@@ -177,7 +177,7 @@ export default function Component() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Image Color Analyzer</h1>
+      <h1 className="text-2xl font-bold mb-4">Optical Puyo Reader</h1>
       <Input 
         type="file" 
         accept="image/png" 
