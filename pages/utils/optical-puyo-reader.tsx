@@ -185,6 +185,7 @@ export default function Component() {
         className="mb-4" 
         aria-label="Upload PNG image"
       />
+      <p>Upload tip: Crop the field image to show only 6x12 puyos</p>
       {imageUrl && (
         <div className="mb-4">
           <img src={imageUrl} alt="Uploaded" className="max-w-full h-auto" />
