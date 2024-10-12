@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Input, Button, Table } from '@/components/ui';
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Table } from "@/components/ui/table"
 
 interface Step {
   step: number;
