@@ -7,8 +7,9 @@ const pages = [
   { title: 'CSV Sorter', path: '/utils/csv-sorter' },
   { title: 'Tetrio.replay-editor', path: '/utils/tetrio-replay-editor' },
   { title: 'KakaoMap Coord Opener', path: '/utils/kakaomap-coord-opener' },
-  { title: 'OPR(Optical Puyo Reader)', path: '/utils/optical-puyo-reader'},
-  { title: 'BoothAlgorithm Multiplier', path: '/utils/booth-algorithm-multiplier'}
+  { title: 'OPR(Optical Puyo Reader)', path: '/utils/optical-puyo-reader' },
+  { title: 'BoothAlgorithm Multiplier', path: '/utils/booth-algorithm-multiplier' },
+  { title: 'NTRIP Mount Point Scanner', path: '/utils/ntrip-scanner' }
 ];
 
 export default function Home() {
