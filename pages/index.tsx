@@ -5,6 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
 const pages = [
   { title: 'CSV Sorter', path: '/utils/csv-sorter' },
+  { title: 'XLSX to SQL', path: '/utils/xlsx-to-sql' },  // Add this line
   { title: 'Tetrio.replay-editor', path: '/utils/tetrio-replay-editor' },
   { title: 'KakaoMap Coord Opener', path: '/utils/kakaomap-coord-opener' },
   { title: 'OPR(Optical Puyo Reader)', path: '/utils/optical-puyo-reader' },
