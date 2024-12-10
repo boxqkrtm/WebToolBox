@@ -21,11 +21,21 @@ export default function Component() {
                 // Process all sheets
                 const allStatements = workbook.SheetNames.map(sheetName => {
                     const sheet = workbook.Sheets[sheetName]
-                    const jsonData = XLSX.utils.sheet_to_json(sheet)
+                    // Add defval option to handle empty cells and ensure all columns are included
+                    const jsonData = XLSX.utils.sheet_to_json(sheet, {
+                        defval: null,
+                        raw: true
+                    })
 
                     if (jsonData.length === 0) return ''
 
-                    const columns = Object.keys(jsonData[0] as Record<string, any>)
+                    // Get header row (column names) directly from the sheet
+                    const range = XLSX.utils.decode_range(sheet['!ref'] || 'A1')
+                    const columns = Array.from({ length: range.e.c + 1 }, (_, i) => {
+                        const cell = sheet[XLSX.utils.encode_cell({ r: 0, c: i })]
+                        return cell ? cell.v : null
+                    }).filter(Boolean)
+
                     const tableName = sheetName.toLowerCase().replace(/\s+/g, '_')
 
                     const insertStatements = jsonData.map(row => {
