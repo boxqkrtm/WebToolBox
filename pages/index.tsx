@@ -5,12 +5,13 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
 const pages = [
   { title: 'CSV Sorter', path: '/utils/csv-sorter' },
-  { title: 'XLSX to SQL', path: '/utils/xlsx-to-sql' },  // Add this line
+  { title: 'XLSX to SQL', path: '/utils/xlsx-to-sql' },
   { title: 'Tetrio.replay-editor', path: '/utils/tetrio-replay-editor' },
   { title: 'KakaoMap Coord Opener', path: '/utils/kakaomap-coord-opener' },
   { title: 'OPR(Optical Puyo Reader)', path: '/utils/optical-puyo-reader' },
   { title: 'BoothAlgorithm Multiplier', path: '/utils/booth-algorithm-multiplier' },
-  { title: 'NTRIP Mount Point Scanner', path: '/utils/ntrip-scanner' }
+  { title: 'NTRIP Mount Point Scanner', path: '/utils/ntrip-scanner' },
+  { title: 'Discord Color Message Generator', path: '/utils/discord-color-message-generator' }
 ];
 
 export default function Home() {
