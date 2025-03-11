@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import Error from "next/error";
 
 export default function EscapedStringDecoder() {
   const [input, setInput] = useState('');
@@ -28,7 +29,7 @@ export default function EscapedStringDecoder() {
         .replace(/,,/g, ',');  // Handle double commas
 
       setOutput(unescaped);
-    } catch (error) {
+    } catch (error: any) {
       setOutput(`Error: ${error.message}`);
     }
   };
@@ -42,7 +43,7 @@ export default function EscapedStringDecoder() {
 
       <main className="container mx-auto p-4 space-y-4">
         <h1 className="text-2xl font-bold mb-4">Escaped String Decoder</h1>
-        
+
         <Card>
           <CardContent className="pt-6 space-y-4">
             <div className="space-y-2">
