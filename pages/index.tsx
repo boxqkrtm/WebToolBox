@@ -11,7 +11,8 @@ const pages = [
   { title: 'OPR(Optical Puyo Reader)', path: '/utils/optical-puyo-reader' },
   { title: 'BoothAlgorithm Multiplier', path: '/utils/booth-algorithm-multiplier' },
   { title: 'NTRIP Mount Point Scanner', path: '/utils/ntrip-scanner' },
-  { title: 'Discord Color Message Generator', path: '/utils/discord-color-message-generator' }
+  { title: 'Discord Color Message Generator', path: '/utils/discord-color-message-generator' },
+  { title: 'Escaped String Decoder', path: '/utils/escaped-string-decoder' }
 ];
 
 export default function Home() {
