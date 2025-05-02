@@ -12,7 +12,8 @@ const pages = [
   { title: 'BoothAlgorithm Multiplier', path: '/utils/booth-algorithm-multiplier' },
   { title: 'NTRIP Mount Point Scanner', path: '/utils/ntrip-scanner' },
   { title: 'Discord Color Message Generator', path: '/utils/discord-color-message-generator' },
-  { title: 'Escaped String Decoder', path: '/utils/escaped-string-decoder' }
+  { title: 'Escaped String Decoder', path: '/utils/escaped-string-decoder' },
+  { title: 'LLM VRAM Calculator (GGUF)', path: '/utils/llm-vram-calculator' }
 ];
 
 export default function Home() {
@@ -39,7 +40,7 @@ export default function Home() {
             type="text"
             placeholder="Search..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
             className="w-full mb-4"
           />
           <ul className="space-y-2">
