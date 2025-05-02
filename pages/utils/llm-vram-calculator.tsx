@@ -32,6 +32,13 @@ const ggufQuants: { [key: string]: number } = {
   Q8_0: 8.5
 };
 
+// KV Cache bits-per-element mapping
+const kvCacheQuants: { [key: string]: number } = {
+  "F16": 16,     // 기본 FP16 포맷, 16비트
+  "Q8": 8,       // 8비트 양자화
+  "Q4": 4        // 4비트 양자화
+};
+
 const contextOptions = [
   { value: "4096", label: "4k" },
   { value: "8192", label: "8k" },
@@ -47,6 +54,7 @@ export default function LlmVramCalculator() {
   const [gqaKV, setGqaKV] = useState<number>(1);
   const [contextLength, setContextLength] = useState<string>("4096");
   const [quantKey, setQuantKey] = useState<string>('Q4_K_M');
+  const [kvQuantKey, setKvQuantKey] = useState<string>('F16');
 
   const [modelMemGB, setModelMemGB] = useState<number>(0);
   const [contextMemGB, setContextMemGB] = useState<number>(0);
@@ -54,13 +62,14 @@ export default function LlmVramCalculator() {
 
   useEffect(() => {
     calculate();
-  }, [modelSize, gqaQ, gqaKV, contextLength, quantKey]);
+  }, [modelSize, gqaQ, gqaKV, contextLength, quantKey, kvQuantKey]);
 
   const calculate = () => {
     const sizeB = modelSize;
     const n = gqaQ > 0 ? gqaQ : 1; // Ensure n is not zero
     const m = gqaKV > 0 ? gqaKV : 1; // Ensure m is not zero
     const bpw = ggufQuants[quantKey];
+    const kvBits = kvCacheQuants[kvQuantKey];
     const context = parseInt(contextLength);
 
     if (isNaN(sizeB) || isNaN(n) || isNaN(m) || isNaN(bpw) || isNaN(context)) {
@@ -74,10 +83,12 @@ export default function LlmVramCalculator() {
     const modelBytes = sizeB * 1e9 * bpw / 8;
     const calculatedModelGB = modelBytes / (1024 ** 3);
 
-    // Context memory: scaled by KV/Q ratio
+    // Context memory: scaled by KV/Q ratio and KV quantization
     const baseCtx = 4096; // Reference context size for scaling
+    const kvFactor = kvBits / 16; // Normalize against the default F16 (16-bit)
+    
     // Ensure calculatedModelGB is a valid number before using it
-    const calculatedCtxGB = isFinite(calculatedModelGB) ? calculatedModelGB * (context / baseCtx) * (m / n) : 0;
+    const calculatedCtxGB = isFinite(calculatedModelGB) ? calculatedModelGB * (context / baseCtx) * (m / n) * kvFactor : 0;
 
     setModelMemGB(calculatedModelGB);
     setContextMemGB(calculatedCtxGB);
@@ -183,6 +194,21 @@ export default function LlmVramCalculator() {
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="kvQuantSize">KV Cache Quantization</Label>
+          <Select value={kvQuantKey} onValueChange={setKvQuantKey}>
+            <SelectTrigger id="kvQuantSize">
+              <SelectValue placeholder="Select KV cache quantization" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(kvCacheQuants).map(([key, value]) => (
+                <SelectItem key={key} value={key}>{key} ({value}-bit)</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-sm text-muted-foreground">F16은 기본값, Q8과 Q4는 K/V 캐시 양자화에 사용됩니다.</p>
         </div>
 
         <Card className="bg-muted/50">
