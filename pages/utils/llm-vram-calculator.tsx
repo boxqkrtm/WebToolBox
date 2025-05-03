@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Loader2, CheckCircle, XCircle, HelpCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-// GGUF bits-per-weight mapping (파라미터당 비트 수)
 const ggufQuants: { [key: string]: number } = {
-  // https://github.com/ggerganov/llama.cpp/blob/master/ggml.c#L1769
-  IQ1_S: 1.56, // Approximate
+  IQ1_S: 1.56,
   IQ2_XXS: 2.06,
   IQ2_XS: 2.31,
   IQ2_S: 2.5,
@@ -35,11 +36,10 @@ const ggufQuants: { [key: string]: number } = {
   F32: 32
 };
 
-// KV Cache bits-per-element mapping (각 K 또는 V 요소당 비트 수)
 const kvCacheQuants: { [key: string]: number } = {
-  "F16": 16,     // 16비트 (2 bytes)
-  "Q8": 8,       // 8비트 (1 byte)
-  "Q4": 4        // 4비트 (0.5 bytes)
+  "F16": 16,
+  "Q8": 8,
+  "Q4": 4
 };
 
 const contextOptions = [
@@ -54,85 +54,268 @@ const contextOptions = [
   { value: "131072", label: "128k" },
 ];
 
-// --- 내부적으로 가정하는 모델 구조 상수 (UI에서는 숨김) ---
-// 이 값들은 특정 0.6B 모델의 구조를 가정한 것입니다.
-// 실제 모델과 다를 수 있습니다.
-const ASSUMED_NUM_LAYERS = 24; // 가정된 레이어 수
-const ASSUMED_HEAD_DIM = 96;     // 가정된 헤드 차원 (d_head)
-const ASSUMED_GQA_Q = 16;        // 가정된 Q 헤드 수
-const ASSUMED_GQA_KV = 8;        // 가정된 KV 헤드 수
-// ----------------------------------------------------------
+interface ModelConfig {
+  hidden_size: number;
+  num_attention_heads: number;
+  num_hidden_layers: number;
+  num_key_value_heads?: number;
+  torch_dtype?: string;
+}
+
+type SizeFetchStatus = 'idle' | 'loading' | 'fetched' | 'failed';
 
 export default function LlmVramCalculator() {
-  // 초기값을 0.6B 모델, 32k 컨텍스트, Q4_K_M, F16 KV에 맞춤
-  const [modelSize, setModelSize] = useState<number>(0.6); // billion
-  const [contextLength, setContextLength] = useState<string>("32768"); // tokens
+  const [modelId, setModelId] = useState<string>("Qwen/Qwen3-0.6B");
+  const [hfToken, setHfToken] = useState<string>("");
+  const [modelConfig, setModelConfig] = useState<ModelConfig | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const [modelSize, setModelSize] = useState<number>(0.5);
+  const [fetchedModelSizeB, setFetchedModelSizeB] = useState<number | null>(null);
+  const [sizeFetchStatus, setSizeFetchStatus] = useState<SizeFetchStatus>('idle');
+
+  const [contextLength, setContextLength] = useState<string>("32768");
   const [quantKey, setQuantKey] = useState<string>('Q4_K_M');
   const [kvQuantKey, setKvQuantKey] = useState<string>('F16');
-  // llama.cpp 3.7GB 결과에 맞추기 위해 오버헤드를 0.5GB~1GB 사이로 조정
-  const [overheadGB, setOverheadGB] = useState<number>(1.3); // 조정된 기본 오버헤드 추정치
+  const [overheadGB, setOverheadGB] = useState<number>(0);
+  const [batchSize, setBatchSize] = useState<number>(512);
 
   const [modelMemGB, setModelMemGB] = useState<number>(0);
   const [contextMemGB, setContextMemGB] = useState<number>(0);
+  const [inputBufferGB, setInputBufferGB] = useState<number>(0);
+  const [computeBufferGB, setComputeBufferGB] = useState<number>(0);
   const [totalMemGB, setTotalMemGB] = useState<number>(0);
 
-  useEffect(() => {
-    calculate();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [modelSize, contextLength, quantKey, kvQuantKey, overheadGB]); // 의존성 배열
+  const getDtypeBytes = (dtype?: string): number => {
+    if (!dtype) return 2;
+    if (dtype.includes('float16') || dtype.includes('bfloat16')) return 2;
+    if (dtype.includes('float32')) return 4;
+    return 2;
+  };
 
-  const calculate = () => {
-    const sizeB = modelSize;
-    const bpw = ggufQuants[quantKey]; // bits per weight
-    const kvBits = kvCacheQuants[kvQuantKey]; // bits per KV element
-    const context = parseInt(contextLength); // tokens
-    const extraOverhead = overheadGB; // GB
+  const fetchModelConfigAndSize = useCallback(async () => {
+    if (!modelId) {
+      setError("Please enter a Hugging Face model ID.");
+      setModelConfig(null);
+      setFetchedModelSizeB(null);
+      setSizeFetchStatus('idle');
+      setModelMemGB(NaN);
+      setContextMemGB(NaN);
+      setInputBufferGB(NaN);
+      setComputeBufferGB(NaN);
+      setTotalMemGB(NaN);
+      return;
+    }
+    setIsLoading(true);
+    setSizeFetchStatus('loading');
+    setError(null);
+    setModelConfig(null);
+    setFetchedModelSizeB(null);
+    setModelMemGB(NaN);
+    setContextMemGB(NaN);
+    setInputBufferGB(NaN);
+    setComputeBufferGB(NaN);
+    setTotalMemGB(NaN);
 
-    // 입력 유효성 검사
-    if (isNaN(sizeB) || sizeB < 0 ||
-        isNaN(bpw) || bpw <= 0 ||
-        isNaN(context) || context < 1 ||
-        isNaN(kvBits) || kvBits <= 0 ||
-        isNaN(extraOverhead) || extraOverhead < 0
-       )
-    {
-        setModelMemGB(NaN);
-        setContextMemGB(NaN);
-        setTotalMemGB(NaN);
-        return;
+    const configUrl = `https://huggingface.co/${modelId}/raw/main/config.json`;
+    const apiUrl = `https://huggingface.co/api/models/${modelId}`;
+    const headers: HeadersInit = {};
+    if (hfToken) {
+      headers['Authorization'] = `Bearer ${hfToken}`;
     }
 
-    // 1. 모델 가중치 메모리
-    // (모델 파라미터 수) * (파라미터당 비트 수) / 8 bits/byte
+    try {
+      const configResponse = await fetch(configUrl, { headers });
+      if (!configResponse.ok) {
+        if (configResponse.status === 401) throw new Error("Unauthorized: Check your Hugging Face token or model permissions for config.");
+        if (configResponse.status === 403) throw new Error("Forbidden: Your token may not have access to this gated/private model's config.");
+        if (configResponse.status === 404) throw new Error("Model config not found. Check the model ID.");
+        throw new Error(`Failed to fetch config: ${configResponse.statusText} (Status: ${configResponse.status})`);
+      }
+      let config = await configResponse.json();
+
+      if (config.text_config) {
+        config = config.text_config;
+      }
+
+      if (!config.hidden_size || !config.num_attention_heads || !config.num_hidden_layers) {
+        throw new Error("Incomplete model config: Missing required fields (hidden_size, num_attention_heads, num_hidden_layers).");
+      }
+
+      const num_key_value_heads = config.num_key_value_heads || config.num_attention_heads;
+      const fetchedConfig: ModelConfig = {
+        hidden_size: config.hidden_size,
+        num_attention_heads: config.num_attention_heads,
+        num_hidden_layers: config.num_hidden_layers,
+        num_key_value_heads: num_key_value_heads,
+        torch_dtype: config.torch_dtype,
+      };
+      setModelConfig(fetchedConfig);
+
+      try {
+        const apiResponse = await fetch(apiUrl, { headers });
+        if (!apiResponse.ok) {
+          console.warn(`Failed to fetch model API info: ${apiResponse.statusText}. Model size needs manual input.`);
+          setSizeFetchStatus('failed');
+          setError(prev => prev ? `${prev}\nCould not fetch model size info.` : "Could not fetch model size info. Please enter manually.");
+          return;
+        }
+        const apiData = await apiResponse.json();
+        const safetensorsInfo = apiData?.safetensors;
+        const totalSize = safetensorsInfo?.total;
+
+        if (totalSize && totalSize > 0) {
+          const dtypeBytes = getDtypeBytes(fetchedConfig.torch_dtype);
+          const estimatedParametersFromBytes = totalSize / dtypeBytes;
+          const adjustedParametersForSize = estimatedParametersFromBytes * 2;
+          const sizeBFromBytes = adjustedParametersForSize / 1e9;
+
+          const roundedSizeB = parseFloat(sizeBFromBytes.toFixed(2));
+
+          setFetchedModelSizeB(roundedSizeB);
+          setModelSize(roundedSizeB);
+          setSizeFetchStatus('fetched');
+        } else {
+          setSizeFetchStatus('failed');
+          setError(prev => prev ? `${prev}\nCould not determine model size from API. Please enter manually.` : "Could not determine model size from API. Please enter manually.");
+        }
+      } catch (apiErr: any) {
+        setSizeFetchStatus('failed');
+        setError(prev => prev ? `${prev}\nError fetching model size info. Please enter manually.` : `Error fetching model size info: ${apiErr.message}. Please enter manually.`);
+      }
+
+    } catch (err: any) {
+      setError(err.message || "An unknown error occurred while fetching model data.");
+      setModelConfig(null);
+      setFetchedModelSizeB(null);
+      setSizeFetchStatus('failed');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [modelId, hfToken]);
+
+  const calculate = useCallback(() => {
+    const sizeB = modelSize;
+    const bpw = ggufQuants[quantKey];
+    const kvBits = kvCacheQuants[kvQuantKey];
+    const context = parseInt(contextLength);
+    const bsz = batchSize;
+    const extraOverhead = overheadGB;
+
+    let currentError = error;
+    if (currentError && (currentError.includes("Invalid") || currentError.includes("Cannot calculate"))) {
+        currentError = null;
+    }
+
+    if (!modelConfig || sizeFetchStatus === 'loading' || isNaN(bsz) || bsz <= 0) {
+      setModelMemGB(NaN); setContextMemGB(NaN); setInputBufferGB(NaN); setComputeBufferGB(NaN); setTotalMemGB(NaN);
+      return;
+    }
+
+    let validationError = null;
+    if (isNaN(sizeB) || sizeB <= 0) validationError = "Invalid Model Size.";
+    else if (isNaN(bpw) || bpw <= 0) validationError = "Invalid GGUF Quantization selected.";
+    else if (isNaN(context) || context < 1) validationError = "Invalid Context Length.";
+    else if (isNaN(kvBits) || kvBits <= 0) validationError = "Invalid KV Cache Quantization selected.";
+    else if (isNaN(extraOverhead) || extraOverhead < 0) validationError = "Invalid Overhead value.";
+
+    if (validationError) {
+        setError(validationError);
+        setModelMemGB(NaN); setContextMemGB(NaN); setInputBufferGB(NaN); setComputeBufferGB(NaN); setTotalMemGB(NaN);
+        return;
+    }
+    setError(currentError);
+
+    const bytes_per_gib = 1024 ** 3;
+
     const modelBytes = sizeB * 1e9 * bpw / 8;
-    const calculatedModelGB = modelBytes / (1024 ** 3);
+    const calculatedModelGB = modelBytes / bytes_per_gib;
 
-    // 2. KV 캐시 메모리 (가정된 구조 사용)
-    // (컨텍스트 길이) * (가정된 레이어 수) * 2 (K, V) * (가정된 KV 헤드 수) * (가정된 헤드 차원) * (KV 데이터 정밀도 바이트)
-    const kvBytesPerTokenPerLayer = 2 * ASSUMED_GQA_KV * ASSUMED_HEAD_DIM * (kvBits / 8);
-    const totalKvBytes = context * ASSUMED_NUM_LAYERS * kvBytesPerTokenPerLayer;
-    const calculatedCtxGB = totalKvBytes / (1024 ** 3);
+    const num_layers = modelConfig.num_hidden_layers;
+    const head_dim = modelConfig.num_attention_heads > 0 ? modelConfig.hidden_size / modelConfig.num_attention_heads : 0;
+    const num_kv_heads = modelConfig.num_key_value_heads ?? modelConfig.num_attention_heads;
+    const num_q_heads = modelConfig.num_attention_heads;
 
-    // 3. 총 VRAM (모델 가중치 + KV 캐시 + 오버헤드)
-    const total = calculatedModelGB + calculatedCtxGB + extraOverhead;
+    if (isNaN(head_dim) || head_dim <= 0 || !Number.isInteger(head_dim)) {
+      const headError = "Invalid model config: Cannot calculate valid head dimension (hidden_size / num_attention_heads).";
+      setError(headError);
+      setModelMemGB(NaN); setContextMemGB(NaN); setInputBufferGB(NaN); setComputeBufferGB(NaN); setTotalMemGB(NaN);
+      return;
+    }
+    // kv
+    const kvBytesPerTokenPerLayer = 2 * num_kv_heads * head_dim * (kvBits / 8);
+    const totalKvBytes = context * num_layers * kvBytesPerTokenPerLayer;
+
+    // 절감률 계산 (full attention 기준: kv_heads = q_heads)
+    const fullKvBytes = context * modelConfig.num_hidden_layers * (2 * num_q_heads * head_dim * (kvBits / 8));
+    const savingFactor = fullKvBytes / totalKvBytes;
+
+    console.log(`Total KV Cache Size: ${(totalKvBytes / (1024 * 1024)).toFixed(2)} MB`);
+    if (savingFactor > 1) {
+      console.log(`💡 GQA enabled: KV cache uses ${savingFactor.toFixed(1)}x less memory than full attention.`);
+    } else {
+      console.log(`Standard attention: no KV memory saving.`);
+    }
+
+    const calculatedCtxGB = totalKvBytes / bytes_per_gib;
+
+    const bytes_i32 = 4;
+    const bytes_f32 = 4;
+    const inp_tokens_b = bsz * bytes_i32;
+    const inp_embd_b = modelConfig.hidden_size * bsz * bytes_f32;
+    const inp_pos_b = bsz * bytes_i32;
+    const inp_KQ_mask_b = context * bsz * bytes_f32;
+    const inp_K_shift_b = context * bytes_i32;
+    const inp_sum_b = bsz * bytes_f32;
+    const totalInputBufferBytes = inp_tokens_b + inp_embd_b + inp_pos_b + inp_KQ_mask_b + inp_K_shift_b + inp_sum_b;
+    const calculatedInputBufGB = totalInputBufferBytes / bytes_per_gib;
+
+    const computeBufferMiB = (context / 1024.0 * 2.0 + 0.75) * modelConfig.num_attention_heads;
+    const computeBufferBytes = computeBufferMiB * 1024 * 1024;
+    const calculatedComputeBufGB = computeBufferBytes / bytes_per_gib;
+
+    const total = calculatedModelGB + calculatedCtxGB + calculatedInputBufGB + calculatedComputeBufGB + extraOverhead;
 
     setModelMemGB(calculatedModelGB);
     setContextMemGB(calculatedCtxGB);
+    setInputBufferGB(calculatedInputBufGB);
+    setComputeBufferGB(calculatedComputeBufGB);
     setTotalMemGB(total);
-  };
 
-  // 일반 숫자 입력 핸들러
+  }, [modelSize, quantKey, kvQuantKey, contextLength, overheadGB, modelConfig, error, sizeFetchStatus, batchSize]);
+
+  useEffect(() => {
+    if (modelConfig && !isLoading && (sizeFetchStatus === 'fetched' || sizeFetchStatus === 'failed')) {
+      calculate();
+    } else if (!isLoading && !modelConfig) {
+      setModelMemGB(NaN);
+      setContextMemGB(NaN);
+      setInputBufferGB(NaN);
+      setComputeBufferGB(NaN);
+      setTotalMemGB(NaN);
+    }
+  }, [calculate, modelConfig, sizeFetchStatus, isLoading]);
+
   const handleNumberChange = (setter: React.Dispatch<React.SetStateAction<number>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseFloat(e.target.value);
     setter(isNaN(value) && e.target.value !== '' ? NaN : value);
+    if (setter === setModelSize && (sizeFetchStatus === 'fetched' || sizeFetchStatus === 'failed')) {
+      setSizeFetchStatus('idle');
+      setFetchedModelSizeB(null);
+    }
   };
 
-   const handleNumberBlur = (stateValue: number, setter: React.Dispatch<React.SetStateAction<number>>, defaultValue: number = 0, minValue: number = 0) => (e: React.FocusEvent<HTMLInputElement>) => {
-     const value = parseFloat(e.target.value);
+  const handleNumberBlur = (stateValue: number, setter: React.Dispatch<React.SetStateAction<number>>, defaultValue: number = 0, minValue: number = 0) => (e: React.FocusEvent<HTMLInputElement>) => {
+    const value = parseFloat(e.target.value);
     if (e.target.value === '' || isNaN(value) || value < minValue) {
-        setter(defaultValue);
+      setter(defaultValue);
+      if (setter === setModelSize && (sizeFetchStatus === 'fetched' || sizeFetchStatus === 'failed')) {
+        setSizeFetchStatus('idle');
+        setFetchedModelSizeB(null);
+      }
     } else {
-         setter(value);
+      setter(value);
     }
   };
 
@@ -140,45 +323,106 @@ export default function LlmVramCalculator() {
     <Card className="w-full max-w-lg mx-auto">
       <CardHeader>
         <CardTitle>LLM VRAM Calculator (GGUF Estimate)</CardTitle>
-        <CardDescription>Estimate VRAM usage based on assumed model structure and quantization.</CardDescription>
+        <CardDescription>Estimate VRAM usage including compute/input buffers based on Hugging Face model config and quantization.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-2 border p-4 rounded-md">
+          <Label htmlFor="modelId">Hugging Face Model ID</Label>
+          <Input
+            id="modelId"
+            type="text"
+            value={modelId}
+            onChange={(e) => setModelId(e.target.value)}
+            placeholder="e.g., mistralai/Mistral-7B-v0.1"
+            disabled={isLoading}
+          />
+
+          <Label htmlFor="hfToken">Hugging Face Token (Optional)</Label>
+          <Input
+            id="hfToken"
+            type="password"
+            value={hfToken}
+            onChange={(e) => setHfToken(e.target.value)}
+            placeholder="Enter token for private/gated models"
+            disabled={isLoading}
+          />
+          <p className="text-sm text-muted-foreground">비공개 또는 게이트된 모델에 접근하려면 토큰이 필요합니다.</p>
+
+          <Button onClick={fetchModelConfigAndSize} disabled={isLoading || !modelId} className="w-full mt-2">
+            {isLoading ? (
+              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...</>
+            ) : (
+              "Load Model Info"
+            )}
+          </Button>
+        </div>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+
         <div className="space-y-2">
-          <Label htmlFor="modelSize">Model Size (billion parameters)</Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="modelSize">Model Size (Billion Parameters)</Label>
+            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+              {sizeFetchStatus === 'fetched' && <><CheckCircle className="h-3 w-3 text-green-500" /><span>Fetched</span></>}
+              {sizeFetchStatus === 'failed' && <><XCircle className="h-3 w-3 text-red-500" /><span>Fetch failed</span></>}
+              {sizeFetchStatus === 'loading' && <><Loader2 className="h-3 w-3 animate-spin" /><span>Fetching...</span></>}
+              {sizeFetchStatus === 'idle' && <><HelpCircle className="h-3 w-3" /><span>Load or enter manually</span></>}
+            </div>
+          </div>
           <Input
             id="modelSize"
             type="number"
             min="0"
-            step="0.1"
+            step="0.01"
             value={isNaN(modelSize) ? '' : modelSize}
             onChange={handleNumberChange(setModelSize)}
             onBlur={handleNumberBlur(modelSize, setModelSize, 0, 0)}
             placeholder="e.g., 7"
+            disabled={isLoading}
           />
-           <p className="text-sm text-muted-foreground">주로 가중치 메모리 계산에 사용됩니다.</p>
+          <p className="text-sm text-muted-foreground">
+            모델 가중치 메모리 계산에 사용됩니다. 'Load Model Info' 버튼으로 가져오거나 수동 입력하세요.
+            {sizeFetchStatus === 'failed' && " 자동 가져오기 실패. 정확한 값을 입력해주세요."}
+          </p>
         </div>
 
-        {/* 모델 구조 상세 입력 필드는 제거됨 */}
-        {/* <div className="grid grid-cols-2 gap-4">...</div> */}
-        <p className="text-sm text-muted-foreground">
-            (Note: This calculator assumes a specific internal model structure, like ~{ASSUMED_NUM_LAYERS} layers, ~{ASSUMED_GQA_Q}/{ASSUMED_GQA_KV} Attention Heads, and ~{ASSUMED_HEAD_DIM} head dimension, based on typical small models. Actual structure may vary.)
-        </p>
+        <div className="space-y-2">
+          <Label htmlFor="batchSize">Batch Size (Tokens)</Label>
+          <Input
+            id="batchSize"
+            type="number"
+            min="1"
+            step="1"
+            value={isNaN(batchSize) ? '' : batchSize}
+            onChange={handleNumberChange(setBatchSize)}
+            onBlur={handleNumberBlur(batchSize, setBatchSize, 512, 1)}
+            placeholder="e.g., 512"
+            disabled={isLoading || !modelConfig}
+          />
+          <p className="text-sm text-muted-foreground">Input/Compute 버퍼 계산에 사용됩니다. (llama.cpp 기본값: 512)</p>
+        </div>
 
         <div className="space-y-2">
           <Label>Context Length (Tokens)</Label>
           <RadioGroup value={contextLength} onValueChange={setContextLength} className="grid grid-cols-3 gap-2">
             {contextOptions.map(option => (
               <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={`context-${option.value}`} />
+                <RadioGroupItem value={option.value} id={`context-${option.value}`} disabled={isLoading || !modelConfig} />
                 <Label htmlFor={`context-${option.value}`}>{option.label}</Label>
               </div>
             ))}
           </RadioGroup>
+          <p className="text-sm text-muted-foreground">모델 정보를 로드해야 활성화됩니다.</p>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="quantSize">GGUF Weight Quantization</Label>
-          <Select value={quantKey} onValueChange={setQuantKey}>
+          <Select value={quantKey} onValueChange={setQuantKey} disabled={isLoading || !modelConfig}>
             <SelectTrigger id="quantSize">
               <SelectValue placeholder="Select quantization" />
             </SelectTrigger>
@@ -188,12 +432,12 @@ export default function LlmVramCalculator() {
               ))}
             </SelectContent>
           </Select>
-           <p className="text-sm text-muted-foreground">모델 가중치의 정밀도 (bits per weight).</p>
+          <p className="text-sm text-muted-foreground">모델 가중치의 정밀도 (bits per weight). 모델 정보를 로드해야 활성화됩니다.</p>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="kvQuantSize">KV Cache Quantization</Label>
-          <Select value={kvQuantKey} onValueChange={setKvQuantKey}>
+          <Select value={kvQuantKey} onValueChange={setKvQuantKey} disabled={isLoading || !modelConfig}>
             <SelectTrigger id="kvQuantSize">
               <SelectValue placeholder="Select KV cache quantization" />
             </SelectTrigger>
@@ -203,34 +447,49 @@ export default function LlmVramCalculator() {
               ))}
             </SelectContent>
           </Select>
-          <p className="text-sm text-muted-foreground">K/V 캐시 요소의 정밀도. F16이 기본값입니다.</p>
+          <p className="text-sm text-muted-foreground">K/V 캐시 요소의 정밀도. F16이 기본값입니다. 모델 정보를 로드해야 활성화됩니다.</p>
         </div>
 
         <div className="space-y-2">
-            <Label htmlFor="overheadGB">Additional Overhead (GB)</Label>
-            <Input
-                id="overheadGB"
-                type="number"
-                min="0"
-                step="0.1"
-                value={isNaN(overheadGB) ? '' : overheadGB}
-                 onChange={handleNumberChange(setOverheadGB)}
-                onBlur={handleNumberBlur(overheadGB, setOverheadGB, 0.5, 0)}
-                placeholder="e.g., 0.5"
-            />
-             <p className="text-sm text-muted-foreground">활성화, 버퍼, 프레임워크 오버헤드 등. llama.cpp/ollama 환경에 따라 조절해 보세요.</p>
+          <Label htmlFor="overheadGB">Additional Overhead (GB)</Label>
+          <Input
+            id="overheadGB"
+            type="number"
+            min="0"
+            step="0.1"
+            value={isNaN(overheadGB) ? '' : overheadGB}
+            onChange={handleNumberChange(setOverheadGB)}
+            onBlur={handleNumberBlur(overheadGB, setOverheadGB, 0.5, 0)}
+            placeholder="e.g., 1.5"
+            disabled={isLoading || !modelConfig}
+          />
+          <p className="text-sm text-muted-foreground">CUDA 컨텍스트, 프레임워크, 기타 버퍼 등. 기본값 1.5GB에서 조절해보세요.</p>
         </div>
 
-        <Card className="bg-muted/50">
-             <CardHeader className="p-4">
-                 <CardTitle className="text-lg">Estimated VRAM Breakdown</CardTitle>
-             </CardHeader>
-             <CardContent className="p-4 space-y-2">
+        <Card className={`bg-muted/50 ${(!modelConfig || error || modelSize <= 0 || sizeFetchStatus === 'loading') ? 'opacity-50' : ''}`}>
+          <CardHeader className="p-4">
+            <CardTitle className="text-lg">Estimated VRAM Breakdown</CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 space-y-2">
+            {modelConfig && !error && modelSize > 0 && !isLoading && isFinite(totalMemGB) ? (
+              <>
                 <p>Model Weights: <span className="font-semibold">{isFinite(modelMemGB) ? modelMemGB.toFixed(2) : 'N/A'}</span> GB</p>
                 <p>KV Cache: <span className="font-semibold">{isFinite(contextMemGB) ? contextMemGB.toFixed(2) : 'N/A'}</span> GB</p>
+                <p>Input Buffer: <span className="font-semibold">{isFinite(inputBufferGB) ? inputBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
+                <p>Compute Buffer: <span className="font-semibold">{isFinite(computeBufferGB) ? computeBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
                 <p>Overhead: <span className="font-semibold">{isFinite(overheadGB) ? overheadGB.toFixed(2) : 'N/A'}</span> GB</p>
-                <p className="text-lg"><strong>Total Estimated VRAM: <span className="font-semibold">{isFinite(totalMemGB) ? totalMemGB.toFixed(2) : 'N/A'}</span> GB</strong></p>
-             </CardContent>
+                <p className="text-lg"><strong>Total Estimated VRAM: <span className="font-semibold">{totalMemGB.toFixed(2)}</span> GB</strong></p>
+              </>
+            ) : (
+              <p className="text-muted-foreground">
+                {isLoading ? 'Loading data...' :
+                 (error ? `Calculation failed: ${error}` :
+                  (!modelConfig && sizeFetchStatus !== 'loading' ? 'Click "Load Model Info" to start.' :
+                   (modelSize <= 0 && sizeFetchStatus !== 'loading' ? 'Enter a valid model size or load model info.' :
+                    'Calculating...')))}
+              </p>
+            )}
+          </CardContent>
         </Card>
       </CardContent>
     </Card>
