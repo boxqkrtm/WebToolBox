@@ -13,7 +13,8 @@ const pages = [
   { title: 'NTRIP Mount Point Scanner', path: '/utils/ntrip-scanner' },
   { title: 'Discord Color Message Generator', path: '/utils/discord-color-message-generator' },
   { title: 'Escaped String Decoder', path: '/utils/escaped-string-decoder' },
-  { title: 'LLM VRAM Calculator (GGUF)', path: '/utils/llm-vram-calculator' }
+  { title: 'LLM VRAM Calculator (GGUF)', path: '/utils/llm-vram-calculator' },
+  { title: 'Image to Base64 Converter', path: '/utils/image-to-base64' }
 ];
 
 export default function Home() {
