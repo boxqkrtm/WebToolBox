@@ -6,6 +6,9 @@ import { Label } from "@/components/ui/label";
 const pages = [
   { title: 'CSV Sorter', path: '/utils/csv-sorter' },
   { title: 'tetrio.replay-editor', path: '/utils/tetrio-replay-editor' },
+  // Adding the new MP4 Trimmer tool.
+  // Based on the user's feedback, the tool list in this file might be outdated.
+  // I am adding the new tool to the list as it exists in my environment.
   { title: 'MP4 Trimmer', path: '/utils/mp4-trimmer' }
 ];
 
