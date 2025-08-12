@@ -14,7 +14,8 @@ const pages = [
   { title: 'Discord Color Message Generator', path: '/utils/discord-color-message-generator' },
   { title: 'Escaped String Decoder', path: '/utils/escaped-string-decoder' },
   { title: 'LLM VRAM Calculator (GGUF)', path: '/utils/llm-vram-calculator' },
-  { title: 'Image to Base64 Converter', path: '/utils/image-to-base64' }
+  { title: 'Image to Base64 Converter', path: '/utils/image-to-base64' },
+  { title: 'MP4 Trimmer', path: '/utils/mp4-trimmer' }
 ];
 
 export default function Home() {
