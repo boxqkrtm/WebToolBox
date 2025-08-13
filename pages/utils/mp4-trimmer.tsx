@@ -59,7 +59,7 @@ export default function Mp4Trimmer() {
     }
   }
 
-  const handleTrim = async () => {
+  const handleTrim = async (mode: 'fast' | 'slow') => {
     if (!videoFile) return
 
     setIsLoading(true)
@@ -69,17 +69,27 @@ export default function Mp4Trimmer() {
     }
     const ffmpeg = ffmpegRef.current
     try {
-      await ffmpeg.load()
+      if (!ffmpeg.loaded) {
+        await ffmpeg.load()
+      }
 
       setMessage('Writing file to FFmpeg...')
-    await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
 
-    const [start, end] = trimValues
+      const [start, end] = trimValues
 
-    setMessage('Trimming video...')
-    await ffmpeg.exec(['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4'])
+      let command: string[]
+      if (mode === 'fast') {
+        setMessage('Trimming video (fast mode)...')
+        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
+      } else {
+        setMessage('Trimming video (precise mode)...')
+        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+      }
 
-    setMessage('Reading result...')
+      await ffmpeg.exec(command)
+
+      setMessage('Reading result...')
     const data = (await ffmpeg.readFile('output.mp4')) as Uint8Array
     const blob = new Blob([data], { type: 'video/mp4' })
     const url = URL.createObjectURL(blob)
@@ -138,9 +148,17 @@ export default function Mp4Trimmer() {
             </div>
           )}
 
-          <Button onClick={handleTrim} disabled={isLoading || !videoFile}>
-            {isLoading ? 'Processing...' : 'Trim Video'}
-          </Button>
+          <div className="flex items-center space-x-2">
+            <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
+              {isLoading ? 'Processing...' : 'Fast Trim'}
+            </Button>
+            <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
+              {isLoading ? 'Processing...' : 'Precise Trim'}
+            </Button>
+          </div>
+          <p className="text-xs text-gray-500">
+            'Fast Trim' is quicker but may fail on some videos. If you experience issues (like audio only), use 'Precise Trim'.
+          </p>
         </div>
       )}
 
