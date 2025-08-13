@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ChevronRight, ChevronDown, Plus, Minus } from 'lucide-react';
+import UtilsLayout from '@/components/layout/UtilsLayout';
 
 const JsonNode = ({ data, path, onUpdate, onDelete, onAdd, scrollToRef, level = 0 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -191,46 +192,48 @@ export default function TetrioReplayEditor() {
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader>
-        <CardTitle>TETR.IO Replay Editor</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          <div>
-            <input
-              type="file"
-              accept=".ttrm,.ttr,.json"
-              onChange={handleFileUpload}
-              className="block w-full text-sm text-slate-500
-                file:mr-4 file:py-2 file:px-4
-                file:rounded-full file:border-0
-                file:text-sm file:font-semibold
-                file:bg-violet-50 file:text-violet-700
-                hover:file:bg-violet-100"
-            />
+    <UtilsLayout>
+      <Card className="w-full max-w-3xl mx-auto">
+        <CardHeader>
+          <CardTitle>TETR.IO Replay Editor</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <input
+                type="file"
+                accept=".ttrm,.ttr,.json"
+                onChange={handleFileUpload}
+                className="block w-full text-sm text-slate-500
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded-full file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-violet-50 file:text-violet-700
+                  hover:file:bg-violet-100"
+              />
+            </div>
+            <div className="border p-4 rounded-md max-h-[60vh] overflow-auto">
+              <JsonNode
+                data={json}
+                path={[]}
+                onUpdate={handleUpdate}
+                onDelete={handleDelete}
+                onAdd={handleAdd}
+                scrollToRef={scrollToRef}
+              />
+            </div>
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
           </div>
-          <div className="border p-4 rounded-md max-h-[60vh] overflow-auto">
-            <JsonNode
-              data={json}
-              path={[]}
-              onUpdate={handleUpdate}
-              onDelete={handleDelete}
-              onAdd={handleAdd}
-              scrollToRef={scrollToRef}
-            />
-          </div>
-          {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-        </div>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button onClick={handleDownload}>Download Replay</Button>
-        {filename && <span className="text-sm text-gray-500">Current file: {filename}</span>}
-      </CardFooter>
-    </Card>
+        </CardContent>
+        <CardFooter className="flex justify-between">
+          <Button onClick={handleDownload}>Download Replay</Button>
+          {filename && <span className="text-sm text-gray-500">Current file: {filename}</span>}
+        </CardFooter>
+      </Card>
+    </UtilsLayout>
   );
 }

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import UtilsLayout from '@/components/layout/UtilsLayout'
 
 export default function ImageToBase64() {
   const [base64Data, setBase64Data] = useState('')
@@ -32,31 +33,33 @@ export default function ImageToBase64() {
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">Image to Base64 Converter</h1>
-      <div className="space-y-2">
-        <Label htmlFor="image-upload">Upload an image</Label>
-        <Input id="image-upload" type="file" accept="image/*" onChange={handleImageUpload} />
-      </div>
-
-      {base64Data && (
-        <div className="space-y-4">
-          <div>
-            <Label htmlFor="base64-output">Base64 Output</Label>
-            <Textarea
-              id="base64-output"
-              readOnly
-              value={base64Data}
-              className="h-48"
-            />
-          </div>
-          <div className="flex space-x-2">
-            <Button onClick={() => copyToClipboard(base64Data)}>Copy Base64</Button>
-            <Button onClick={() => copyToClipboard(`data:${mimeType};base64,${base64Data}`)}>Copy for &lt;img&gt; src</Button>
-            <Button onClick={() => copyToClipboard(`url("data:${mimeType};base64,${base64Data}")`)}>Copy for CSS url()</Button>
-          </div>
+    <UtilsLayout>
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold">Image to Base64 Converter</h1>
+        <div className="space-y-2">
+          <Label htmlFor="image-upload">Upload an image</Label>
+          <Input id="image-upload" type="file" accept="image/*" onChange={handleImageUpload} />
         </div>
-      )}
-    </div>
+
+        {base64Data && (
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="base64-output">Base64 Output</Label>
+              <Textarea
+                id="base64-output"
+                readOnly
+                value={base64Data}
+                className="h-48"
+              />
+            </div>
+            <div className="flex space-x-2">
+              <Button onClick={() => copyToClipboard(base64Data)}>Copy Base64</Button>
+              <Button onClick={() => copyToClipboard(`data:${mimeType};base64,${base64Data}`)}>Copy for &lt;img&gt; src</Button>
+              <Button onClick={() => copyToClipboard(`url("data:${mimeType};base64,${base64Data}")`)}>Copy for CSS url()</Button>
+            </div>
+          </div>
+        )}
+      </div>
+    </UtilsLayout>
   )
 }

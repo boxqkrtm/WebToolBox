@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import UtilsLayout from '@/components/layout/UtilsLayout';
 
 const ggufQuants: { [key: string]: number } = {
   IQ1_S: 1.56,
@@ -320,178 +321,180 @@ export default function LlmVramCalculator() {
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
-      <CardHeader>
-        <CardTitle>LLM VRAM Calculator (GGUF Estimate)</CardTitle>
-        <CardDescription>Estimate VRAM usage including compute/input buffers based on Hugging Face model config and quantization.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="space-y-2 border p-4 rounded-md">
-          <Label htmlFor="modelId">Hugging Face Model ID</Label>
-          <Input
-            id="modelId"
-            type="text"
-            value={modelId}
-            onChange={(e) => setModelId(e.target.value)}
-            placeholder="e.g., mistralai/Mistral-7B-v0.1"
-            disabled={isLoading}
-          />
+    <UtilsLayout>
+      <Card className="w-full max-w-lg mx-auto">
+        <CardHeader>
+          <CardTitle>LLM VRAM Calculator (GGUF Estimate)</CardTitle>
+          <CardDescription>Estimate VRAM usage including compute/input buffers based on Hugging Face model config and quantization.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2 border p-4 rounded-md">
+            <Label htmlFor="modelId">Hugging Face Model ID</Label>
+            <Input
+              id="modelId"
+              type="text"
+              value={modelId}
+              onChange={(e) => setModelId(e.target.value)}
+              placeholder="e.g., mistralai/Mistral-7B-v0.1"
+              disabled={isLoading}
+            />
 
-          <Label htmlFor="hfToken">Hugging Face Token (Optional)</Label>
-          <Input
-            id="hfToken"
-            type="password"
-            value={hfToken}
-            onChange={(e) => setHfToken(e.target.value)}
-            placeholder="Enter token for private/gated models"
-            disabled={isLoading}
-          />
-          <p className="text-sm text-muted-foreground">비공개 또는 게이트된 모델에 접근하려면 토큰이 필요합니다.</p>
+            <Label htmlFor="hfToken">Hugging Face Token (Optional)</Label>
+            <Input
+              id="hfToken"
+              type="password"
+              value={hfToken}
+              onChange={(e) => setHfToken(e.target.value)}
+              placeholder="Enter token for private/gated models"
+              disabled={isLoading}
+            />
+            <p className="text-sm text-muted-foreground">비공개 또는 게이트된 모델에 접근하려면 토큰이 필요합니다.</p>
 
-          <Button onClick={fetchModelConfigAndSize} disabled={isLoading || !modelId} className="w-full mt-2">
-            {isLoading ? (
-              <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...</>
-            ) : (
-              "Load Model Info"
-            )}
-          </Button>
-        </div>
-
-        {error && (
-          <Alert variant="destructive">
-            <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="modelSize">Model Size (Billion Parameters)</Label>
-            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-              {sizeFetchStatus === 'fetched' && <><CheckCircle className="h-3 w-3 text-green-500" /><span>Fetched</span></>}
-              {sizeFetchStatus === 'failed' && <><XCircle className="h-3 w-3 text-red-500" /><span>Fetch failed</span></>}
-              {sizeFetchStatus === 'loading' && <><Loader2 className="h-3 w-3 animate-spin" /><span>Fetching...</span></>}
-              {sizeFetchStatus === 'idle' && <><HelpCircle className="h-3 w-3" /><span>Load or enter manually</span></>}
-            </div>
+            <Button onClick={fetchModelConfigAndSize} disabled={isLoading || !modelId} className="w-full mt-2">
+              {isLoading ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...</>
+              ) : (
+                "Load Model Info"
+              )}
+            </Button>
           </div>
-          <Input
-            id="modelSize"
-            type="number"
-            min="0"
-            step="0.01"
-            value={isNaN(modelSize) ? '' : modelSize}
-            onChange={handleNumberChange(setModelSize)}
-            onBlur={handleNumberBlur(modelSize, setModelSize, 0, 0)}
-            placeholder="e.g., 7"
-            disabled={isLoading}
-          />
-          <p className="text-sm text-muted-foreground">
-            모델 가중치 메모리 계산에 사용됩니다. 'Load Model Info' 버튼으로 가져오거나 수동 입력하세요.
-            {sizeFetchStatus === 'failed' && " 자동 가져오기 실패. 정확한 값을 입력해주세요."}
-          </p>
-        </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="batchSize">Batch Size (Tokens)</Label>
-          <Input
-            id="batchSize"
-            type="number"
-            min="1"
-            step="1"
-            value={isNaN(batchSize) ? '' : batchSize}
-            onChange={handleNumberChange(setBatchSize)}
-            onBlur={handleNumberBlur(batchSize, setBatchSize, 512, 1)}
-            placeholder="e.g., 512"
-            disabled={isLoading || !modelConfig}
-          />
-          <p className="text-sm text-muted-foreground">Input/Compute 버퍼 계산에 사용됩니다. (llama.cpp 기본값: 512)</p>
-        </div>
+          {error && (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-        <div className="space-y-2">
-          <Label>Context Length (Tokens)</Label>
-          <RadioGroup value={contextLength} onValueChange={setContextLength} className="grid grid-cols-3 gap-2">
-            {contextOptions.map(option => (
-              <div key={option.value} className="flex items-center space-x-2">
-                <RadioGroupItem value={option.value} id={`context-${option.value}`} disabled={isLoading || !modelConfig} />
-                <Label htmlFor={`context-${option.value}`}>{option.label}</Label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="modelSize">Model Size (Billion Parameters)</Label>
+              <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                {sizeFetchStatus === 'fetched' && <><CheckCircle className="h-3 w-3 text-green-500" /><span>Fetched</span></>}
+                {sizeFetchStatus === 'failed' && <><XCircle className="h-3 w-3 text-red-500" /><span>Fetch failed</span></>}
+                {sizeFetchStatus === 'loading' && <><Loader2 className="h-3 w-3 animate-spin" /><span>Fetching...</span></>}
+                {sizeFetchStatus === 'idle' && <><HelpCircle className="h-3 w-3" /><span>Load or enter manually</span></>}
               </div>
-            ))}
-          </RadioGroup>
-          <p className="text-sm text-muted-foreground">모델 정보를 로드해야 활성화됩니다.</p>
-        </div>
+            </div>
+            <Input
+              id="modelSize"
+              type="number"
+              min="0"
+              step="0.01"
+              value={isNaN(modelSize) ? '' : modelSize}
+              onChange={handleNumberChange(setModelSize)}
+              onBlur={handleNumberBlur(modelSize, setModelSize, 0, 0)}
+              placeholder="e.g., 7"
+              disabled={isLoading}
+            />
+            <p className="text-sm text-muted-foreground">
+              모델 가중치 메모리 계산에 사용됩니다. &apos;Load Model Info&apos; 버튼으로 가져오거나 수동 입력하세요.
+              {sizeFetchStatus === 'failed' && " 자동 가져오기 실패. 정확한 값을 입력해주세요."}
+            </p>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="quantSize">GGUF Weight Quantization</Label>
-          <Select value={quantKey} onValueChange={setQuantKey} disabled={isLoading || !modelConfig}>
-            <SelectTrigger id="quantSize">
-              <SelectValue placeholder="Select quantization" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.keys(ggufQuants).map(key => (
-                <SelectItem key={key} value={key}>{key}</SelectItem>
+          <div className="space-y-2">
+            <Label htmlFor="batchSize">Batch Size (Tokens)</Label>
+            <Input
+              id="batchSize"
+              type="number"
+              min="1"
+              step="1"
+              value={isNaN(batchSize) ? '' : batchSize}
+              onChange={handleNumberChange(setBatchSize)}
+              onBlur={handleNumberBlur(batchSize, setBatchSize, 512, 1)}
+              placeholder="e.g., 512"
+              disabled={isLoading || !modelConfig}
+            />
+            <p className="text-sm text-muted-foreground">Input/Compute 버퍼 계산에 사용됩니다. (llama.cpp 기본값: 512)</p>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Context Length (Tokens)</Label>
+            <RadioGroup value={contextLength} onValueChange={setContextLength} className="grid grid-cols-3 gap-2">
+              {contextOptions.map(option => (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option.value} id={`context-${option.value}`} disabled={isLoading || !modelConfig} />
+                  <Label htmlFor={`context-${option.value}`}>{option.label}</Label>
+                </div>
               ))}
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground">모델 가중치의 정밀도 (bits per weight). 모델 정보를 로드해야 활성화됩니다.</p>
-        </div>
+            </RadioGroup>
+            <p className="text-sm text-muted-foreground">모델 정보를 로드해야 활성화됩니다.</p>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="kvQuantSize">KV Cache Quantization</Label>
-          <Select value={kvQuantKey} onValueChange={setKvQuantKey} disabled={isLoading || !modelConfig}>
-            <SelectTrigger id="kvQuantSize">
-              <SelectValue placeholder="Select KV cache quantization" />
-            </SelectTrigger>
-            <SelectContent>
-              {Object.entries(kvCacheQuants).map(([key, value]) => (
-                <SelectItem key={key} value={key}>{key} ({value}-bit)</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground">K/V 캐시 요소의 정밀도. F16이 기본값입니다. 모델 정보를 로드해야 활성화됩니다.</p>
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="quantSize">GGUF Weight Quantization</Label>
+            <Select value={quantKey} onValueChange={setQuantKey} disabled={isLoading || !modelConfig}>
+              <SelectTrigger id="quantSize">
+                <SelectValue placeholder="Select quantization" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(ggufQuants).map(key => (
+                  <SelectItem key={key} value={key}>{key}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">모델 가중치의 정밀도 (bits per weight). 모델 정보를 로드해야 활성화됩니다.</p>
+          </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="overheadGB">Additional Overhead (GB)</Label>
-          <Input
-            id="overheadGB"
-            type="number"
-            min="0"
-            step="0.1"
-            value={isNaN(overheadGB) ? '' : overheadGB}
-            onChange={handleNumberChange(setOverheadGB)}
-            onBlur={handleNumberBlur(overheadGB, setOverheadGB, 0.5, 0)}
-            placeholder="e.g., 1.5"
-            disabled={isLoading || !modelConfig}
-          />
-          <p className="text-sm text-muted-foreground">CUDA 컨텍스트, 프레임워크, 기타 버퍼 등. 기본값 1.5GB에서 조절해보세요.</p>
-        </div>
+          <div className="space-y-2">
+            <Label htmlFor="kvQuantSize">KV Cache Quantization</Label>
+            <Select value={kvQuantKey} onValueChange={setKvQuantKey} disabled={isLoading || !modelConfig}>
+              <SelectTrigger id="kvQuantSize">
+                <SelectValue placeholder="Select KV cache quantization" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.entries(kvCacheQuants).map(([key, value]) => (
+                  <SelectItem key={key} value={key}>{key} ({value}-bit)</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-sm text-muted-foreground">K/V 캐시 요소의 정밀도. F16이 기본값입니다. 모델 정보를 로드해야 활성화됩니다.</p>
+          </div>
 
-        <Card className={`bg-muted/50 ${(!modelConfig || error || modelSize <= 0 || sizeFetchStatus === 'loading') ? 'opacity-50' : ''}`}>
-          <CardHeader className="p-4">
-            <CardTitle className="text-lg">Estimated VRAM Breakdown</CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 space-y-2">
-            {modelConfig && !error && modelSize > 0 && !isLoading && isFinite(totalMemGB) ? (
-              <>
-                <p>Model Weights: <span className="font-semibold">{isFinite(modelMemGB) ? modelMemGB.toFixed(2) : 'N/A'}</span> GB</p>
-                <p>KV Cache: <span className="font-semibold">{isFinite(contextMemGB) ? contextMemGB.toFixed(2) : 'N/A'}</span> GB</p>
-                <p>Input Buffer: <span className="font-semibold">{isFinite(inputBufferGB) ? inputBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
-                <p>Compute Buffer: <span className="font-semibold">{isFinite(computeBufferGB) ? computeBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
-                <p>Overhead: <span className="font-semibold">{isFinite(overheadGB) ? overheadGB.toFixed(2) : 'N/A'}</span> GB</p>
-                <p className="text-lg"><strong>Total Estimated VRAM: <span className="font-semibold">{totalMemGB.toFixed(2)}</span> GB</strong></p>
-              </>
-            ) : (
-              <p className="text-muted-foreground">
-                {isLoading ? 'Loading data...' :
-                 (error ? `Calculation failed: ${error}` :
-                  (!modelConfig && sizeFetchStatus !== 'loading' ? 'Click "Load Model Info" to start.' :
-                   (modelSize <= 0 && sizeFetchStatus !== 'loading' ? 'Enter a valid model size or load model info.' :
-                    'Calculating...')))}
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </CardContent>
-    </Card>
+          <div className="space-y-2">
+            <Label htmlFor="overheadGB">Additional Overhead (GB)</Label>
+            <Input
+              id="overheadGB"
+              type="number"
+              min="0"
+              step="0.1"
+              value={isNaN(overheadGB) ? '' : overheadGB}
+              onChange={handleNumberChange(setOverheadGB)}
+              onBlur={handleNumberBlur(overheadGB, setOverheadGB, 0.5, 0)}
+              placeholder="e.g., 1.5"
+              disabled={isLoading || !modelConfig}
+            />
+            <p className="text-sm text-muted-foreground">CUDA 컨텍스트, 프레임워크, 기타 버퍼 등. 기본값 1.5GB에서 조절해보세요.</p>
+          </div>
+
+          <Card className={`bg-muted/50 ${(!modelConfig || error || modelSize <= 0 || sizeFetchStatus === 'loading') ? 'opacity-50' : ''}`}>
+            <CardHeader className="p-4">
+              <CardTitle className="text-lg">Estimated VRAM Breakdown</CardTitle>
+            </CardHeader>
+            <CardContent className="p-4 space-y-2">
+              {modelConfig && !error && modelSize > 0 && !isLoading && isFinite(totalMemGB) ? (
+                <>
+                  <p>Model Weights: <span className="font-semibold">{isFinite(modelMemGB) ? modelMemGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>KV Cache: <span className="font-semibold">{isFinite(contextMemGB) ? contextMemGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>Input Buffer: <span className="font-semibold">{isFinite(inputBufferGB) ? inputBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>Compute Buffer: <span className="font-semibold">{isFinite(computeBufferGB) ? computeBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>Overhead: <span className="font-semibold">{isFinite(overheadGB) ? overheadGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p className="text-lg"><strong>Total Estimated VRAM: <span className="font-semibold">{totalMemGB.toFixed(2)}</span> GB</strong></p>
+                </>
+              ) : (
+                <p className="text-muted-foreground">
+                  {isLoading ? 'Loading data...' :
+                   (error ? `Calculation failed: ${error}` :
+                    (!modelConfig && sizeFetchStatus !== 'loading' ? 'Click "Load Model Info" to start.' :
+                     (modelSize <= 0 && sizeFetchStatus !== 'loading' ? 'Enter a valid model size or load model info.' :
+                      'Calculating...')))}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
+    </UtilsLayout>
   );
 }

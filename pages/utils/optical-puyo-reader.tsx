@@ -1,9 +1,11 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import Image from 'next/image';
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Slider } from "@/components/ui/slider"
+import UtilsLayout from '@/components/layout/UtilsLayout';
 
 type ColorCategory = 'R' | 'G' | 'B' | 'Y' | 'P' | 'O' | '';
 
@@ -13,6 +15,7 @@ export default function Component() {
   const [categoryGrid, setCategoryGrid] = useState<ColorCategory[][]>([]);
   const [threshold, setThreshold] = useState(51);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -23,22 +26,81 @@ export default function Component() {
     }
   };
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && imageUrl && canvasRef.current) {
-      analyzeImage();
+  const categorizeColor = useCallback((color: string): ColorCategory => {
+    const rgb = color.match(/\d+/g)?.map(Number);
+    if (!rgb) return 'O';
+    const [r, g, b] = rgb;
+    
+    const emptyTargetR = 50, emptyTargetG = 72, emptyTargetB = 35;
+    const emptyThreshold = 20;
+    
+    if (
+      Math.abs(r - emptyTargetR) <= emptyThreshold &&
+      Math.abs(g - emptyTargetG) <= emptyThreshold &&
+      Math.abs(b - emptyTargetB) <= emptyThreshold
+    ) {
+      return '';
     }
-  }, [imageUrl, threshold]);
 
-  const analyzeImage = () => {
+    const otherTargetR = 50, otherTargetG = 80, otherTargetB = 71;
+    const otherThreshold = 10;
+
+    if (
+      Math.abs(r - otherTargetR) <= otherThreshold &&
+      Math.abs(g - otherTargetG) <= otherThreshold &&
+      Math.abs(b - otherTargetB) <= otherThreshold
+    ) {
+      return 'O';
+    }
+
+    if (
+      Math.abs(r - 162) <= threshold &&
+      Math.abs(g - 92) <= threshold &&
+      Math.abs(b - 91) <= threshold
+    ) {
+      return 'R';
+    }
+
+    if (
+      Math.abs(r - 84) <= threshold &&
+      Math.abs(g - 125) <= threshold &&
+      Math.abs(b - 155) <= threshold
+    ) {
+      return 'B';
+    }
+
+    if (
+      Math.abs(r - 195) <= threshold &&
+      Math.abs(g - 179) <= threshold &&
+      Math.abs(b - 114) <= threshold
+    ) {
+      return 'Y';
+    }
+
+    if (
+      Math.abs(r - 137) <= threshold &&
+      Math.abs(g - 89) <= threshold &&
+      Math.abs(b - 151) <= threshold
+    ) {
+      return 'P';
+    }
+
+    if (g > r && g > b) return 'G';
+
+    return 'O';
+  }, [threshold]);
+
+  const analyzeImage = useCallback(() => {
     const img = new window.Image();
     img.onload = () => {
+      setImageDimensions({ width: img.width, height: img.height });
       const canvas = canvasRef.current!;
       const ctx = canvas.getContext('2d');
       if (ctx) {
         canvas.width = img.width;
         canvas.height = img.height;
         ctx.drawImage(img, 0, 0);
-        
+
         const cellWidth = img.width / 6;
         const cellHeight = img.height / 12;
         const newColorGrid: string[][] = [];
@@ -61,8 +123,16 @@ export default function Component() {
         setCategoryGrid(newCategoryGrid);
       }
     };
-    img.src = imageUrl!;
-  };
+    if (imageUrl) {
+      img.src = imageUrl;
+    }
+  }, [imageUrl, categorizeColor]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && imageUrl && canvasRef.current) {
+      analyzeImage();
+    }
+  }, [imageUrl, analyzeImage]);
 
   const getAverageColor = (data: Uint8ClampedArray): string => {
     let r = 0, g = 0, b = 0;
@@ -73,77 +143,6 @@ export default function Component() {
     }
     const count = data.length / 4;
     return `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`;
-  };
-
-  const categorizeColor = (color: string): ColorCategory => {
-    const rgb = color.match(/\d+/g)?.map(Number);
-    if (!rgb) return 'O';
-    const [r, g, b] = rgb;
-    
-    // Check if the color is close to rgb(50, 72, 35)
-    const emptyTargetR = 50, emptyTargetG = 72, emptyTargetB = 35;
-    const emptyThreshold = 20;
-    
-    if (
-      Math.abs(r - emptyTargetR) <= emptyThreshold &&
-      Math.abs(g - emptyTargetG) <= emptyThreshold &&
-      Math.abs(b - emptyTargetB) <= emptyThreshold
-    ) {
-      return '';
-    }
-
-    // Check if the color is close to rgb(50, 80, 71)
-    const otherTargetR = 50, otherTargetG = 80, otherTargetB = 71;
-    const otherThreshold = 10;
-
-    if (
-      Math.abs(r - otherTargetR) <= otherThreshold &&
-      Math.abs(g - otherTargetG) <= otherThreshold &&
-      Math.abs(b - otherTargetB) <= otherThreshold
-    ) {
-      return 'O';
-    }
-
-    // Red: rgb(162, 92, 91)
-    if (
-      Math.abs(r - 162) <= threshold &&
-      Math.abs(g - 92) <= threshold &&
-      Math.abs(b - 91) <= threshold
-    ) {
-      return 'R';
-    }
-
-    // Blue: rgb(84, 125, 155)
-    if (
-      Math.abs(r - 84) <= threshold &&
-      Math.abs(g - 125) <= threshold &&
-      Math.abs(b - 155) <= threshold
-    ) {
-      return 'B';
-    }
-
-    // Yellow: rgb(195, 179, 114)
-    if (
-      Math.abs(r - 195) <= threshold &&
-      Math.abs(g - 179) <= threshold &&
-      Math.abs(b - 114) <= threshold
-    ) {
-      return 'Y';
-    }
-
-    // Purple: rgb(137, 89, 151)
-    if (
-      Math.abs(r - 137) <= threshold &&
-      Math.abs(g - 89) <= threshold &&
-      Math.abs(b - 151) <= threshold
-    ) {
-      return 'P';
-    }
-
-    // Green (keeping the previous logic as it wasn't specified in the new colors)
-    if (g > r && g > b) return 'G';
-
-    return 'O'; // Other
   };
 
   const getCategoryColor = (category: ColorCategory): string => {
@@ -176,7 +175,7 @@ export default function Component() {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <UtilsLayout>
       <h1 className="text-2xl font-bold mb-4">Optical Puyo Reader</h1>
       <Input 
         type="file" 
@@ -188,7 +187,7 @@ export default function Component() {
       <p>Upload tip: Crop the field image to show only 6x12 puyos</p>
       {imageUrl && (
         <div className="mb-4">
-          <img src={imageUrl} alt="Uploaded" className="max-w-full h-auto" />
+          <Image src={imageUrl} alt="Uploaded" width={imageDimensions.width} height={imageDimensions.height} className="max-w-full h-auto" />
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }} aria-hidden="true" />
@@ -281,6 +280,6 @@ export default function Component() {
           </div>
         </>
       )}
-    </div>
+    </UtilsLayout>
   );
 }

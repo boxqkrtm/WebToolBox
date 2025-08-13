@@ -413,6 +413,7 @@ export default function DiscordColorMessageGenerator() {
             </div>
           </div>
           
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
           <Button onClick={generateColoredMessage} className="w-full mt-4">
             색상 메시지 생성 및 복사
           </Button>
@@ -467,7 +468,7 @@ export default function DiscordColorMessageGenerator() {
             <li>메시지를 입력하세요</li>
             <li>여러 글자를 드래그 선택하여 한번에 같은 색상, 스타일, 배경색을 적용할 수 있습니다</li>
             <li>개별 글자마다 색상, 스타일, 배경색을 선택할 수도 있습니다</li>
-            <li>"색상 메시지 생성 및 복사" 버튼을 클릭하세요</li>
+            <li>&quot;색상 메시지 생성 및 복사&quot; 버튼을 클릭하세요</li>
             <li>생성된 코드가 자동으로 복사됩니다</li>
             <li>디스코드 채팅에 붙여넣기 하세요</li>
           </ol>

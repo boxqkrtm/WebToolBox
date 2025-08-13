@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Slider } from "@/components/ui/slider"
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
+import UtilsLayout from '@/components/layout/UtilsLayout'
 
 export default function Mp4Trimmer() {
   const [videoFile, setVideoFile] = useState<File | null>(null)
@@ -104,73 +105,75 @@ export default function Mp4Trimmer() {
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
-      <h1 className="text-2xl font-bold">MP4 Video Trimmer</h1>
+    <UtilsLayout>
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold">MP4 Video Trimmer</h1>
 
-      <div className="space-y-2">
-        <Label htmlFor="video-upload">Upload a video</Label>
-        <Input id="video-upload" type="file" accept="video/mp4" onChange={handleFileChange} />
-      </div>
+        <div className="space-y-2">
+          <Label htmlFor="video-upload">Upload a video</Label>
+          <Input id="video-upload" type="file" accept="video/mp4" onChange={handleFileChange} />
+        </div>
 
-      {videoSrc && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Original Video</h2>
-          <video
-            ref={videoRef}
-            src={videoSrc}
-            controls
-            className="w-full rounded"
-            onLoadedMetadata={handleLoadedMetadata}
-            onTimeUpdate={handleTimeUpdate}
-          />
+        {videoSrc && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Original Video</h2>
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              controls
+              className="w-full rounded"
+              onLoadedMetadata={handleLoadedMetadata}
+              onTimeUpdate={handleTimeUpdate}
+            />
 
-          {duration > 0 && (
-            <div className="space-y-2">
-              <Label>Trim Range</Label>
-              <Slider
-                min={0}
-                max={duration}
-                step={0.1}
-                value={trimValues}
-                onValueChange={handleSliderChange}
-              />
-              <div className="flex justify-between text-sm">
-                <span>Start: {trimValues[0].toFixed(1)}s</span>
-                <span className='font-semibold'>Current: {currentTime.toFixed(1)}s</span>
-                <span>End: {trimValues[1].toFixed(1)}s</span>
+            {duration > 0 && (
+              <div className="space-y-2">
+                <Label>Trim Range</Label>
+                <Slider
+                  min={0}
+                  max={duration}
+                  step={0.1}
+                  value={trimValues}
+                  onValueChange={handleSliderChange}
+                />
+                <div className="flex justify-between text-sm">
+                  <span>Start: {trimValues[0].toFixed(1)}s</span>
+                  <span className='font-semibold'>Current: {currentTime.toFixed(1)}s</span>
+                  <span>End: {trimValues[1].toFixed(1)}s</span>
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {isLoading && (
-            <div className="text-center p-2 bg-gray-100 rounded-md">
-              <p>{message}</p>
-            </div>
-          )}
+            {isLoading && (
+              <div className="text-center p-2 bg-gray-100 rounded-md">
+                <p>{message}</p>
+              </div>
+            )}
 
-          <div className="flex items-center space-x-2">
-            <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
-              {isLoading ? 'Processing...' : 'Fast Trim'}
-            </Button>
-            <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
-              {isLoading ? 'Processing...' : 'Precise Trim'}
-            </Button>
+            <div className="flex items-center space-x-2">
+              <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
+                {isLoading ? 'Processing...' : 'Fast Trim'}
+              </Button>
+              <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
+                {isLoading ? 'Processing...' : 'Precise Trim'}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500">
+              &apos;Fast Trim&apos; is quicker but may fail on some videos. If you experience issues (like audio only), use &apos;Precise Trim&apos;.
+            </p>
           </div>
-          <p className="text-xs text-gray-500">
-            'Fast Trim' is quicker but may fail on some videos. If you experience issues (like audio only), use 'Precise Trim'.
-          </p>
-        </div>
-      )}
+        )}
 
-      {trimmedVideoSrc && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Trimmed Video</h2>
-          <video src={trimmedVideoSrc} controls className="w-full rounded" />
-          <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name || 'video.mp4'}`}>
-            <Button>Download Trimmed Video</Button>
-          </a>
-        </div>
-      )}
-    </div>
+        {trimmedVideoSrc && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold">Trimmed Video</h2>
+            <video src={trimmedVideoSrc} controls className="w-full rounded" />
+            <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name || 'video.mp4'}`}>
+              <Button>Download Trimmed Video</Button>
+            </a>
+          </div>
+        )}
+      </div>
+    </UtilsLayout>
   )
 }

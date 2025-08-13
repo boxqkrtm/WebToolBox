@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
+import UtilsLayout from '@/components/layout/UtilsLayout';
 
 interface ErrorDetails {
     message: string;
@@ -59,8 +60,8 @@ export default function NtripScanner() {
     };
 
     return (
-        <div className="flex flex-col items-center p-6 bg-gray-50 min-h-screen">
-            <Card className="w-full max-w-md">
+        <UtilsLayout>
+            <Card className="w-full max-w-md mx-auto">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl font-bold text-gray-800">
                         NTRIP Mount Point Scanner
@@ -130,6 +131,6 @@ export default function NtripScanner() {
                     </div>
                 </CardContent>
             </Card>
-        </div>
+        </UtilsLayout>
     );
 }
