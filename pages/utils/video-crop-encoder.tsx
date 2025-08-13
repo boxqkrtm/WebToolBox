@@ -199,7 +199,7 @@ export default function VideoCropEncoder() {
                 <Checkbox
                   id="size-limit-checkbox"
                   checked={isSizeLimitEnabled}
-                  onCheckedChange={setIsSizeLimitEnabled}
+                  onCheckedChange={(checked) => setIsSizeLimitEnabled(Boolean(checked))}
                 />
                 <Label htmlFor="size-limit-checkbox">Limit output file size</Label>
               </div>
