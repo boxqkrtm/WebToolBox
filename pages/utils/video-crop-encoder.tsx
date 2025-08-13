@@ -2,14 +2,16 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
+import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import UtilsLayout from '@/components/layout/UtilsLayout'
 
-export default function Mp4Trimmer() {
+export default function VideoCropEncoder() {
   const [videoFile, setVideoFile] = useState<File | null>(null)
   const [videoSrc, setVideoSrc] = useState<string>('')
   const [trimmedVideoSrc, setTrimmedVideoSrc] = useState<string>('')
@@ -18,6 +20,9 @@ export default function Mp4Trimmer() {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
+  const [isSizeLimitEnabled, setIsSizeLimitEnabled] = useState<boolean>(false)
+  const [sizeLimitPreset, setSizeLimitPreset] = useState<string>('1')
+  const [customSizeLimit, setCustomSizeLimit] = useState<string>('10')
   const videoRef = useRef<HTMLVideoElement>(null)
   const ffmpegRef = useRef<FFmpeg | null>(null)
 
@@ -78,11 +83,50 @@ export default function Mp4Trimmer() {
       await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
 
       const [start, end] = trimValues
+      const trimDuration = end - start
 
       let command: string[]
-      if (mode === 'fast') {
+      if (mode === 'fast' && !isSizeLimitEnabled) {
         setMessage('Trimming video (fast mode)...')
         command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
+      } else if (isSizeLimitEnabled) {
+        setMessage('Encoding video with size limit...')
+
+        const targetSizeMB = sizeLimitPreset === 'custom'
+          ? parseFloat(customSizeLimit)
+          : parseFloat(sizeLimitPreset)
+
+        if (isNaN(targetSizeMB) || targetSizeMB < 1) {
+          setMessage('Invalid size limit. Must be at least 1 MB.')
+          setIsLoading(false)
+          return
+        }
+
+        const targetSizeBytes = targetSizeMB * 1024 * 1024
+        const totalBitrate = (targetSizeBytes * 8) / trimDuration
+        const audioBitrate = 128 * 1024 // 128 kbps
+        const videoBitrate = totalBitrate - audioBitrate
+
+        if (videoBitrate <= 0) {
+          setMessage('Target size is too small for the selected duration. Please choose a larger size or shorter duration.')
+          setIsLoading(false)
+          return
+        }
+
+        const videoBitrateK = Math.floor(videoBitrate / 1024)
+
+        command = [
+          '-i', 'input.mp4',
+          '-ss', `${start}`,
+          '-to', `${end}`,
+          '-c:v', 'libx264',
+          '-b:v', `${videoBitrateK}k`,
+          '-maxrate', `${videoBitrateK}k`,
+          '-bufsize', `${videoBitrateK * 2}k`,
+          '-c:a', 'aac',
+          '-b:a', '128k',
+          'output.mp4'
+        ]
       } else {
         setMessage('Trimming video (precise mode)...')
         command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
@@ -107,7 +151,7 @@ export default function Mp4Trimmer() {
   return (
     <UtilsLayout>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">MP4 Video Trimmer</h1>
+        <h1 className="text-2xl font-bold">Video Crop/Encoder</h1>
 
         <div className="space-y-2">
           <Label htmlFor="video-upload">Upload a video</Label>
@@ -150,16 +194,58 @@ export default function Mp4Trimmer() {
               </div>
             )}
 
+            <div className="space-y-4 rounded-md border p-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="size-limit-checkbox"
+                  checked={isSizeLimitEnabled}
+                  onCheckedChange={setIsSizeLimitEnabled}
+                />
+                <Label htmlFor="size-limit-checkbox">Limit output file size</Label>
+              </div>
+
+              {isSizeLimitEnabled && (
+                <div className="grid grid-cols-2 gap-4">
+                  <Select value={sizeLimitPreset} onValueChange={setSizeLimitPreset}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select size limit" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 MB</SelectItem>
+                      <SelectItem value="5">5 MB</SelectItem>
+                      <SelectItem value="10">10 MB</SelectItem>
+                      <SelectItem value="50">50 MB</SelectItem>
+                      <SelectItem value="100">100 MB</SelectItem>
+                      <SelectItem value="custom">Custom</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {sizeLimitPreset === 'custom' && (
+                    <Input
+                      type="number"
+                      value={customSizeLimit}
+                      onChange={(e) => setCustomSizeLimit(e.target.value)}
+                      min="1"
+                      placeholder="MB"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+
             <div className="flex items-center space-x-2">
-              <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
-                {isLoading ? 'Processing...' : 'Fast Trim'}
-              </Button>
+              {!isSizeLimitEnabled && (
+                <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
+                  {isLoading ? 'Processing...' : 'Fast Trim'}
+                </Button>
+              )}
               <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
-                {isLoading ? 'Processing...' : 'Precise Trim'}
+                {isLoading ? 'Processing...' : isSizeLimitEnabled ? 'Encode' : 'Precise Trim'}
               </Button>
             </div>
             <p className="text-xs text-gray-500">
-              &apos;Fast Trim&apos; is quicker but may fail on some videos. If you experience issues (like audio only), use &apos;Precise Trim&apos;.
+              {isSizeLimitEnabled
+                ? 'Encoding will be slower but will target the selected file size.'
+                : "'Fast Trim' is quicker but may fail on some videos. If you experience issues (like audio only), use 'Precise Trim'."}
             </p>
           </div>
         )}
