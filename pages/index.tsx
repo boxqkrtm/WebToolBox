@@ -38,7 +38,7 @@ export const pages = [
   { title: 'Escaped String Decoder', path: '/utils/escaped-string-decoder', category: 'json', description: 'Decode escaped strings.' },
   { title: 'LLM VRAM Calculator (GGUF)', path: '/utils/llm-vram-calculator', category: 'llm', description: 'Calculate VRAM requirements for GGUF models.' },
   { title: 'Image to Base64 Converter', path: '/utils/image-to-base64', category: 'video', description: 'Convert images to Base64 strings.' },
-  { title: 'MP4 Trimmer', path: '/utils/mp4-trimmer', category: 'video', description: 'Trim MP4 video files.' },
+  { title: 'Video Crop/Encoder', path: '/utils/video-crop-encoder', category: 'video', description: 'Trim and encode video files with a size limit.' },
   { title: 'BoothAlgorithm Multiplier', path: '/utils/booth-algorithm-multiplier', category: 'etc', description: 'Visualize Booth\'s multiplication algorithm.' },
 ];
 
