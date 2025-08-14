@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider"
 import { Muxer, ArrayBufferTarget } from 'mp4-muxer'
 import * as MP4Box from 'mp4box'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Terminal } from "lucide-react"
 import UtilsLayout from '@/components/layout/UtilsLayout'
 
 export default function VideoCutterEncoder() {
@@ -20,6 +22,7 @@ export default function VideoCutterEncoder() {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
   const [isSizeLimitEnabled, setIsSizeLimitEnabled] = useState<boolean>(false)
   const [sizeLimitPreset, setSizeLimitPreset] = useState<string>('1')
   const [customSizeLimit, setCustomSizeLimit] = useState<string>('10')
@@ -77,7 +80,8 @@ export default function VideoCutterEncoder() {
     let audioEncoder: AudioEncoder | undefined;
     let muxer: Muxer<ArrayBufferTarget>;
 
-    mp4boxfile.onReady = (info) => {
+    mp4boxfile.onReady = async (info) => {
+      try {
       setMessage('Video metadata loaded. Preparing pipeline...')
 
       let videoTrack = info.tracks.find(track => track.codec.startsWith('avc1'))
@@ -155,14 +159,21 @@ export default function VideoCutterEncoder() {
         }
       }
 
-      videoEncoder.configure({
+      const encoderConfig: VideoEncoderConfig = {
         codec: 'avc1.42001E',
         width: videoTrack.video.width,
         height: videoTrack.video.height,
         bitrate: targetVideoBitrate,
         framerate: videoTrack.nb_samples / videoTrack.movie_duration * videoTrack.timescale,
         hardwareAcceleration: 'prefer-software',
-      });
+      }
+
+      const support = await VideoEncoder.isConfigSupported(encoderConfig)
+      if (!support.supported) {
+        return reject(new Error("Your browser does not support encoding this video's resolution or codec configuration. Please try a different video or browser."))
+      }
+
+      videoEncoder.configure(encoderConfig);
 
       if (audioTrack && audioTrack.audio && audioEncoder) {
         audioDecoder.configure({
@@ -209,6 +220,9 @@ export default function VideoCutterEncoder() {
         mp4boxfile.setExtractionOptions(audioTrack.id, 'audio', { nbSamples: 100 });
       }
       mp4boxfile.start();
+    } catch (e) {
+      reject(e)
+    }
     }
 
     const reader = videoFile.stream().getReader();
@@ -247,16 +261,20 @@ export default function VideoCutterEncoder() {
   const handleTrim = async () => {
     if (!videoFile) return
 
+    setError(null)
+    setTrimmedVideoSrc('')
     setIsLoading(true)
     setMessage('Starting video processing...')
 
     try {
       await encodeWithWebCodecs()
-    } catch (error) {
-      console.error(error)
-      setMessage(`An error occurred: ${error instanceof Error ? error.message : String(error)}`)
+    } catch (e) {
+      console.error(e)
+      const errorMessage = e instanceof Error ? e.message : String(e)
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
+      setMessage('')
     }
   }
 
@@ -300,7 +318,17 @@ export default function VideoCutterEncoder() {
               </div>
             )}
 
-            {isLoading && (
+            {error && (
+              <Alert variant="destructive">
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  {error}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {isLoading && message && (
               <div className="text-center p-2 bg-gray-100 rounded-md">
                 <p>{message}</p>
               </div>
