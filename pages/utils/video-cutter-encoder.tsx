@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile, toBlobURL } from '@ffmpeg/util'
+import { Muxer, ArrayBufferTarget } from 'mp4-muxer'
+import * as MP4Box from 'mp4box'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Terminal } from "lucide-react"
 import UtilsLayout from '@/components/layout/UtilsLayout'
 
 export default function VideoCutterEncoder() {
@@ -20,11 +22,11 @@ export default function VideoCutterEncoder() {
   const [currentTime, setCurrentTime] = useState<number>(0)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [message, setMessage] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
   const [isSizeLimitEnabled, setIsSizeLimitEnabled] = useState<boolean>(false)
   const [sizeLimitPreset, setSizeLimitPreset] = useState<string>('1')
   const [customSizeLimit, setCustomSizeLimit] = useState<string>('10')
   const videoRef = useRef<HTMLVideoElement>(null)
-  const ffmpegRef = useRef<FFmpeg | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -56,7 +58,6 @@ export default function VideoCutterEncoder() {
     setTrimValues(newValues)
 
     if (videoRef.current) {
-      // Seek the video to the thumb that was moved
       if (newStart !== oldStart) {
         videoRef.current.currentTime = newStart
       } else if (newEnd !== oldEnd) {
@@ -65,92 +66,215 @@ export default function VideoCutterEncoder() {
     }
   }
 
-  const handleTrim = async (mode: 'fast' | 'slow') => {
-    if (!videoFile) return
+  const encodeWithWebCodecs = () => new Promise<void>((resolve, reject) => {
+    if (!videoFile) return reject(new Error('No video file selected'))
 
-    setIsLoading(true)
-    setMessage('Loading FFmpeg core...')
-    if (!ffmpegRef.current) {
-      ffmpegRef.current = new FFmpeg()
-    }
-    const ffmpeg = ffmpegRef.current
-    try {
-      if (!ffmpeg.loaded) {
-        await ffmpeg.load()
+    setMessage('Starting to process video...')
+    const mp4boxfile = MP4Box.createFile()
+
+    mp4boxfile.onError = (e: any) => reject(new Error(`MP4Box error: ${e}`))
+
+    let videoDecoder: VideoDecoder;
+    let audioDecoder: AudioDecoder;
+    let videoEncoder: VideoEncoder;
+    let audioEncoder: AudioEncoder | undefined;
+    let muxer: Muxer<ArrayBufferTarget>;
+
+    mp4boxfile.onReady = async (info) => {
+      try {
+      setMessage('Video metadata loaded. Preparing pipeline...')
+
+      let videoTrack = info.tracks.find(track => track.codec.startsWith('avc1'))
+      let audioTrack = info.tracks.find(track => track.codec.startsWith('mp4a'))
+
+      if (!videoTrack || !videoTrack.video) {
+        return reject(new Error('No H.264 video track with video metadata found.'))
       }
-
-      setMessage('Writing file to FFmpeg...')
-      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      if (audioTrack && !audioTrack.audio) {
+        console.warn('Audio track is missing audio metadata, proceeding without it.')
+        audioTrack = undefined
+      }
 
       const [start, end] = trimValues
       const trimDuration = end - start
 
-      let command: string[]
-      if (mode === 'fast' && !isSizeLimitEnabled) {
-        setMessage('Trimming video (fast mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
-      } else if (isSizeLimitEnabled) {
-        const targetSizeMB = sizeLimitPreset === 'custom'
-          ? parseFloat(customSizeLimit)
-          : parseFloat(sizeLimitPreset)
+      videoDecoder = new VideoDecoder({
+        output: (frame) => videoEncoder.encode(frame),
+        error: (e) => reject(new Error(`VideoDecoder error: ${e.message}`)),
+      });
 
-        if (isNaN(targetSizeMB) || targetSizeMB < 1) {
-          setMessage('Invalid size limit. Must be at least 1 MB.')
-          setIsLoading(false)
-          return
-        }
+      audioDecoder = new AudioDecoder({
+        output: (frame) => audioEncoder?.encode(frame),
+        error: (e) => reject(new Error(`AudioDecoder error: ${e.message}`)),
+      });
 
-        const targetSizeBytes = targetSizeMB * 1024 * 1024
-        const estimatedTrimmedSizeBytes = (videoFile.size * trimDuration) / duration;
+      muxer = new Muxer({
+        target: new ArrayBufferTarget(),
+        video: {
+          codec: 'avc',
+          width: videoTrack.video.width,
+          height: videoTrack.video.height,
+        },
+        audio: audioTrack && audioTrack.audio ? {
+          codec: 'aac',
+          numberOfChannels: audioTrack.audio.channel_count,
+          sampleRate: audioTrack.audio.sample_rate,
+        } : undefined,
+        fastStart: 'in-memory',
+      });
 
-        if (targetSizeBytes < estimatedTrimmedSizeBytes) {
-          setMessage('Target size is smaller than estimated. Re-encoding...')
-          const totalBitrate = (targetSizeBytes * 8) / trimDuration
-          const audioBitrate = 128 * 1024 // 128 kbps
-          const videoBitrate = totalBitrate - audioBitrate
+      videoEncoder = new VideoEncoder({
+        output: (chunk, meta) => muxer.addVideoChunk(chunk, meta),
+        error: (e) => reject(new Error(`VideoEncoder error: ${e.message}`)),
+      });
 
-          if (videoBitrate <= 0) {
-            setMessage('Target size is too small for the selected duration. Please choose a larger size or shorter duration.')
-            setIsLoading(false)
-            return
-          }
-
-          const videoBitrateK = Math.floor(videoBitrate / 1024)
-
-          command = [
-            '-i', 'input.mp4',
-            '-ss', `${start}`,
-            '-to', `${end}`,
-            '-c:v', 'libx264',
-            '-b:v', `${videoBitrateK}k`,
-            '-maxrate', `${videoBitrateK}k`,
-            '-bufsize', `${videoBitrateK * 2}k`,
-            '-c:a', 'aac',
-            '-b:a', '128k',
-            'output.mp4'
-          ]
-        } else {
-          setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
-          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
-        }
-      } else {
-        setMessage('Trimming video (precise mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+      if (audioTrack) {
+        audioEncoder = new AudioEncoder({
+          output: (chunk, meta) => muxer.addAudioChunk(chunk, meta),
+          error: (e) => reject(new Error(`AudioEncoder error: ${e.message}`)),
+        });
       }
 
-      await ffmpeg.exec(command)
+      videoDecoder.configure({
+        codec: videoTrack.codec,
+        description: (videoTrack as any).description,
+        codedWidth: videoTrack.video.width,
+        codedHeight: videoTrack.video.height,
+      });
 
-      setMessage('Reading result...')
-    const data = (await ffmpeg.readFile('output.mp4')) as Uint8Array
-    const blob = new Blob([data], { type: 'video/mp4' })
-    const url = URL.createObjectURL(blob)
-    setTrimmedVideoSrc(url)
-    setMessage('Done!')
-    } catch (error) {
-      console.error(error)
-      setMessage(`An error occurred: ${error instanceof Error ? error.message : String(error)}`)
+      let targetVideoBitrate = 2_000_000; // Default 2 Mbps
+      const audioBitrate = 128_000; // 128 kbps
+
+      if (isSizeLimitEnabled) {
+        const targetSizeMB = sizeLimitPreset === 'custom'
+          ? parseFloat(customSizeLimit)
+          : parseFloat(sizeLimitPreset);
+
+        if (!isNaN(targetSizeMB) && targetSizeMB >= 1) {
+          const targetTotalBitrate = (targetSizeMB * 1024 * 1024 * 8) / trimDuration;
+          targetVideoBitrate = targetTotalBitrate - (audioTrack ? audioBitrate : 0);
+          if (targetVideoBitrate <= 0) {
+            return reject(new Error('Target size is too small for this duration.'))
+          }
+        }
+      }
+
+      const encoderConfig: VideoEncoderConfig = {
+        codec: 'avc1.42001E',
+        width: videoTrack.video.width,
+        height: videoTrack.video.height,
+        bitrate: targetVideoBitrate,
+        framerate: videoTrack.nb_samples / videoTrack.movie_duration * videoTrack.timescale,
+        hardwareAcceleration: 'prefer-software',
+      }
+
+      const support = await VideoEncoder.isConfigSupported(encoderConfig)
+      if (!support.supported) {
+        return reject(new Error("Your browser does not support encoding this video's resolution or codec configuration. Please try a different video or browser."))
+      }
+
+      videoEncoder.configure(encoderConfig);
+
+      if (audioTrack && audioTrack.audio && audioEncoder) {
+        audioDecoder.configure({
+          codec: audioTrack.codec,
+          description: (audioTrack as any).description,
+          numberOfChannels: audioTrack.audio.channel_count,
+          sampleRate: audioTrack.audio.sample_rate,
+        });
+        audioEncoder.configure({
+          codec: 'mp4a.40.2',
+          numberOfChannels: audioTrack.audio.channel_count,
+          sampleRate: audioTrack.audio.sample_rate,
+          bitrate: audioBitrate,
+        });
+      }
+
+      mp4boxfile.onSamples = (trackId, ref, samples) => {
+        for (const sample of samples) {
+          if (!sample.data) continue;
+          const timestamp = sample.cts / sample.timescale;
+          if (timestamp < start || timestamp > end) continue;
+
+          if (trackId === videoTrack.id) {
+            videoDecoder.decode(new EncodedVideoChunk({
+              type: sample.is_sync ? 'key' : 'delta',
+              timestamp: (timestamp - start) * 1_000_000,
+              duration: sample.duration / sample.timescale * 1_000_000,
+              data: sample.data,
+            }));
+          } else if (audioTrack && trackId === audioTrack.id) {
+            audioDecoder.decode(new EncodedAudioChunk({
+              type: sample.is_sync ? 'key' : 'delta',
+              timestamp: (timestamp - start) * 1_000_000,
+              duration: sample.duration / sample.timescale * 1_000_000,
+              data: sample.data,
+            }));
+          }
+        }
+      };
+
+      setMessage('Decoding and re-encoding...');
+      mp4boxfile.setExtractionOptions(videoTrack.id, 'video', { nbSamples: 100 });
+      if (audioTrack) {
+        mp4boxfile.setExtractionOptions(audioTrack.id, 'audio', { nbSamples: 100 });
+      }
+      mp4boxfile.start();
+    } catch (e) {
+      reject(e)
+    }
+    }
+
+    const reader = videoFile.stream().getReader();
+    let offset = 0;
+    const processChunk = ({ done, value }: ReadableStreamReadResult<Uint8Array>) => {
+      if (done) {
+        setMessage('Finalizing video...');
+        mp4boxfile.flush();
+        Promise.all([
+          videoDecoder.flush(),
+          audioDecoder.flush()
+        ]).then(() => Promise.all([
+          videoEncoder.flush(),
+          audioEncoder?.flush()
+        ])).then(() => {
+          muxer.finalize();
+          const { buffer } = muxer.target as ArrayBufferTarget;
+          const blob = new Blob([buffer], { type: 'video/mp4' });
+          const url = URL.createObjectURL(blob);
+          setTrimmedVideoSrc(url);
+          setMessage('Done!');
+          resolve();
+        }).catch(reject);
+        return;
+      }
+
+      const buffer: any = value.buffer
+      buffer.fileStart = offset
+      offset += buffer.byteLength
+      mp4boxfile.appendBuffer(buffer)
+      reader.read().then(processChunk).catch(reject)
+    }
+    reader.read().then(processChunk).catch(reject)
+  });
+
+  const handleTrim = async () => {
+    if (!videoFile) return
+
+    setError(null)
+    setTrimmedVideoSrc('')
+    setIsLoading(true)
+    setMessage('Starting video processing...')
+
+    try {
+      await encodeWithWebCodecs()
+    } catch (e) {
+      console.error(e)
+      const errorMessage = e instanceof Error ? e.message : String(e)
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
+      setMessage('')
     }
   }
 
@@ -194,7 +318,17 @@ export default function VideoCutterEncoder() {
               </div>
             )}
 
-            {isLoading && (
+            {error && (
+              <Alert variant="destructive">
+                <Terminal className="h-4 w-4" />
+                <AlertTitle>Error</AlertTitle>
+                <AlertDescription>
+                  {error}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {isLoading && message && (
               <div className="text-center p-2 bg-gray-100 rounded-md">
                 <p>{message}</p>
               </div>
@@ -239,19 +373,12 @@ export default function VideoCutterEncoder() {
             </div>
 
             <div className="flex items-center space-x-2">
-              {!isSizeLimitEnabled && (
-                <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
-                  {isLoading ? 'Processing...' : 'Fast Trim'}
-                </Button>
-              )}
-              <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
-                {isLoading ? 'Processing...' : isSizeLimitEnabled ? 'Encode' : 'Precise Trim'}
+              <Button onClick={handleTrim} disabled={isLoading || !videoFile}>
+                {isLoading ? 'Processing...' : 'Encode Video'}
               </Button>
             </div>
             <p className="text-xs text-gray-500">
-              {isSizeLimitEnabled
-                ? 'Encoding will be slower but will target the selected file size.'
-                : "'Fast Trim' is quicker but may fail on some videos. If you experience issues (like audio only), use 'Precise Trim'."}
+              Your video will be re-encoded using the browser's native capabilities.
             </p>
           </div>
         )}
