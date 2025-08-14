@@ -161,6 +161,7 @@ export default function VideoCutterEncoder() {
         height: videoTrack.video.height,
         bitrate: targetVideoBitrate,
         framerate: videoTrack.nb_samples / videoTrack.movie_duration * videoTrack.timescale,
+        hardwareAcceleration: 'prefer-software',
       });
 
       if (audioTrack && audioTrack.audio && audioEncoder) {
