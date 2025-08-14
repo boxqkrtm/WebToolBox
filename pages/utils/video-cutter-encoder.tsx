@@ -11,7 +11,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import UtilsLayout from '@/components/layout/UtilsLayout'
 
-export default function VideoCropEncoder() {
+export default function VideoCutterEncoder() {
   const [videoFile, setVideoFile] = useState<File | null>(null)
   const [videoSrc, setVideoSrc] = useState<string>('')
   const [trimmedVideoSrc, setTrimmedVideoSrc] = useState<string>('')
@@ -90,8 +90,6 @@ export default function VideoCropEncoder() {
         setMessage('Trimming video (fast mode)...')
         command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
       } else if (isSizeLimitEnabled) {
-        setMessage('Encoding video with size limit...')
-
         const targetSizeMB = sizeLimitPreset === 'custom'
           ? parseFloat(customSizeLimit)
           : parseFloat(sizeLimitPreset)
@@ -103,30 +101,38 @@ export default function VideoCropEncoder() {
         }
 
         const targetSizeBytes = targetSizeMB * 1024 * 1024
-        const totalBitrate = (targetSizeBytes * 8) / trimDuration
-        const audioBitrate = 128 * 1024 // 128 kbps
-        const videoBitrate = totalBitrate - audioBitrate
+        const estimatedTrimmedSizeBytes = (videoFile.size * trimDuration) / duration;
 
-        if (videoBitrate <= 0) {
-          setMessage('Target size is too small for the selected duration. Please choose a larger size or shorter duration.')
-          setIsLoading(false)
-          return
+        if (targetSizeBytes < estimatedTrimmedSizeBytes) {
+          setMessage('Target size is smaller than estimated. Re-encoding...')
+          const totalBitrate = (targetSizeBytes * 8) / trimDuration
+          const audioBitrate = 128 * 1024 // 128 kbps
+          const videoBitrate = totalBitrate - audioBitrate
+
+          if (videoBitrate <= 0) {
+            setMessage('Target size is too small for the selected duration. Please choose a larger size or shorter duration.')
+            setIsLoading(false)
+            return
+          }
+
+          const videoBitrateK = Math.floor(videoBitrate / 1024)
+
+          command = [
+            '-i', 'input.mp4',
+            '-ss', `${start}`,
+            '-to', `${end}`,
+            '-c:v', 'libx264',
+            '-b:v', `${videoBitrateK}k`,
+            '-maxrate', `${videoBitrateK}k`,
+            '-bufsize', `${videoBitrateK * 2}k`,
+            '-c:a', 'aac',
+            '-b:a', '128k',
+            'output.mp4'
+          ]
+        } else {
+          setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
+          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
         }
-
-        const videoBitrateK = Math.floor(videoBitrate / 1024)
-
-        command = [
-          '-i', 'input.mp4',
-          '-ss', `${start}`,
-          '-to', `${end}`,
-          '-c:v', 'libx264',
-          '-b:v', `${videoBitrateK}k`,
-          '-maxrate', `${videoBitrateK}k`,
-          '-bufsize', `${videoBitrateK * 2}k`,
-          '-c:a', 'aac',
-          '-b:a', '128k',
-          'output.mp4'
-        ]
       } else {
         setMessage('Trimming video (precise mode)...')
         command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
@@ -151,7 +157,7 @@ export default function VideoCropEncoder() {
   return (
     <UtilsLayout>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Video Crop/Encoder</h1>
+        <h1 className="text-2xl font-bold">Video Cutter/Encoder</h1>
 
         <div className="space-y-2">
           <Label htmlFor="video-upload">Upload a video</Label>
