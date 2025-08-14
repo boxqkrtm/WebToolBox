@@ -71,45 +71,52 @@ export default function VideoCutterEncoder() {
 
     mp4boxfile.onError = (e: any) => reject(new Error(`MP4Box error: ${e}`))
 
+    let videoDecoder: VideoDecoder;
+    let audioDecoder: AudioDecoder;
+    let videoEncoder: VideoEncoder;
+    let audioEncoder: AudioEncoder | undefined;
+    let muxer: Muxer<ArrayBufferTarget>;
+
     mp4boxfile.onReady = (info) => {
       setMessage('Video metadata loaded. Preparing pipeline...')
 
-      const videoTrack = info.tracks.find(track => track.codec.startsWith('avc1'))
-      const audioTrack = info.tracks.find(track => track.codec.startsWith('mp4a'))
+      let videoTrack = info.tracks.find(track => track.codec.startsWith('avc1'))
+      let audioTrack = info.tracks.find(track => track.codec.startsWith('mp4a'))
 
-      if (!videoTrack) {
-        return reject(new Error('No H.264 video track found.'))
+      if (!videoTrack || !videoTrack.video) {
+        return reject(new Error('No H.264 video track with video metadata found.'))
+      }
+      if (audioTrack && !audioTrack.audio) {
+        console.warn('Audio track is missing audio metadata, proceeding without it.')
+        audioTrack = undefined
       }
 
       const [start, end] = trimValues
       const trimDuration = end - start
 
-      let videoEncoder: VideoEncoder;
-      let audioEncoder: AudioEncoder | undefined;
-
-      const videoDecoder = new VideoDecoder({
+      videoDecoder = new VideoDecoder({
         output: (frame) => videoEncoder.encode(frame),
         error: (e) => reject(new Error(`VideoDecoder error: ${e.message}`)),
       });
 
-      const audioDecoder = new AudioDecoder({
+      audioDecoder = new AudioDecoder({
         output: (frame) => audioEncoder?.encode(frame),
         error: (e) => reject(new Error(`AudioDecoder error: ${e.message}`)),
       });
 
-      const muxer = new Muxer({
+      muxer = new Muxer({
         target: new ArrayBufferTarget(),
         video: {
           codec: 'avc',
           width: videoTrack.video.width,
           height: videoTrack.video.height,
         },
-        audio: audioTrack ? {
+        audio: audioTrack && audioTrack.audio ? {
           codec: 'aac',
           numberOfChannels: audioTrack.audio.channel_count,
           sampleRate: audioTrack.audio.sample_rate,
         } : undefined,
-        fastStart: 'in-order',
+        fastStart: 'in-memory',
       });
 
       videoEncoder = new VideoEncoder({
@@ -126,7 +133,7 @@ export default function VideoCutterEncoder() {
 
       videoDecoder.configure({
         codec: videoTrack.codec,
-        description: videoTrack.description,
+        description: (videoTrack as any).description,
         codedWidth: videoTrack.video.width,
         codedHeight: videoTrack.video.height,
       });
@@ -156,10 +163,10 @@ export default function VideoCutterEncoder() {
         framerate: videoTrack.nb_samples / videoTrack.movie_duration * videoTrack.timescale,
       });
 
-      if (audioTrack && audioEncoder) {
+      if (audioTrack && audioTrack.audio && audioEncoder) {
         audioDecoder.configure({
           codec: audioTrack.codec,
-          description: audioTrack.description,
+          description: (audioTrack as any).description,
           numberOfChannels: audioTrack.audio.channel_count,
           sampleRate: audioTrack.audio.sample_rate,
         });
@@ -173,20 +180,24 @@ export default function VideoCutterEncoder() {
 
       mp4boxfile.onSamples = (trackId, ref, samples) => {
         for (const sample of samples) {
+          if (!sample.data) continue;
           const timestamp = sample.cts / sample.timescale;
           if (timestamp < start || timestamp > end) continue;
 
-          const chunkOptions = {
-            type: sample.is_sync ? 'key' : 'delta',
-            timestamp: (timestamp - start) * 1_000_000,
-            duration: sample.duration / sample.timescale * 1_000_000,
-            data: sample.data,
-          };
-
           if (trackId === videoTrack.id) {
-            videoDecoder.decode(new EncodedVideoChunk(chunkOptions));
+            videoDecoder.decode(new EncodedVideoChunk({
+              type: sample.is_sync ? 'key' : 'delta',
+              timestamp: (timestamp - start) * 1_000_000,
+              duration: sample.duration / sample.timescale * 1_000_000,
+              data: sample.data,
+            }));
           } else if (audioTrack && trackId === audioTrack.id) {
-            audioDecoder.decode(new EncodedAudioChunk(chunkOptions));
+            audioDecoder.decode(new EncodedAudioChunk({
+              type: sample.is_sync ? 'key' : 'delta',
+              timestamp: (timestamp - start) * 1_000_000,
+              duration: sample.duration / sample.timescale * 1_000_000,
+              data: sample.data,
+            }));
           }
         }
       };
@@ -223,7 +234,7 @@ export default function VideoCutterEncoder() {
         return;
       }
 
-      const buffer = value.buffer as MP4Box.MP4ArrayBuffer
+      const buffer: any = value.buffer
       buffer.fileStart = offset
       offset += buffer.byteLength
       mp4boxfile.appendBuffer(buffer)
