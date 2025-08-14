@@ -65,7 +65,7 @@ export default function VideoCutterEncoder() {
     }
   }
 
-  const handleTrim = async (mode: 'fast' | 'slow') => {
+  const handleTrim = async () => {
     if (!videoFile) return
 
     setIsLoading(true)
@@ -80,16 +80,13 @@ export default function VideoCutterEncoder() {
       }
 
       setMessage('Writing file to FFmpeg...')
-      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      await ffmpeg.writeFile(videoFile.name, await fetchFile(videoFile))
 
       const [start, end] = trimValues
       const trimDuration = end - start
 
       let command: string[]
-      if (mode === 'fast' && !isSizeLimitEnabled) {
-        setMessage('Trimming video (fast mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
-      } else if (isSizeLimitEnabled) {
+      if (isSizeLimitEnabled) {
         const targetSizeMB = sizeLimitPreset === 'custom'
           ? parseFloat(customSizeLimit)
           : parseFloat(sizeLimitPreset)
@@ -118,31 +115,31 @@ export default function VideoCutterEncoder() {
           const videoBitrateK = Math.floor(videoBitrate / 1024)
 
           command = [
-            '-i', 'input.mp4',
+            '-i', videoFile.name,
             '-ss', `${start}`,
             '-to', `${end}`,
-            '-c:v', 'libx264',
+            '-c:v', 'libvpx-vp9',
             '-b:v', `${videoBitrateK}k`,
             '-maxrate', `${videoBitrateK}k`,
             '-bufsize', `${videoBitrateK * 2}k`,
-            '-c:a', 'aac',
+            '-c:a', 'libopus',
             '-b:a', '128k',
-            'output.mp4'
+            'output.webm'
           ]
         } else {
           setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
-          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+          command = ['-i', videoFile.name, '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libvpx-vp9', '-c:a', 'libopus', 'output.webm']
         }
       } else {
         setMessage('Trimming video (precise mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+        command = ['-i', videoFile.name, '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libvpx-vp9', '-c:a', 'libopus', 'output.webm']
       }
 
       await ffmpeg.exec(command)
 
       setMessage('Reading result...')
-    const data = (await ffmpeg.readFile('output.mp4')) as Uint8Array
-    const blob = new Blob([data], { type: 'video/mp4' })
+    const data = (await ffmpeg.readFile('output.webm')) as Uint8Array
+    const blob = new Blob([data], { type: 'video/webm' })
     const url = URL.createObjectURL(blob)
     setTrimmedVideoSrc(url)
     setMessage('Done!')
@@ -161,7 +158,7 @@ export default function VideoCutterEncoder() {
 
         <div className="space-y-2">
           <Label htmlFor="video-upload">Upload a video</Label>
-          <Input id="video-upload" type="file" accept="video/mp4" onChange={handleFileChange} />
+          <Input id="video-upload" type="file" accept="video/*" onChange={handleFileChange} />
         </div>
 
         {videoSrc && (
@@ -239,19 +236,12 @@ export default function VideoCutterEncoder() {
             </div>
 
             <div className="flex items-center space-x-2">
-              {!isSizeLimitEnabled && (
-                <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
-                  {isLoading ? 'Processing...' : 'Fast Trim'}
-                </Button>
-              )}
-              <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
-                {isLoading ? 'Processing...' : isSizeLimitEnabled ? 'Encode' : 'Precise Trim'}
+              <Button onClick={handleTrim} disabled={isLoading || !videoFile}>
+                {isLoading ? 'Processing...' : 'Trim & Encode'}
               </Button>
             </div>
             <p className="text-xs text-gray-500">
-              {isSizeLimitEnabled
-                ? 'Encoding will be slower but will target the selected file size.'
-                : "'Fast Trim' is quicker but may fail on some videos. If you experience issues (like audio only), use 'Precise Trim'."}
+              All videos are re-encoded to ensure compatibility. The output format will be VP9 video and Opus audio in a WebM container.
             </p>
           </div>
         )}
@@ -260,7 +250,7 @@ export default function VideoCutterEncoder() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Trimmed Video</h2>
             <video src={trimmedVideoSrc} controls className="w-full rounded" />
-            <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name || 'video.mp4'}`}>
+            <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name.replace(/\.[^/.]+$/, "") || 'video'}.webm`}>
               <Button>Download Trimmed Video</Button>
             </a>
           </div>
