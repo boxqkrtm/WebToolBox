@@ -153,10 +153,10 @@ export default function VideoCutterEncoder() {
       setMessage('Done!')
       await ffmpeg.unmount(workDir);
     } catch (error) {
-      const errorMessage = `An error occurred: ${error instanceof Error ? error.message : String(error)}`
-      console.error(error)
-      setMessage(errorMessage)
-      alert(errorMessage)
+      const errorMessage = `An error occurred: ${error instanceof Error ? error.message : String(error)}`;
+      console.error(errorMessage);
+      setMessage(errorMessage);
+      alert(errorMessage);
     } finally {
       setIsLoading(false)
     }
