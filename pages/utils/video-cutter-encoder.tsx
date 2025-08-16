@@ -78,18 +78,22 @@ export default function VideoCutterEncoder() {
       if (!ffmpeg.loaded) {
         await ffmpeg.load()
       }
+      const workDir = '/work'
+      await ffmpeg.createDir(workDir);
+
+      const inputFilename = `${workDir}/input.mp4`;
+      const outputFilename = `${workDir}/output.webm`;
 
       setMessage('Writing file to FFmpeg...')
-      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      await ffmpeg.writeFile(inputFilename, await fetchFile(videoFile))
 
       const [start, end] = trimValues
       const trimDuration = end - start
 
-      const outputFilename = 'output.webm'
       let command: string[]
       if (mode === 'fast' && !isSizeLimitEnabled) {
         setMessage('Trimming video (fast mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '35', '-cpu-used', '8', '-c:a', 'libopus', '-b:a', '96k', outputFilename]
+        command = ['-i', inputFilename, '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '35', '-cpu-used', '8', '-c:a', 'libopus', '-b:a', '96k', outputFilename]
       } else if (isSizeLimitEnabled) {
         const targetSizeMB = sizeLimitPreset === 'custom'
           ? parseFloat(customSizeLimit)
@@ -119,7 +123,7 @@ export default function VideoCutterEncoder() {
           const videoBitrateK = Math.floor(videoBitrate / 1024)
 
           command = [
-            '-i', 'input.mp4',
+            '-i', inputFilename,
             '-ss', `${start}`,
             '-to', `${end}`,
             '-c:v', 'libaom-av1',
@@ -131,11 +135,11 @@ export default function VideoCutterEncoder() {
           ]
         } else {
           setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
-          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'libopus', '-b:a', '128k', outputFilename]
+          command = ['-i', inputFilename, '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'libopus', '-b:a', '128k', outputFilename]
         }
       } else {
         setMessage('Trimming video (precise mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'libopus', '-b:a', '128k', outputFilename]
+        command = ['-i', inputFilename, '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'libopus', '-b:a', '128k', outputFilename]
       }
 
       await ffmpeg.exec(command)
