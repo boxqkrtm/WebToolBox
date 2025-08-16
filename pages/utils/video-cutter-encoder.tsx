@@ -204,7 +204,7 @@ export default function VideoCutterEncoder() {
       // Force progress to 0 before setting up new listener
       setProgress(0);
       setMessage(`Processing... ${0}%`);
-      ffmpeg.on("progress", ({ progress: progressRatio, time }) => {
+      ffmpeg.on("progress", ({ progress: progressRatio, time }: { progress: number; time: number }) => {
         // Calculate progress based on trimmed portion
         const adjustedProgress = (progressRatio * duration) / trimDuration;
         const percentage = Math.min(Math.round(adjustedProgress * 100), 100);
@@ -374,8 +374,8 @@ export default function VideoCutterEncoder() {
           ? `video/${extension}`
           : "video/mp4";
 
-      const data = (await ffmpeg.readFile(outputFile)) as Uint8Array;
-      const blob = new Blob([data], { type: mimeType });
+      const data = await ffmpeg.readFile(outputFile);
+      const blob = new Blob([new Uint8Array(data as ArrayBuffer)], { type: mimeType });
       const url = URL.createObjectURL(blob);
       setTrimmedVideoSrc(url);
       setMessage("Done!");
