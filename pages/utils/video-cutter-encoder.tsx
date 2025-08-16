@@ -1,158 +1,407 @@
-'use client'
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { Button } from "@/components/ui/button"
-import { Checkbox } from '@/components/ui/checkbox'
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile, toBlobURL } from '@ffmpeg/util'
-import UtilsLayout from '@/components/layout/UtilsLayout'
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import UtilsLayout from "@/components/layout/UtilsLayout";
+
+// FFmpeg will be imported dynamically on client side only
 
 export default function VideoCutterEncoder() {
-  const [videoFile, setVideoFile] = useState<File | null>(null)
-  const [videoSrc, setVideoSrc] = useState<string>('')
-  const [trimmedVideoSrc, setTrimmedVideoSrc] = useState<string>('')
-  const [duration, setDuration] = useState<number>(0)
-  const [trimValues, setTrimValues] = useState<[number, number]>([0, 0])
-  const [currentTime, setCurrentTime] = useState<number>(0)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [message, setMessage] = useState<string>('')
-  const [isSizeLimitEnabled, setIsSizeLimitEnabled] = useState<boolean>(false)
-  const [sizeLimitPreset, setSizeLimitPreset] = useState<string>('1')
-  const [customSizeLimit, setCustomSizeLimit] = useState<string>('10')
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const ffmpegRef = useRef<FFmpeg | null>(null)
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoSrc, setVideoSrc] = useState<string>("");
+  const [trimmedVideoSrc, setTrimmedVideoSrc] = useState<string>("");
+  const [duration, setDuration] = useState<number>(0);
+  const [trimValues, setTrimValues] = useState<[number, number]>([0, 0]);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+  const [isSizeLimitEnabled, setIsSizeLimitEnabled] = useState<boolean>(false);
+  const [sizeLimitPreset, setSizeLimitPreset] = useState<string>("1");
+  const [customSizeLimit, setCustomSizeLimit] = useState<string>("10");
+  const [progress, setProgress] = useState<number>(0);
+  const [ffmpegLoaded, setFfmpegLoaded] = useState<boolean>(false);
+  const [supportsFastTrim, setSupportsFastTrim] = useState<boolean>(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const ffmpegRef = useRef<any>(null);
+  const [FFmpegConstructor, setFFmpegConstructor] = useState<any>(null);
+  const [ffmpegUtils, setFfmpegUtils] = useState<any>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      setVideoFile(file)
-      const url = URL.createObjectURL(file)
-      setVideoSrc(url)
-    }
-  }
+  const handleFileSelect = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "video/*";
+
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) {
+        // Clean up previous video URL if exists
+        if (videoSrc) {
+          URL.revokeObjectURL(videoSrc);
+        }
+
+        setVideoFile(file);
+        const url = URL.createObjectURL(file);
+        setVideoSrc(url);
+        setTrimmedVideoSrc(""); // Clear previous trimmed video
+        setProgress(0);
+        setMessage("");
+
+        // Check if format supports fast trim (mp4, webm, mkv)
+        const extension = file.name.toLowerCase().split(".").pop();
+        const fastTrimFormats = ["mp4", "webm", "mkv", "mov"];
+        setSupportsFastTrim(fastTrimFormats.includes(extension || ""));
+
+        // Set video source after state update
+        setTimeout(() => {
+          if (videoRef.current) {
+            videoRef.current.src = url;
+            videoRef.current.load();
+          }
+        }, 0);
+      }
+    };
+
+    input.click();
+  };
 
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
-      const videoDuration = videoRef.current.duration
-      setDuration(videoDuration)
-      setTrimValues([0, videoDuration])
+      const videoDuration = videoRef.current.duration;
+      setDuration(videoDuration);
+      setTrimValues([0, videoDuration]);
     }
-  }
+  };
 
   const handleTimeUpdate = () => {
     if (videoRef.current) {
-      setCurrentTime(videoRef.current.currentTime)
+      setCurrentTime(videoRef.current.currentTime);
     }
-  }
+  };
 
   const handleSliderChange = (newValues: [number, number]) => {
-    const [oldStart, oldEnd] = trimValues
-    const [newStart, newEnd] = newValues
+    const [oldStart, oldEnd] = trimValues;
+    const [newStart, newEnd] = newValues;
 
-    setTrimValues(newValues)
+    setTrimValues(newValues);
 
     if (videoRef.current) {
       // Seek the video to the thumb that was moved
       if (newStart !== oldStart) {
-        videoRef.current.currentTime = newStart
+        videoRef.current.currentTime = newStart;
       } else if (newEnd !== oldEnd) {
-        videoRef.current.currentTime = newEnd
+        videoRef.current.currentTime = newEnd;
       }
     }
-  }
+  };
 
-  const handleTrim = async (mode: 'fast' | 'slow') => {
-    if (!videoFile) return
+  // Load FFmpeg modules dynamically on client side
+  useEffect(() => {
+    const loadModules = async () => {
+      const { FFmpeg } = await import("@ffmpeg/ffmpeg");
+      const { fetchFile, toBlobURL } = await import("@ffmpeg/util");
+      setFFmpegConstructor(() => FFmpeg);
+      setFfmpegUtils({ fetchFile, toBlobURL });
+    };
+    loadModules();
 
-    setIsLoading(true)
-    setMessage('Loading FFmpeg core...')
+    // Cleanup function to remove listeners when component unmounts
+    return () => {
+      if (ffmpegRef.current) {
+        ffmpegRef.current.off("progress");
+      }
+    };
+  }, []);
+
+  const loadFFmpeg = async () => {
+    if (!FFmpegConstructor || !ffmpegUtils) {
+      setMessage("FFmpeg modules not loaded yet...");
+      return;
+    }
+
+    const baseURL =
+      "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
+
     if (!ffmpegRef.current) {
-      ffmpegRef.current = new FFmpeg()
+      ffmpegRef.current = new FFmpegConstructor();
     }
-    const ffmpeg = ffmpegRef.current
+
+    const ffmpeg = ffmpegRef.current;
+    const { toBlobURL } = ffmpegUtils;
+
+    setMessage("Loading FFmpeg core...");
+
+    // Remove any existing progress listeners
+    ffmpeg.off("progress");
+
+    // Load FFmpeg core
+    await ffmpeg.load({
+      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(
+        `${baseURL}/ffmpeg-core.wasm`,
+        "application/wasm"
+      ),
+    });
+
+    setFfmpegLoaded(true);
+    setMessage("FFmpeg loaded successfully!");
+    // Reset progress when FFmpeg is loaded
+    setProgress(0);
+  };
+
+  const handleTrim = async (mode: "fast" | "slow" | "low") => {
+    if (!videoFile) return;
+
+    // Reset progress immediately before any async operations
+    setProgress(0);
+    setIsLoading(true);
+    setTrimmedVideoSrc(""); // Clear previous trimmed video
+
     try {
-      if (!ffmpeg.loaded) {
-        await ffmpeg.load()
+      // Load FFmpeg if not already loaded
+      if (!ffmpegLoaded) {
+        await loadFFmpeg();
       }
 
-      setMessage('Writing file to FFmpeg...')
-      await ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      // Get ffmpeg instance after loading
+      const ffmpeg = ffmpegRef.current;
+      if (!ffmpeg) {
+        throw new Error("FFmpeg failed to load");
+      }
 
-      const [start, end] = trimValues
-      const trimDuration = end - start
+      setMessage("Writing file to FFmpeg...");
 
-      let command: string[]
-      if (mode === 'fast' && !isSizeLimitEnabled) {
-        setMessage('Trimming video (fast mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
+      // Check file size and warn if too large
+      const fileSizeMB = videoFile.size / (1024 * 1024);
+      if (fileSizeMB > 100) {
+        setMessage(
+          `Warning: Large file (${fileSizeMB.toFixed(
+            1
+          )}MB) may cause memory issues. Consider using smaller segments.`
+        );
+      }
+
+      await ffmpeg.writeFile(
+        "input.mp4",
+        await ffmpegUtils.fetchFile(videoFile)
+      );
+
+      const [start, end] = trimValues;
+      const trimDuration = end - start;
+
+      // Set up progress listener with trim-adjusted calculation
+      ffmpeg.off("progress");
+      // Force progress to 0 before setting up new listener
+      setProgress(0);
+      setMessage(`Processing... ${0}%`);
+      ffmpeg.on("progress", ({ progress: progressRatio, time }) => {
+        // Calculate progress based on trimmed portion
+        const adjustedProgress = (progressRatio * duration) / trimDuration;
+        const percentage = Math.min(Math.round(adjustedProgress * 100), 100);
+        if (progressRatio > 1.1) {
+          setProgress(0);
+          setMessage(`Processing... 0%`);
+        } else {
+          setProgress(percentage);
+          setMessage(`Processing... ${percentage}%`);
+        }
+      });
+
+      let command: string[];
+      if (mode === "fast" && !isSizeLimitEnabled) {
+        setMessage("Trimming video (fast mode)...");
+        // Get file extension for output
+        const extension =
+          videoFile.name.toLowerCase().split(".").pop() || "mp4";
+        command = [
+          "-i",
+          "input.mp4",
+          "-ss",
+          `${start}`,
+          "-to",
+          `${end}`,
+          "-c",
+          "copy",
+          `output.${extension}`,
+        ];
       } else if (isSizeLimitEnabled) {
-        const targetSizeMB = sizeLimitPreset === 'custom'
-          ? parseFloat(customSizeLimit)
-          : parseFloat(sizeLimitPreset)
+        const targetSizeMB =
+          sizeLimitPreset === "custom"
+            ? parseFloat(customSizeLimit)
+            : parseFloat(sizeLimitPreset);
 
         if (isNaN(targetSizeMB) || targetSizeMB < 1) {
-          setMessage('Invalid size limit. Must be at least 1 MB.')
-          setIsLoading(false)
-          return
+          setMessage("Invalid size limit. Must be at least 1 MB.");
+          setIsLoading(false);
+          return;
         }
 
-        const targetSizeBytes = targetSizeMB * 1024 * 1024
-        const estimatedTrimmedSizeBytes = (videoFile.size * trimDuration) / duration;
+        const targetSizeBytes = targetSizeMB * 1024 * 1024;
+        const estimatedTrimmedSizeBytes =
+          (videoFile.size * trimDuration) / duration;
 
         if (targetSizeBytes < estimatedTrimmedSizeBytes) {
-          setMessage('Target size is smaller than estimated. Re-encoding...')
-          const totalBitrate = (targetSizeBytes * 8) / trimDuration
-          const audioBitrate = 128 * 1024 // 128 kbps
-          const videoBitrate = totalBitrate - audioBitrate
+          setMessage("Target size is smaller than estimated. Re-encoding...");
+          const totalBitrate = (targetSizeBytes * 8) / trimDuration;
+          const audioBitrate = 128 * 1024; // 128 kbps
+          const videoBitrate = totalBitrate - audioBitrate;
 
           if (videoBitrate <= 0) {
-            setMessage('Target size is too small for the selected duration. Please choose a larger size or shorter duration.')
-            setIsLoading(false)
-            return
+            setMessage(
+              "Target size is too small for the selected duration. Please choose a larger size or shorter duration."
+            );
+            setIsLoading(false);
+            return;
           }
 
-          const videoBitrateK = Math.floor(videoBitrate / 1024)
+          const videoBitrateK = Math.floor(videoBitrate / 1024);
 
           command = [
-            '-i', 'input.mp4',
-            '-ss', `${start}`,
-            '-to', `${end}`,
-            '-c:v', 'libx264',
-            '-b:v', `${videoBitrateK}k`,
-            '-maxrate', `${videoBitrateK}k`,
-            '-bufsize', `${videoBitrateK * 2}k`,
-            '-c:a', 'aac',
-            '-b:a', '128k',
-            'output.mp4'
-          ]
+            "-i",
+            "input.mp4",
+            "-ss",
+            `${start}`,
+            "-to",
+            `${end}`,
+            "-c:v",
+            "libx264",
+            "-b:v",
+            `${videoBitrateK}k`,
+            "-preset",
+            "medium",
+            "-threads",
+            "0",
+            "-c:a",
+            "aac",
+            "-b:a",
+            "128k",
+            "output.mp4",
+          ];
         } else {
-          setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
-          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+          setMessage(
+            "Target size is larger than estimated. Using precise trim to preserve quality..."
+          );
+          command = [
+            "-i",
+            "input.mp4",
+            "-ss",
+            `${start}`,
+            "-to",
+            `${end}`,
+            "-c:v",
+            "libx264",
+            "-preset",
+            "medium",
+            "-crf",
+            "23",
+            "-threads",
+            "1",
+            "-c:a",
+            "aac",
+            "output.mp4",
+          ];
         }
+      } else if (mode === "low") {
+        setMessage("Trimming video (low quality mode)...");
+        command = [
+          "-i",
+          "input.mp4",
+          "-ss",
+          `${start}`,
+          "-to",
+          `${end}`,
+          "-c:v",
+          "libx264",
+          "-preset",
+          "ultrafast",
+          "-crf",
+          "28",
+          "-threads",
+          "0",
+          "-c:a",
+          "aac",
+          "-b:a",
+          "96k",
+          "output.mp4",
+        ];
       } else {
-        setMessage('Trimming video (precise mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+        setMessage("Trimming video (precise mode)...");
+        command = [
+          "-i",
+          "input.mp4",
+          "-ss",
+          `${start}`,
+          "-to",
+          `${end}`,
+          "-c:v",
+          "libx264",
+          "-preset",
+          "medium",
+          "-crf",
+          "23",
+          "-threads",
+          "1",
+          "-c:a",
+          "aac",
+          "output.mp4",
+        ];
       }
 
-      await ffmpeg.exec(command)
+      await ffmpeg.exec(command);
 
-      setMessage('Reading result...')
-    const data = (await ffmpeg.readFile('output.mp4')) as Uint8Array
-    const blob = new Blob([data], { type: 'video/mp4' })
-    const url = URL.createObjectURL(blob)
-    setTrimmedVideoSrc(url)
-    setMessage('Done!')
+      // Clean up progress listener after completion
+      ffmpeg.off("progress");
+
+      setMessage("Reading result...");
+      // Get output filename based on mode
+      const extension = videoFile.name.toLowerCase().split(".").pop() || "mp4";
+      const outputFile =
+        mode === "fast" && !isSizeLimitEnabled
+          ? `output.${extension}`
+          : "output.mp4";
+      const mimeType =
+        mode === "fast" && !isSizeLimitEnabled
+          ? `video/${extension}`
+          : "video/mp4";
+
+      const data = (await ffmpeg.readFile(outputFile)) as Uint8Array;
+      const blob = new Blob([data], { type: mimeType });
+      const url = URL.createObjectURL(blob);
+      setTrimmedVideoSrc(url);
+      setMessage("Done!");
+      setProgress(0);
     } catch (error) {
-      console.error(error)
-      setMessage(`An error occurred: ${error instanceof Error ? error.message : String(error)}`)
+      console.error(error);
+      if (error instanceof Error && error.message.includes("memory")) {
+        setMessage(
+          "Memory error: Try using a smaller video segment or reducing quality settings."
+        );
+      } else {
+        setMessage(
+          `An error occurred: ${
+            error instanceof Error ? error.message : String(error)
+          }`
+        );
+      }
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
+      setProgress(0);
+      // Clean up any remaining listeners
+      if (ffmpegRef.current) {
+        ffmpegRef.current.off("progress");
+      }
     }
-  }
+  };
 
   return (
     <UtilsLayout>
@@ -160,8 +409,27 @@ export default function VideoCutterEncoder() {
         <h1 className="text-2xl font-bold">Video Cutter/Encoder</h1>
 
         <div className="space-y-2">
-          <Label htmlFor="video-upload">Upload a video</Label>
-          <Input id="video-upload" type="file" accept="video/mp4" onChange={handleFileChange} />
+          <Label>Select a video</Label>
+          <Button
+            onClick={handleFileSelect}
+            variant="outline"
+            className="w-full"
+          >
+            <svg
+              className="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
+            {videoFile ? `Selected: ${videoFile.name}` : "Choose Video File"}
+          </Button>
         </div>
 
         {videoSrc && (
@@ -169,11 +437,12 @@ export default function VideoCutterEncoder() {
             <h2 className="text-xl font-semibold">Original Video</h2>
             <video
               ref={videoRef}
-              src={videoSrc}
               controls
               className="w-full rounded"
               onLoadedMetadata={handleLoadedMetadata}
               onTimeUpdate={handleTimeUpdate}
+              preload="metadata"
+              crossOrigin="anonymous"
             />
 
             {duration > 0 && (
@@ -188,15 +457,25 @@ export default function VideoCutterEncoder() {
                 />
                 <div className="flex justify-between text-sm">
                   <span>Start: {trimValues[0].toFixed(1)}s</span>
-                  <span className='font-semibold'>Current: {currentTime.toFixed(1)}s</span>
+                  <span className="font-semibold">
+                    Current: {currentTime.toFixed(1)}s
+                  </span>
                   <span>End: {trimValues[1].toFixed(1)}s</span>
                 </div>
               </div>
             )}
 
             {isLoading && (
-              <div className="text-center p-2 bg-gray-100 rounded-md">
-                <p>{message}</p>
+              <div className="space-y-2 p-4 bg-gray-100 rounded-md">
+                <p className="text-center">{message}</p>
+                {progress > 0 && (
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div
+                      className="bg-blue-600 h-2.5 rounded-full"
+                      style={{ width: `${progress}%` }}
+                    />
+                  </div>
+                )}
               </div>
             )}
 
@@ -205,14 +484,21 @@ export default function VideoCutterEncoder() {
                 <Checkbox
                   id="size-limit-checkbox"
                   checked={isSizeLimitEnabled}
-                  onCheckedChange={(checked) => setIsSizeLimitEnabled(Boolean(checked))}
+                  onCheckedChange={(checked) =>
+                    setIsSizeLimitEnabled(Boolean(checked))
+                  }
                 />
-                <Label htmlFor="size-limit-checkbox">Limit output file size</Label>
+                <Label htmlFor="size-limit-checkbox">
+                  Limit output file size
+                </Label>
               </div>
 
               {isSizeLimitEnabled && (
                 <div className="grid grid-cols-2 gap-4">
-                  <Select value={sizeLimitPreset} onValueChange={setSizeLimitPreset}>
+                  <Select
+                    value={sizeLimitPreset}
+                    onValueChange={setSizeLimitPreset}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select size limit" />
                     </SelectTrigger>
@@ -225,7 +511,7 @@ export default function VideoCutterEncoder() {
                       <SelectItem value="custom">Custom</SelectItem>
                     </SelectContent>
                   </Select>
-                  {sizeLimitPreset === 'custom' && (
+                  {sizeLimitPreset === "custom" && (
                     <Input
                       type="number"
                       value={customSizeLimit}
@@ -239,19 +525,30 @@ export default function VideoCutterEncoder() {
             </div>
 
             <div className="flex items-center space-x-2">
-              {!isSizeLimitEnabled && (
-                <Button onClick={() => handleTrim('fast')} disabled={isLoading || !videoFile}>
-                  {isLoading ? 'Processing...' : 'Fast Trim'}
-                </Button>
-              )}
-              <Button onClick={() => handleTrim('slow')} disabled={isLoading || !videoFile} variant="secondary">
-                {isLoading ? 'Processing...' : isSizeLimitEnabled ? 'Encode' : 'Precise Trim'}
+              <Button
+                onClick={() => {
+                  handleTrim(isSizeLimitEnabled ? "slow" : "fast");
+                }}
+                disabled={
+                  isLoading ||
+                  !videoFile ||
+                  (!supportsFastTrim && !isSizeLimitEnabled)
+                }
+                title={
+                  !supportsFastTrim && !isSizeLimitEnabled
+                    ? "This format requires re-encoding"
+                    : ""
+                }
+              >
+                {isLoading ? "Processing..." : "Process"}
               </Button>
             </div>
             <p className="text-xs text-gray-500">
               {isSizeLimitEnabled
-                ? 'Encoding will be slower but will target the selected file size.'
-                : "'Fast Trim' is quicker but may fail on some videos. If you experience issues (like audio only), use 'Precise Trim'."}
+                ? "Size limit requires re-encoding. Disable for fast processing."
+                : supportsFastTrim
+                ? "Process will quickly trim without re-encoding. Use fix options if video has issues."
+                : "This format requires re-encoding. Processing may take longer."}
             </p>
           </div>
         )}
@@ -260,12 +557,37 @@ export default function VideoCutterEncoder() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Trimmed Video</h2>
             <video src={trimmedVideoSrc} controls className="w-full rounded" />
-            <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name || 'video.mp4'}`}>
-              <Button>Download Trimmed Video</Button>
-            </a>
+            <div className="flex items-center space-x-2">
+              <a
+                href={trimmedVideoSrc}
+                download={`trimmed-${
+                  videoFile?.name?.replace(/\.[^/.]+$/, "") || "video"
+                }.mp4`}
+              >
+                <Button>Download Trimmed Video</Button>
+              </a>
+              <Button
+                onClick={() => {
+                  handleTrim("slow");
+                }}
+                disabled={isLoading || !videoFile}
+                variant="outline"
+              >
+                Fix Video (High Quality)
+              </Button>
+              <Button
+                onClick={() => {
+                  handleTrim("low");
+                }}
+                disabled={isLoading || !videoFile}
+                variant="outline"
+              >
+                Fix Video (Low Quality)
+              </Button>
+            </div>
           </div>
         )}
       </div>
     </UtilsLayout>
-  )
+  );
 }
