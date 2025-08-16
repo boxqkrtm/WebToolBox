@@ -121,21 +121,20 @@ export default function VideoCutterEncoder() {
             '-i', 'input.mp4',
             '-ss', `${start}`,
             '-to', `${end}`,
-            '-c:v', 'libx264',
+            '-c:v', 'libaom-av1',
             '-b:v', `${videoBitrateK}k`,
-            '-maxrate', `${videoBitrateK}k`,
-            '-bufsize', `${videoBitrateK * 2}k`,
+            '-cpu-used', '5',
             '-c:a', 'aac',
             '-b:a', '128k',
             'output.mp4'
           ]
         } else {
           setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
-          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'aac', 'output.mp4']
         }
       } else {
         setMessage('Trimming video (precise mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libx264', '-preset', 'ultrafast', '-c:a', 'aac', 'output.mp4']
+        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'aac', 'output.mp4']
       }
 
       await ffmpeg.exec(command)
