@@ -85,10 +85,11 @@ export default function VideoCutterEncoder() {
       const [start, end] = trimValues
       const trimDuration = end - start
 
+      const outputFilename = 'output.webm'
       let command: string[]
       if (mode === 'fast' && !isSizeLimitEnabled) {
         setMessage('Trimming video (fast mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c', 'copy', 'output.mp4']
+        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '35', '-cpu-used', '8', '-c:a', 'libopus', '-b:a', '96k', outputFilename]
       } else if (isSizeLimitEnabled) {
         const targetSizeMB = sizeLimitPreset === 'custom'
           ? parseFloat(customSizeLimit)
@@ -106,7 +107,7 @@ export default function VideoCutterEncoder() {
         if (targetSizeBytes < estimatedTrimmedSizeBytes) {
           setMessage('Target size is smaller than estimated. Re-encoding...')
           const totalBitrate = (targetSizeBytes * 8) / trimDuration
-          const audioBitrate = 128 * 1024 // 128 kbps
+          const audioBitrate = 96 * 1024 // 96 kbps for Opus
           const videoBitrate = totalBitrate - audioBitrate
 
           if (videoBitrate <= 0) {
@@ -124,24 +125,24 @@ export default function VideoCutterEncoder() {
             '-c:v', 'libaom-av1',
             '-b:v', `${videoBitrateK}k`,
             '-cpu-used', '5',
-            '-c:a', 'aac',
-            '-b:a', '128k',
-            'output.mp4'
+            '-c:a', 'libopus',
+            '-b:a', '96k',
+            outputFilename
           ]
         } else {
           setMessage('Target size is larger than estimated. Using precise trim to preserve quality...')
-          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'aac', 'output.mp4']
+          command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'libopus', '-b:a', '128k', outputFilename]
         }
       } else {
         setMessage('Trimming video (precise mode)...')
-        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'aac', 'output.mp4']
+        command = ['-i', 'input.mp4', '-ss', `${start}`, '-to', `${end}`, '-c:v', 'libaom-av1', '-crf', '30', '-cpu-used', '5', '-c:a', 'libopus', '-b:a', '128k', outputFilename]
       }
 
       await ffmpeg.exec(command)
 
       setMessage('Reading result...')
-    const data = (await ffmpeg.readFile('output.mp4')) as Uint8Array
-    const blob = new Blob([data], { type: 'video/mp4' })
+    const data = (await ffmpeg.readFile(outputFilename)) as Uint8Array
+    const blob = new Blob([data], { type: 'video/webm' })
     const url = URL.createObjectURL(blob)
     setTrimmedVideoSrc(url)
     setMessage('Done!')
@@ -259,7 +260,7 @@ export default function VideoCutterEncoder() {
           <div className="space-y-4">
             <h2 className="text-xl font-semibold">Trimmed Video</h2>
             <video src={trimmedVideoSrc} controls className="w-full rounded" />
-            <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name || 'video.mp4'}`}>
+            <a href={trimmedVideoSrc} download={`trimmed-${videoFile?.name.replace(/\.[^/.]+$/, "") || 'video'}.webm`}>
               <Button>Download Trimmed Video</Button>
             </a>
           </div>
