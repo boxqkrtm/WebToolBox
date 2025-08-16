@@ -78,14 +78,15 @@ export default function VideoCutterEncoder() {
       if (!ffmpeg.loaded) {
         await ffmpeg.load()
       }
+
       const workDir = '/work'
       await ffmpeg.createDir(workDir);
+      await ffmpeg.mount('WORKERFS', { files: [videoFile] }, workDir);
 
-      const inputFilename = `${workDir}/input.mp4`;
+      const inputFilename = `${workDir}/${videoFile.name}`;
       const outputFilename = `${workDir}/output.webm`;
 
-      setMessage('Writing file to FFmpeg...')
-      await ffmpeg.writeFile(inputFilename, await fetchFile(videoFile))
+      setMessage('Processing file...')
 
       const [start, end] = trimValues
       const trimDuration = end - start
@@ -145,14 +146,17 @@ export default function VideoCutterEncoder() {
       await ffmpeg.exec(command)
 
       setMessage('Reading result...')
-    const data = (await ffmpeg.readFile(outputFilename)) as Uint8Array
-    const blob = new Blob([data], { type: 'video/webm' })
-    const url = URL.createObjectURL(blob)
-    setTrimmedVideoSrc(url)
-    setMessage('Done!')
+      const data = (await ffmpeg.readFile(outputFilename)) as Uint8Array
+      const blob = new Blob([data], { type: 'video/webm' })
+      const url = URL.createObjectURL(blob)
+      setTrimmedVideoSrc(url)
+      setMessage('Done!')
+      await ffmpeg.unmount(workDir);
     } catch (error) {
+      const errorMessage = `An error occurred: ${error instanceof Error ? error.message : String(error)}`
       console.error(error)
-      setMessage(`An error occurred: ${error instanceof Error ? error.message : String(error)}`)
+      setMessage(errorMessage)
+      alert(errorMessage)
     } finally {
       setIsLoading(false)
     }
