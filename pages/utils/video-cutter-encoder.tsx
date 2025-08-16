@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
-import { FFmpeg } from '@ffmpeg/ffmpeg'
+import { FFmpeg, FFFSType } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import UtilsLayout from '@/components/layout/UtilsLayout'
 
@@ -81,7 +81,7 @@ export default function VideoCutterEncoder() {
 
       const workDir = '/work'
       await ffmpeg.createDir(workDir);
-      await ffmpeg.mount('WORKERFS', { files: [videoFile] }, workDir);
+      await ffmpeg.mount(FFFSType.WORKERFS, { files: [videoFile] }, workDir);
 
       const inputFilename = `${workDir}/${videoFile.name}`;
       const outputFilename = `${workDir}/output.webm`;
