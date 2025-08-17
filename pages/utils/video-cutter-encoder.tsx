@@ -14,10 +14,12 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import UtilsLayout from "@/components/layout/UtilsLayout";
+import { useI18n } from "@/lib/i18n/i18nContext";
 
 // FFmpeg will be imported dynamically on client side only
 
 export default function VideoCutterEncoder() {
+  const { t } = useI18n();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoSrc, setVideoSrc] = useState<string>("");
   const [trimmedVideoSrc, setTrimmedVideoSrc] = useState<string>("");
@@ -125,7 +127,7 @@ export default function VideoCutterEncoder() {
 
   const loadFFmpeg = async () => {
     if (!FFmpegConstructor || !ffmpegUtils) {
-      setMessage("FFmpeg modules not loaded yet...");
+      setMessage(t('common.tools.videoCutterEncoder.page.ffmpegNotLoaded'));
       return;
     }
 
@@ -139,7 +141,7 @@ export default function VideoCutterEncoder() {
     const ffmpeg = ffmpegRef.current;
     const { toBlobURL } = ffmpegUtils;
 
-    setMessage("Loading FFmpeg core...");
+    setMessage(t('common.tools.videoCutterEncoder.page.loadingFFmpeg'));
 
     // Remove any existing progress listeners
     ffmpeg.off("progress");
@@ -154,7 +156,7 @@ export default function VideoCutterEncoder() {
     });
 
     setFfmpegLoaded(true);
-    setMessage("FFmpeg loaded successfully!");
+    setMessage(t('common.tools.videoCutterEncoder.page.ffmpegLoaded'));
     // Reset progress when FFmpeg is loaded
     setProgress(0);
   };
@@ -179,7 +181,7 @@ export default function VideoCutterEncoder() {
         throw new Error("FFmpeg failed to load");
       }
 
-      setMessage("Writing file to FFmpeg...");
+      setMessage(t('common.tools.videoCutterEncoder.page.writingFile'));
 
       // Check file size and warn if too large
       const fileSizeMB = videoFile.size / (1024 * 1024);
@@ -203,23 +205,23 @@ export default function VideoCutterEncoder() {
       ffmpeg.off("progress");
       // Force progress to 0 before setting up new listener
       setProgress(0);
-      setMessage(`Processing... ${0}%`);
+      setMessage(`${t('common.tools.videoCutterEncoder.page.processing')} ${0}%`);
       ffmpeg.on("progress", ({ progress: progressRatio, time }: { progress: number; time: number }) => {
         // Calculate progress based on trimmed portion
         const adjustedProgress = (progressRatio * duration) / trimDuration;
         const percentage = Math.min(Math.round(adjustedProgress * 100), 100);
         if (progressRatio > 1.1) {
           setProgress(0);
-          setMessage(`Processing... 0%`);
+          setMessage(`${t('common.tools.videoCutterEncoder.page.processing')} 0%`);
         } else {
           setProgress(percentage);
-          setMessage(`Processing... ${percentage}%`);
+          setMessage(`${t('common.tools.videoCutterEncoder.page.processing')} ${percentage}%`);
         }
       });
 
       let command: string[];
       if (mode === "fast" && !isSizeLimitEnabled) {
-        setMessage("Trimming video (fast mode)...");
+        setMessage(t('common.tools.videoCutterEncoder.page.trimmingFast'));
         // Get file extension for output
         const extension =
           videoFile.name.toLowerCase().split(".").pop() || "mp4";
@@ -241,7 +243,7 @@ export default function VideoCutterEncoder() {
             : parseFloat(sizeLimitPreset);
 
         if (isNaN(targetSizeMB) || targetSizeMB < 1) {
-          setMessage("Invalid size limit. Must be at least 1 MB.");
+          setMessage(t('common.tools.videoCutterEncoder.page.invalidSizeLimit'));
           setIsLoading(false);
           return;
         }
@@ -251,14 +253,14 @@ export default function VideoCutterEncoder() {
           (videoFile.size * trimDuration) / duration;
 
         if (targetSizeBytes < estimatedTrimmedSizeBytes) {
-          setMessage("Target size is smaller than estimated. Re-encoding...");
+          setMessage(t('common.tools.videoCutterEncoder.page.targetSizeSmaller'));
           const totalBitrate = (targetSizeBytes * 8) / trimDuration;
           const audioBitrate = 128 * 1024; // 128 kbps
           const videoBitrate = totalBitrate - audioBitrate;
 
           if (videoBitrate <= 0) {
             setMessage(
-              "Target size is too small for the selected duration. Please choose a larger size or shorter duration."
+              t('common.tools.videoCutterEncoder.page.targetSizeTooSmall')
             );
             setIsLoading(false);
             return;
@@ -289,7 +291,7 @@ export default function VideoCutterEncoder() {
           ];
         } else {
           setMessage(
-            "Target size is larger than estimated. Using precise trim to preserve quality..."
+            t('common.tools.videoCutterEncoder.page.targetSizeLarger')
           );
           command = [
             "-i",
@@ -312,7 +314,7 @@ export default function VideoCutterEncoder() {
           ];
         }
       } else if (mode === "low") {
-        setMessage("Trimming video (low quality mode)...");
+        setMessage(t('common.tools.videoCutterEncoder.page.trimmingLowQuality'));
         command = [
           "-i",
           "input.mp4",
@@ -335,7 +337,7 @@ export default function VideoCutterEncoder() {
           "output.mp4",
         ];
       } else {
-        setMessage("Trimming video (precise mode)...");
+        setMessage(t('common.tools.videoCutterEncoder.page.trimmingPrecise'));
         command = [
           "-i",
           "input.mp4",
@@ -362,7 +364,7 @@ export default function VideoCutterEncoder() {
       // Clean up progress listener after completion
       ffmpeg.off("progress");
 
-      setMessage("Reading result...");
+      setMessage(t('common.tools.videoCutterEncoder.page.readingResult'));
       // Get output filename based on mode
       const extension = videoFile.name.toLowerCase().split(".").pop() || "mp4";
       const outputFile =
@@ -378,13 +380,13 @@ export default function VideoCutterEncoder() {
       const blob = new Blob([new Uint8Array(data as ArrayBuffer)], { type: mimeType });
       const url = URL.createObjectURL(blob);
       setTrimmedVideoSrc(url);
-      setMessage("Done!");
+      setMessage(t('common.tools.videoCutterEncoder.page.done'));
       setProgress(0);
     } catch (error) {
       console.error(error);
       if (error instanceof Error && error.message.includes("memory")) {
         setMessage(
-          "Memory error: Try using a smaller video segment or reducing quality settings."
+          t('common.tools.videoCutterEncoder.page.memoryError')
         );
       } else {
         setMessage(
@@ -406,10 +408,10 @@ export default function VideoCutterEncoder() {
   return (
     <UtilsLayout>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Video Cutter/Encoder</h1>
+        <h1 className="text-2xl font-bold">{t('common.tools.videoCutterEncoder.title')}</h1>
 
         <div className="space-y-2">
-          <Label>Select a video</Label>
+          <Label>{t('common.tools.videoCutterEncoder.page.selectVideo')}</Label>
           <Button
             onClick={handleFileSelect}
             variant="outline"
@@ -428,13 +430,13 @@ export default function VideoCutterEncoder() {
                 d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
               />
             </svg>
-            {videoFile ? `Selected: ${videoFile.name}` : "Choose Video File"}
+            {videoFile ? `Selected: ${videoFile.name}` : t('common.tools.videoCutterEncoder.page.chooseVideoFile')}
           </Button>
         </div>
 
         {videoSrc && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Original Video</h2>
+            <h2 className="text-xl font-semibold">{t('common.tools.videoCutterEncoder.page.originalVideo')}</h2>
             <video
               ref={videoRef}
               controls
@@ -447,7 +449,7 @@ export default function VideoCutterEncoder() {
 
             {duration > 0 && (
               <div className="space-y-2">
-                <Label>Trim Range</Label>
+                <Label>{t('common.tools.videoCutterEncoder.page.trimRange')}</Label>
                 <Slider
                   min={0}
                   max={duration}
@@ -456,11 +458,11 @@ export default function VideoCutterEncoder() {
                   onValueChange={handleSliderChange}
                 />
                 <div className="flex justify-between text-sm">
-                  <span>Start: {trimValues[0].toFixed(1)}s</span>
+                  <span>{t('common.tools.videoCutterEncoder.page.start')}: {trimValues[0].toFixed(1)}s</span>
                   <span className="font-semibold">
                     Current: {currentTime.toFixed(1)}s
                   </span>
-                  <span>End: {trimValues[1].toFixed(1)}s</span>
+                  <span>{t('common.tools.videoCutterEncoder.page.end')}: {trimValues[1].toFixed(1)}s</span>
                 </div>
               </div>
             )}
@@ -500,7 +502,7 @@ export default function VideoCutterEncoder() {
                     onValueChange={setSizeLimitPreset}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Select size limit" />
+                      <SelectValue placeholder={t('common.tools.videoCutterEncoder.page.selectSizeLimit')} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="1">1 MB</SelectItem>
@@ -508,7 +510,7 @@ export default function VideoCutterEncoder() {
                       <SelectItem value="10">10 MB</SelectItem>
                       <SelectItem value="50">50 MB</SelectItem>
                       <SelectItem value="100">100 MB</SelectItem>
-                      <SelectItem value="custom">Custom</SelectItem>
+                      <SelectItem value="custom">{t('common.tools.videoCutterEncoder.page.custom')}</SelectItem>
                     </SelectContent>
                   </Select>
                   {sizeLimitPreset === "custom" && (
@@ -536,26 +538,26 @@ export default function VideoCutterEncoder() {
                 }
                 title={
                   !supportsFastTrim && !isSizeLimitEnabled
-                    ? "This format requires re-encoding"
+                    ? t('common.tools.videoCutterEncoder.page.formatRequiresReencoding')
                     : ""
                 }
               >
-                {isLoading ? "Processing..." : "Process"}
+                {isLoading ? t('common.tools.videoCutterEncoder.page.processing')} : t('common.tools.videoCutterEncoder.page.process')}
               </Button>
             </div>
             <p className="text-xs text-gray-500">
               {isSizeLimitEnabled
-                ? "Size limit requires re-encoding. Disable for fast processing."
+                ? t('common.tools.videoCutterEncoder.page.sizeLimitRequiresReencoding')
                 : supportsFastTrim
-                ? "Process will quickly trim without re-encoding. Use fix options if video has issues."
-                : "This format requires re-encoding. Processing may take longer."}
+                ? t('common.tools.videoCutterEncoder.page.processFastTrim')
+                : t('common.tools.videoCutterEncoder.page.formatRequiresReencodingLonger')}
             </p>
           </div>
         )}
 
         {trimmedVideoSrc && (
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Trimmed Video</h2>
+            <h2 className="text-xl font-semibold">{t('common.tools.videoCutterEncoder.page.trimmedVideo')}</h2>
             <video src={trimmedVideoSrc} controls className="w-full rounded" />
             <div className="flex items-center space-x-2">
               <a
@@ -564,7 +566,7 @@ export default function VideoCutterEncoder() {
                   videoFile?.name?.replace(/\.[^/.]+$/, "") || "video"
                 }.mp4`}
               >
-                <Button>Download Trimmed Video</Button>
+                <Button>{t('common.tools.videoCutterEncoder.page.downloadTrimmedVideo')}</Button>
               </a>
               <Button
                 onClick={() => {

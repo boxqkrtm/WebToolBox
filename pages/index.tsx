@@ -10,22 +10,25 @@ import {
   HiLocationMarker,
   HiCollection,
 } from 'react-icons/hi';
+import { useI18n } from '@/lib/i18n/i18nContext';
 
 export default function Home() {
+  const { t } = useI18n();
+  
   return (
     <div className="container mx-auto p-4 sm:p-6">
-      <h1 className="text-4xl font-bold text-center mb-2">Web Utils</h1>
-      <p className="text-xl text-gray-600 text-center mb-8">A collection of useful tools and utilities.</p>
+      <h1 className="text-4xl font-bold text-center mb-2">{t('common.title')}</h1>
+      <p className="text-xl text-muted-foreground text-center mb-8">{t('common.subtitle')}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
         <Link href="/category/json" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiCode className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>JSON</CardTitle>
+              <HiCode className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.json.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Tools for working with JSON data.</p>
+              <p className="text-muted-foreground">{t('common.categories.json.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -33,11 +36,11 @@ export default function Home() {
         <Link href="/category/sql" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiDatabase className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>SQL</CardTitle>
+              <HiDatabase className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.sql.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Tools for database and SQL operations.</p>
+              <p className="text-muted-foreground">{t('common.categories.sql.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -45,11 +48,11 @@ export default function Home() {
         <Link href="/category/game" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiPuzzle className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>Game</CardTitle>
+              <HiPuzzle className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.game.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Utilities for various games.</p>
+              <p className="text-muted-foreground">{t('common.categories.game.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -57,11 +60,11 @@ export default function Home() {
         <Link href="/category/image-video" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiVideoCamera className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>Image & Video</CardTitle>
+              <HiVideoCamera className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.imageVideo.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Tools for video and image manipulation.</p>
+              <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -69,11 +72,11 @@ export default function Home() {
         <Link href="/category/discord" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiChatAlt2 className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>Discord</CardTitle>
+              <HiChatAlt2 className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.discord.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Utilities for Discord.</p>
+              <p className="text-muted-foreground">{t('common.categories.discord.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -81,11 +84,11 @@ export default function Home() {
         <Link href="/category/llm" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiLightningBolt className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>LLM</CardTitle>
+              <HiLightningBolt className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.llm.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Tools for Large Language Models.</p>
+              <p className="text-muted-foreground">{t('common.categories.llm.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -93,11 +96,11 @@ export default function Home() {
         <Link href="/category/geolocation" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiLocationMarker className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>Geolocation</CardTitle>
+              <HiLocationMarker className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.geolocation.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Tools for working with geographic data.</p>
+              <p className="text-muted-foreground">{t('common.categories.geolocation.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -105,11 +108,11 @@ export default function Home() {
         <Link href="/category/etc" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
-              <HiCollection className="h-12 w-12 mb-4 text-gray-500" />
-              <CardTitle>Etc</CardTitle>
+              <HiCollection className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.etc.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-gray-600">Other miscellaneous utilities.</p>
+              <p className="text-muted-foreground">{t('common.categories.etc.description')}</p>
             </CardContent>
           </Card>
         </Link>
