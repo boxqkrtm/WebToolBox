@@ -5,7 +5,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
 const pages = [
   { title: 'CSV Sorter', path: '/utils/csv-sorter' },
-  { title: 'tetrio.replay-editor', path: '/utils/tetrio-replay-editor' }
+  { title: 'tetrio.replay-editor', path: '/utils/tetrio-replay-editor' },
+  { title: 'Claude Token Counter', path: '/llm/claude-token-counter' }
 ];
 
 export default function Home() {
