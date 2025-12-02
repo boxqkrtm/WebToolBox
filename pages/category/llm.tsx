@@ -28,6 +28,16 @@ export default function LlmCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/utils/claude-token-counter" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>Claude Token Counter</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">Count tokens for Claude models.</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );
