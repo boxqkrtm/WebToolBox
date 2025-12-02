@@ -35,5 +35,5 @@ export const countTokens = async ({
     messages,
     tools,
   });
-  return response.usage.input_tokens;
+  return response.input_tokens;
 };
