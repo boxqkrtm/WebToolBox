@@ -21,26 +21,14 @@ export default function Home() {
       <p className="text-xl text-muted-foreground text-center mb-8">{t('common.subtitle')}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-        <Link href="/category/json" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiCode className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.json.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.json.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/sql" passHref>
+        <Link href="/category/database" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">
               <HiDatabase className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.sql.title')}</CardTitle>
+              <CardTitle>{t('common.categories.database.title')}</CardTitle>
             </CardHeader>
             <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.sql.description')}</p>
+              <p className="text-muted-foreground">{t('common.categories.database.description')}</p>
             </CardContent>
           </Card>
         </Link>

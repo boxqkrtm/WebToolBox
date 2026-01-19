@@ -5,13 +5,9 @@ export const translations = {
       subtitle: "A collection of useful tools and utilities.",
       backToCategories: "Back to Categories",
       categories: {
-        json: {
-          title: "JSON",
-          description: "Tools for working with JSON data."
-        },
-        sql: {
-          title: "SQL",
-          description: "Tools for database and SQL operations."
+        database: {
+          title: "Database",
+          description: "Tools for JSON, CSV, and SQL database."
         },
         game: {
           title: "Game",
@@ -139,13 +135,9 @@ export const translations = {
       subtitle: "유용한 도구 및 유틸리티 모음",
       backToCategories: "카테고리로 돌아가기",
       categories: {
-        json: {
-          title: "JSON",
-          description: "JSON 데이터 작업 도구"
-        },
-        sql: {
-          title: "SQL",
-          description: "데이터베이스 및 SQL 작업 도구"
+        database: {
+          title: "데이터베이스",
+          description: "JSON, CSV, SQL 데이터베이스 작업 도구"
         },
         game: {
           title: "게임",
@@ -269,13 +261,9 @@ export const translations = {
       subtitle: "便利なツールとユーティリティのコレクション",
       backToCategories: "カテゴリーに戻る",
       categories: {
-        json: {
-          title: "JSON",
-          description: "JSONデータ操作ツール"
-        },
-        sql: {
-          title: "SQL",
-          description: "データベースとSQL操作ツール"
+        database: {
+          title: "データベース",
+          description: "JSON、CSV、SQLデータベース操作ツール"
         },
         game: {
           title: "ゲーム",
@@ -399,13 +387,9 @@ export const translations = {
       subtitle: "实用工具和实用程序集合",
       backToCategories: "返回分类",
       categories: {
-        json: {
-          title: "JSON",
-          description: "JSON数据处理工具"
-        },
-        sql: {
-          title: "SQL",
-          description: "数据库和SQL操作工具"
+        database: {
+          title: "数据库",
+          description: "JSON、CSV、SQL数据库工具"
         },
         game: {
           title: "游戏",
