@@ -10,10 +10,24 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const savedLang = localStorage.getItem('language') as Language;
+      if (savedLang && translations[savedLang]) {
+        return savedLang;
+      }
+      const browserLang = navigator.language.toLowerCase();
+      if (browserLang.startsWith('ko')) return 'ko';
+      if (browserLang.startsWith('ja')) return 'ja';
+      if (browserLang.startsWith('zh')) return 'zh';
+    }
+    return 'en';
+  });
 
   // Detect browser language on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+    
     const detectLanguage = () => {
       const browserLang = navigator.language.toLowerCase();
       
@@ -35,7 +49,9 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const handleSetLanguage = (lang: Language) => {
     setLanguage(lang);
-    localStorage.setItem('language', lang);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', lang);
+    }
   };
 
   const t = (key: string): string => {
