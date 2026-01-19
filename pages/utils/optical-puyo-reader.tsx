@@ -26,6 +26,24 @@ export default function Component() {
     }
   };
 
+  const handlePaste = (event: React.ClipboardEvent) => {
+    const items = event.clipboardData?.items;
+    if (!items) return;
+
+    for (const item of items) {
+      if (item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (e) => setImageUrl(e.target?.result as string);
+          reader.readAsDataURL(file);
+          event.preventDefault();
+          break;
+        }
+      }
+    }
+  };
+
   const categorizeColor = useCallback((color: string): ColorCategory => {
     const rgb = color.match(/\d+/g)?.map(Number);
     if (!rgb) return 'O';
@@ -175,7 +193,7 @@ export default function Component() {
   };
 
   return (
-    <UtilsLayout>
+    <UtilsLayout onPaste={handlePaste}>
       <h1 className="text-2xl font-bold mb-4">Optical Puyo Reader</h1>
       <Input 
         type="file" 
@@ -184,7 +202,7 @@ export default function Component() {
         className="mb-4" 
         aria-label="Upload PNG image"
       />
-      <p>Upload tip: Crop the field image to show only 6x12 puyos</p>
+      <p>Upload tip: Crop the field image to show only 6x12 puyos (or Ctrl+V to paste)</p>
       {imageUrl && (
         <div className="mb-4">
           <Image src={imageUrl} alt="Uploaded" width={imageDimensions.width} height={imageDimensions.height} className="max-w-full h-auto" />

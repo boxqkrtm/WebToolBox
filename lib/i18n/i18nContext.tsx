@@ -10,19 +10,12 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('language') as Language;
-      if (savedLang && translations[savedLang]) {
-        return savedLang;
-      }
-      const browserLang = navigator.language.toLowerCase();
-      if (browserLang.startsWith('ko')) return 'ko';
-      if (browserLang.startsWith('ja')) return 'ja';
-      if (browserLang.startsWith('zh')) return 'zh';
-    }
-    return 'en';
-  });
+  const [mounted, setMounted] = useState(false);
+  const [language, setLanguage] = useState<Language>('en');
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Detect browser language on mount
   useEffect(() => {
@@ -80,7 +73,7 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <I18nContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
-      {children}
+      {mounted ? children : null}
     </I18nContext.Provider>
   );
 };
