@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Slider } from "@/components/ui/slider"
 import UtilsLayout from '@/components/layout/UtilsLayout';
+import { useI18n } from '@/lib/i18n/i18nContext';
 
 type ColorCategory = 'R' | 'G' | 'B' | 'Y' | 'P' | 'O' | '';
 
 export default function Component() {
+  const { t } = useI18n();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [colorGrid, setColorGrid] = useState<string[][]>([]);
   const [categoryGrid, setCategoryGrid] = useState<ColorCategory[][]>([]);
@@ -194,7 +196,7 @@ export default function Component() {
 
   return (
     <UtilsLayout onPaste={handlePaste}>
-      <h1 className="text-2xl font-bold mb-4">Optical Puyo Reader</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('common.tools.opticalPuyoReader.title')}</h1>
       <Input 
         type="file" 
         accept="image/png" 
@@ -202,7 +204,7 @@ export default function Component() {
         className="mb-4" 
         aria-label="Upload PNG image"
       />
-      <p>Upload tip: Crop the field image to show only 6x12 puyos (or Ctrl+V to paste)</p>
+      <p>{t('common.tools.opticalPuyoReader.uploadTip')}</p>
       {imageUrl && (
         <div className="mb-4">
           <Image src={imageUrl} alt="Uploaded" width={imageDimensions.width} height={imageDimensions.height} className="max-w-full h-auto" />
@@ -211,13 +213,13 @@ export default function Component() {
       <canvas ref={canvasRef} style={{ display: 'none' }} aria-hidden="true" />
       {colorGrid.length > 0 && (
         <>
-          <h2 className="text-xl font-bold mb-2">Original Colors</h2>
+          <h2 className="text-xl font-bold mb-2">{t('common.tools.opticalPuyoReader.originalColors')}</h2>
           <div className="overflow-x-auto mb-8">
             <Table>
               <TableHeader>
                 <TableRow>
                   {Array.from({ length: 6 }, (_, i) => (
-                    <TableHead key={i} className="text-center">Column {i + 1}</TableHead>
+                    <TableHead key={i} className="text-center">{t('common.tools.opticalPuyoReader.column')} {i + 1}</TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -229,7 +231,7 @@ export default function Component() {
                         key={colIndex} 
                         style={{ backgroundColor: column[rowIndex] }} 
                         className="w-16 h-8"
-                        aria-label={`Row ${rowIndex + 1}, Column ${colIndex + 1}: ${column[rowIndex]}`}
+                        aria-label={`${t('common.tools.opticalPuyoReader.row')} ${rowIndex + 1}, ${t('common.tools.opticalPuyoReader.column')} ${colIndex + 1}: ${column[rowIndex]}`}
                       ></TableCell>
                     ))}
                   </TableRow>
@@ -237,14 +239,14 @@ export default function Component() {
               </TableBody>
             </Table>
           </div>
-
-          <h2 className="text-xl font-bold mb-2">Categorized Colors</h2>
+ 
+          <h2 className="text-xl font-bold mb-2">{t('common.tools.opticalPuyoReader.categorizedColors')}</h2>
           <div className="overflow-x-auto mb-8">
             <Table>
               <TableHeader>
                 <TableRow>
                   {Array.from({ length: 6 }, (_, i) => (
-                    <TableHead key={i} className="text-center">Column {i + 1}</TableHead>
+                    <TableHead key={i} className="text-center">{t('common.tools.opticalPuyoReader.column')} {i + 1}</TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -259,7 +261,7 @@ export default function Component() {
                           border: column[rowIndex] === '' ? '1px solid #ccc' : 'none'
                         }} 
                         className="w-16 h-8 text-center text-white font-bold"
-                        aria-label={`Row ${rowIndex + 1}, Column ${colIndex + 1}: ${column[rowIndex] || 'Empty'}`}
+                        aria-label={`${t('common.tools.opticalPuyoReader.row')} ${rowIndex + 1}, ${t('common.tools.opticalPuyoReader.column')} ${colIndex + 1}: ${column[rowIndex] || t('common.tools.opticalPuyoReader.empty')}`}
                       >
                         {column[rowIndex]}
                       </TableCell>
@@ -269,10 +271,10 @@ export default function Component() {
               </TableBody>
             </Table>
           </div>
-
+ 
           <div className="mb-4">
             <label htmlFor="threshold-slider" className="block text-sm font-medium text-gray-700 mb-1">
-              Color Snap Sensitivity: {threshold}
+              {t('common.tools.opticalPuyoReader.colorSnapSensitivity')}: {threshold}
             </label>
             <Slider
               id="threshold-slider"
@@ -284,16 +286,16 @@ export default function Component() {
               className="w-full"
             />
           </div>
-
+ 
           <div className="mt-8">
-            <h2 className="text-xl font-bold mb-2">Chain Simulator Link</h2>
+            <h2 className="text-xl font-bold mb-2">{t('common.tools.opticalPuyoReader.chainSimulatorLink')}</h2>
             <a 
               href={generateChainSimLink()} 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-blue-600 hover:text-blue-800 underline"
             >
-              Open in Chain Simulator
+              {t('common.tools.opticalPuyoReader.openInChainSimulator')}
             </a>
           </div>
         </>

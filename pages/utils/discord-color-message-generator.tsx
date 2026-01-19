@@ -5,8 +5,10 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useI18n } from '@/lib/i18n/i18nContext';
 
 export default function DiscordColorMessageGenerator() {
+  const { t } = useI18n();
   const [message, setMessage] = useState("");
   const [result, setResult] = useState("");
   const [copied, setCopied] = useState(false);
@@ -18,14 +20,14 @@ export default function DiscordColorMessageGenerator() {
 
   // ANSI 지원 색상 목록 - 8가지 기본 색상만 지원
   const ansiColors = [
-    { name: "Black", hex: "#000000", code: "0" },
-    { name: "Red", hex: "#FF0000", code: "1" },
-    { name: "Green", hex: "#00FF00", code: "2" },
-    { name: "Yellow", hex: "#FFFF00", code: "3" },
-    { name: "Blue", hex: "#0000FF", code: "4" },
-    { name: "Purple", hex: "#FF00FF", code: "5" },
-    { name: "Cyan", hex: "#00FFFF", code: "6" },
-    { name: "White", hex: "#FFFFFF", code: "7" },
+    { name: t('common.tools.discordColorMessageGenerator.black'), hex: "#000000", code: "0" },
+    { name: t('common.tools.discordColorMessageGenerator.red'), hex: "#FF0000", code: "1" },
+    { name: t('common.tools.discordColorMessageGenerator.green'), hex: "#00FF00", code: "2" },
+    { name: t('common.tools.discordColorMessageGenerator.yellow'), hex: "#FFFF00", code: "3" },
+    { name: t('common.tools.discordColorMessageGenerator.blue'), hex: "#0000FF", code: "4" },
+    { name: t('common.tools.discordColorMessageGenerator.purple'), hex: "#FF00FF", code: "5" },
+    { name: t('common.tools.discordColorMessageGenerator.cyan'), hex: "#00FFFF", code: "6" },
+    { name: t('common.tools.discordColorMessageGenerator.white'), hex: "#FFFFFF", code: "7" },
   ];
 
   // 색상 코드 찾기
