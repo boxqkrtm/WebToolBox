@@ -124,6 +124,11 @@ export const translations = {
         tetrioReplayEditor: {
           title: "Tetrio Replay Editor",
           description: "Edit Tetrio replay files"
+        },
+        qrCodeGenerator: {
+          title: "QR Code Generator",
+          description: "Generate QR codes from text",
+          placeholder: "Enter text to generate QR code"
         }
       }
     }
@@ -249,6 +254,11 @@ export const translations = {
             memoryError: "메모리 오류: 더 작은 비디오 세그먼트를 사용하거나 품질 설정을 낮추세요.",
             errorProcessing: "비디오 처리 오류"
           }
+        },
+        qrCodeGenerator: {
+          title: "QR 코드 생성기",
+          description: "텍스트로 QR 코드 생성",
+          placeholder: "QR 코드를 생성할 텍스트를 입력하세요"
         }
       }
     }
@@ -374,6 +384,11 @@ export const translations = {
             memoryError: "メモリエラー：より小さいビデオセグメントを使用するか、品質設定を下げてください。",
             errorProcessing: "ビデオ処理エラー"
           }
+        },
+        qrCodeGenerator: {
+          title: "QRコードジェネレーター",
+          description: "テキストからQRコードを生成",
+          placeholder: "QRコードを生成するテキストを入力してください"
         }
       }
     }
@@ -499,6 +514,11 @@ export const translations = {
             memoryError: "内存错误：请尝试使用较小的视频片段或降低质量设置。",
             errorProcessing: "视频处理错误"
           }
+        },
+        qrCodeGenerator: {
+          title: "二维码生成器",
+          description: "从文本生成二维码",
+          placeholder: "输入文本以生成二维码"
         }
       }
     }

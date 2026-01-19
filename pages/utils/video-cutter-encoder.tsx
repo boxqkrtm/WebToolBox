@@ -542,7 +542,7 @@ export default function VideoCutterEncoder() {
                     : ""
                 }
               >
-                {isLoading ? t('common.tools.videoCutterEncoder.page.processing')} : t('common.tools.videoCutterEncoder.page.process')}
+                {isLoading ? t('common.tools.videoCutterEncoder.page.processing') : t('common.tools.videoCutterEncoder.page.process')}
               </Button>
             </div>
             <p className="text-xs text-gray-500">
