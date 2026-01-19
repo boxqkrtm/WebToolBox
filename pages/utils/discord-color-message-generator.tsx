@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -224,7 +224,7 @@ export default function DiscordColorMessageGenerator() {
             </div>
             
             {selectedRange && (
-              <div className="p-3 border rounded-md bg-gray-50">
+              <div className="p-3 border rounded-md bg-gray-50 dark:bg-gray-800">
                 <div className="text-sm font-medium mb-2">
                   선택된 텍스트 범위 ({selectedRange[0]} ~ {selectedRange[1]})에 적용:
                 </div>

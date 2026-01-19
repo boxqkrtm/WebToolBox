@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { translations, Language } from './translations';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useMount } from '../hooks/useMount';
 
 interface I18nContextType {
   language: Language;
@@ -11,17 +13,12 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [mounted, setMounted] = useState(false);
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguageState] = useLocalStorage<Language>('language', 'en');
 
-  useEffect(() => {
+  useMount(() => {
     setMounted(true);
-  }, []);
 
-  // Detect browser language on mount
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    
-    const detectLanguage = () => {
+    const detectLanguage = (): Language => {
       const browserLang = navigator.language.toLowerCase();
       
       if (browserLang.startsWith('ko')) return 'ko';
@@ -30,24 +27,17 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return 'en';
     };
 
-    const savedLang = localStorage.getItem('language') as Language;
-    if (savedLang && translations[savedLang]) {
-      setLanguage(savedLang);
-    } else {
+    if (!language || !translations[language]) {
       const detectedLang = detectLanguage();
-      setLanguage(detectedLang);
-      localStorage.setItem('language', detectedLang);
+      setLanguageState(detectedLang);
     }
-  }, []);
+  });
 
-  const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('language', lang);
-    }
-  };
+  const setLanguage = useCallback((lang: Language) => {
+    setLanguageState(lang);
+  }, [setLanguageState]);
 
-  const t = (key: string): string => {
+  const t = useCallback((key: string): string => {
     const keys = key.split('.');
     let value: any = translations[language];
     
@@ -55,13 +45,12 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        // Fallback to English
         value = translations.en;
         for (const fallbackKey of keys) {
           if (value && typeof value === 'object' && fallbackKey in value) {
             value = value[fallbackKey];
           } else {
-            return key; // Return key if translation not found
+            return key;
           }
         }
         break;
@@ -69,10 +58,10 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     
     return typeof value === 'string' ? value : key;
-  };
+  }, [language]);
 
   return (
-    <I18nContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+    <I18nContext.Provider value={{ language, setLanguage, t }}>
       {mounted ? children : null}
     </I18nContext.Provider>
   );
