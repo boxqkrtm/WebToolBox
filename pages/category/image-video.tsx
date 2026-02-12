@@ -41,10 +41,10 @@ export default function ImageVideoCategoryPage() {
         <Link href="/utils/qr-code-generator" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>
-              <CardTitle>{t('common.tools.qrCodeGenerator.title')}</CardTitle>
+              <CardTitle>{t('common.tools.qrCode.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.qrCodeGenerator.description')}</p>
+              <p className="text-muted-foreground">{t('common.tools.qrCode.description')}</p>
             </CardContent>
           </Card>
         </Link>

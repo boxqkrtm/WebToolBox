@@ -144,10 +144,24 @@ export const translations = {
           title: "Tetrio Replay Editor",
           description: "Edit Tetrio replay files"
         },
-        qrCodeGenerator: {
-          title: "QR Code Generator",
-          description: "Generate QR codes from text",
-          placeholder: "Enter text to generate QR code"
+        qrCode: {
+          title: "QR Code",
+          description: "Generate and read QR codes",
+          placeholder: "Enter text to generate QR code",
+          tabGenerate: "Generate",
+          tabRead: "Read",
+          generateTitle: "Generate QR Code",
+          readTitle: "Read QR Code",
+          pasteFromClipboard: "Paste from clipboard (Ctrl+V)",
+          orUploadFile: "Or upload a QR code image",
+          uploadFile: "Upload Image",
+          decodedResult: "Decoded Result",
+          copyResult: "Copy",
+          copied: "Copied!",
+          noQrFound: "No QR code found in the image.",
+          pasteHint: "Press Ctrl+V to paste a QR code image from clipboard",
+          dragDropHint: "or drag & drop an image here",
+          downloadQr: "Download QR Code"
         }
       }
     }
@@ -293,10 +307,28 @@ export const translations = {
             errorProcessing: "비디오 처리 오류"
           }
         },
-        qrCodeGenerator: {
-          title: "QR 코드 생성기",
-          description: "텍스트로 QR 코드 생성",
-          placeholder: "QR 코드를 생성할 텍스트를 입력하세요"
+        tetrioReplayEditor: {
+          title: "테트리오 리플레이 편집기",
+          description: "테트리오 리플레이 파일 편집"
+        },
+        qrCode: {
+          title: "QR코드",
+          description: "QR코드 생성 및 인식",
+          placeholder: "QR 코드를 생성할 텍스트를 입력하세요",
+          tabGenerate: "생성",
+          tabRead: "인식",
+          generateTitle: "QR코드 생성",
+          readTitle: "QR코드 인식",
+          pasteFromClipboard: "클립보드에서 붙여넣기 (Ctrl+V)",
+          orUploadFile: "또는 QR코드 이미지 업로드",
+          uploadFile: "이미지 업로드",
+          decodedResult: "인식 결과",
+          copyResult: "복사",
+          copied: "복사됨!",
+          noQrFound: "이미지에서 QR코드를 찾을 수 없습니다.",
+          pasteHint: "Ctrl+V로 클립보드의 QR코드 이미지를 붙여넣으세요",
+          dragDropHint: "또는 이미지를 여기에 드래그 & 드롭",
+          downloadQr: "QR코드 다운로드"
         }
       }
     }
@@ -442,10 +474,28 @@ export const translations = {
             errorProcessing: "ビデオ処理エラー"
           }
         },
-        qrCodeGenerator: {
-          title: "QRコードジェネレーター",
-          description: "テキストからQRコードを生成",
-          placeholder: "QRコードを生成するテキストを入力してください"
+        tetrioReplayEditor: {
+          title: "テトリオリプレイエディター",
+          description: "テトリオリプレイファイルを編集"
+        },
+        qrCode: {
+          title: "QRコード",
+          description: "QRコードの生成と読み取り",
+          placeholder: "QRコードを生成するテキストを入力してください",
+          tabGenerate: "生成",
+          tabRead: "読み取り",
+          generateTitle: "QRコード生成",
+          readTitle: "QRコード読み取り",
+          pasteFromClipboard: "クリップボードから貼り付け (Ctrl+V)",
+          orUploadFile: "またはQRコード画像をアップロード",
+          uploadFile: "画像をアップロード",
+          decodedResult: "読み取り結果",
+          copyResult: "コピー",
+          copied: "コピーしました！",
+          noQrFound: "画像からQRコードが見つかりませんでした。",
+          pasteHint: "Ctrl+VでクリップボードのQRコード画像を貼り付けてください",
+          dragDropHint: "または画像をここにドラッグ＆ドロップ",
+          downloadQr: "QRコードをダウンロード"
         }
       }
     }
@@ -591,10 +641,28 @@ export const translations = {
             errorProcessing: "视频处理错误"
           }
         },
-        qrCodeGenerator: {
-          title: "二维码生成器",
-          description: "从文本生成二维码",
-          placeholder: "输入文本以生成二维码"
+        tetrioReplayEditor: {
+          title: "Tetrio回放编辑器",
+          description: "编辑Tetrio回放文件"
+        },
+        qrCode: {
+          title: "二维码",
+          description: "生成和读取二维码",
+          placeholder: "输入文本以生成二维码",
+          tabGenerate: "生成",
+          tabRead: "读取",
+          generateTitle: "生成二维码",
+          readTitle: "读取二维码",
+          pasteFromClipboard: "从剪贴板粘贴 (Ctrl+V)",
+          orUploadFile: "或上传二维码图片",
+          uploadFile: "上传图片",
+          decodedResult: "识别结果",
+          copyResult: "复制",
+          copied: "已复制！",
+          noQrFound: "在图片中未找到二维码。",
+          pasteHint: "按Ctrl+V粘贴剪贴板中的二维码图片",
+          dragDropHint: "或将图片拖放到此处",
+          downloadQr: "下载二维码"
         }
       }
     }
