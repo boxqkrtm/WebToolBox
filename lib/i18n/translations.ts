@@ -17,10 +17,6 @@ export const translations = {
           title: "Image & Video",
           description: "Tools for video and image manipulation."
         },
-        discord: {
-          title: "Discord",
-          description: "Utilities for Discord."
-        },
         llm: {
           title: "LLM",
           description: "Tools for Large Language Models."
@@ -50,6 +46,10 @@ export const translations = {
         boothAlgorithmMultiplier: {
           title: "Booth Algorithm Multiplier",
           description: "Binary multiplication using Booth's algorithm"
+        },
+        kakaotalkChatAnalyzer: {
+          title: "KakaoTalk Chat Analyzer",
+          description: "Analyze chat rankings and hourly activity from KakaoTalk logs"
         },
         discordColorMessageGenerator: {
           title: "Discord Color Message Generator",
@@ -184,10 +184,6 @@ export const translations = {
           title: "이미지 및 비디오",
           description: "비디오 및 이미지 편집 도구"
         },
-        discord: {
-          title: "디스코드",
-          description: "디스코드 유틸리티"
-        },
         llm: {
           title: "LLM",
           description: "대규모 언어 모델 도구"
@@ -217,6 +213,10 @@ export const translations = {
         boothAlgorithmMultiplier: {
           title: "부스 알고리즘 곱셈기",
           description: "부스 알고리즘을 사용한 이진 곱셈"
+        },
+        kakaotalkChatAnalyzer: {
+          title: "카카오톡 채팅 분석기",
+          description: "카카오톡 로그로 순위와 시간대별 활동을 분석"
         },
         discordColorMessageGenerator: {
           title: "디스코드 컬러 메시지 생성기",
@@ -351,10 +351,6 @@ export const translations = {
           title: "画像・動画",
           description: "動画と画像の編集ツール"
         },
-        discord: {
-          title: "Discord",
-          description: "Discord用ユーティリティ"
-        },
         llm: {
           title: "LLM",
           description: "大規模言語モデルツール"
@@ -384,6 +380,10 @@ export const translations = {
         boothAlgorithmMultiplier: {
           title: "ブースアルゴリズム乗算器",
           description: "ブースアルゴリズムを使用したバイナリ乗算"
+        },
+        kakaotalkChatAnalyzer: {
+          title: "KakaoTalkチャット分析",
+          description: "KakaoTalkログからランキングと時間帯別アクティビティを分析"
         },
         discordColorMessageGenerator: {
           title: "Discord カラーメッセージジェネレーター",
@@ -518,10 +518,6 @@ export const translations = {
           title: "图片和视频",
           description: "视频和图像编辑工具"
         },
-        discord: {
-          title: "Discord",
-          description: "Discord实用工具"
-        },
         llm: {
           title: "LLM",
           description: "大型语言模型工具"
@@ -551,6 +547,10 @@ export const translations = {
         boothAlgorithmMultiplier: {
           title: "Booth算法乘法器",
           description: "使用Booth算法进行二进制乘法"
+        },
+        kakaotalkChatAnalyzer: {
+          title: "KakaoTalk聊天分析器",
+          description: "从KakaoTalk日志分析排名与分时活跃度"
         },
         discordColorMessageGenerator: {
           title: "Discord彩色消息生成器",

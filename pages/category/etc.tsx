@@ -18,13 +18,35 @@ export default function EtcCategoryPage() {
       <p className="text-muted-foreground mb-6">{t('common.categories.etc.description')}</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        <Link href="/utils/discord-color-message-generator" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.discordColorMessageGenerator.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.discordColorMessageGenerator.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
         <Link href="/utils/booth-algorithm-multiplier" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>
-              <CardTitle>BoothAlgorithm Multiplier</CardTitle>
+              <CardTitle>{t('common.tools.boothAlgorithmMultiplier.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Visualize Booth's multiplication algorithm.</p>
+              <p className="text-muted-foreground">{t('common.tools.boothAlgorithmMultiplier.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/utils/kakaotalk-chat-analyzer" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.kakaotalkChatAnalyzer.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.kakaotalkChatAnalyzer.description')}</p>
             </CardContent>
           </Card>
         </Link>

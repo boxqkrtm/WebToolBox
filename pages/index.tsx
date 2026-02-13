@@ -5,7 +5,6 @@ import {
   HiDatabase,
   HiPuzzle,
   HiVideoCamera,
-  HiChatAlt2,
   HiLightningBolt,
   HiLocationMarker,
   HiCollection,
@@ -53,18 +52,6 @@ export default function Home() {
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/discord" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiChatAlt2 className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.discord.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.discord.description')}</p>
             </CardContent>
           </Card>
         </Link>
