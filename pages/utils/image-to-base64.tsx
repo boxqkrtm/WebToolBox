@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import UtilsLayout from '@/components/layout/UtilsLayout'
+import { useI18n } from '@/lib/i18n/i18nContext'
 
 export default function ImageToBase64() {
+  const { t } = useI18n()
   const [base64Data, setBase64Data] = useState('')
   const [fileName, setFileName] = useState('')
   const [mimeType, setMimeType] = useState('')
@@ -35,16 +37,16 @@ export default function ImageToBase64() {
   return (
     <UtilsLayout>
       <div className="space-y-4">
-        <h1 className="text-2xl font-bold">Image to Base64 Converter</h1>
+        <h1 className="text-2xl font-bold">{t('common.tools.imageToBase64.page.converterTitle')}</h1>
         <div className="space-y-2">
-          <Label htmlFor="image-upload">Upload an image</Label>
+          <Label htmlFor="image-upload">{t('common.tools.imageToBase64.page.uploadImage')}</Label>
           <Input id="image-upload" type="file" accept="image/*" onChange={handleImageUpload} />
         </div>
 
         {base64Data && (
           <div className="space-y-4">
             <div>
-              <Label htmlFor="base64-output">Base64 Output</Label>
+              <Label htmlFor="base64-output">{t('common.tools.imageToBase64.page.base64Output')}</Label>
               <Textarea
                 id="base64-output"
                 readOnly
@@ -53,9 +55,9 @@ export default function ImageToBase64() {
               />
             </div>
             <div className="flex space-x-2">
-              <Button onClick={() => copyToClipboard(base64Data)}>Copy Base64</Button>
-              <Button onClick={() => copyToClipboard(`data:${mimeType};base64,${base64Data}`)}>Copy for &lt;img&gt; src</Button>
-              <Button onClick={() => copyToClipboard(`url("data:${mimeType};base64,${base64Data}")`)}>Copy for CSS url()</Button>
+              <Button onClick={() => copyToClipboard(base64Data)}>{t('common.tools.imageToBase64.page.copyBase64')}</Button>
+              <Button onClick={() => copyToClipboard(`data:${mimeType};base64,${base64Data}`)}>{t('common.tools.imageToBase64.page.copyImgSrc')}</Button>
+              <Button onClick={() => copyToClipboard(`url("data:${mimeType};base64,${base64Data}")`)}>{t('common.tools.imageToBase64.page.copyCssUrl')}</Button>
             </div>
           </div>
         )}

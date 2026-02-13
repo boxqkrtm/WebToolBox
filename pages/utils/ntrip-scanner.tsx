@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
 import UtilsLayout from '@/components/layout/UtilsLayout';
+import { useI18n } from '@/lib/i18n/i18nContext';
 
 interface ErrorDetails {
     message: string;
@@ -16,6 +17,7 @@ interface ErrorDetails {
 }
 
 export default function NtripScanner() {
+    const { t } = useI18n();
     const [ip, setIp] = useState('rts2.ngii.go.kr');
     const [port, setPort] = useState('2101');
     const [id, setId] = useState('');
@@ -44,13 +46,13 @@ export default function NtripScanner() {
             let errorData: ErrorDetails;
             try {
                 errorData = err instanceof Error ? JSON.parse(err.message) : {
-                    message: '알 수 없는 오류가 발생했습니다',
-                    details: { host: ip, port: Number(port), connectionStatus: '실패' }
+                    message: t('common.tools.ntripScanner.page.unknownError'),
+                    details: { host: ip, port: Number(port), connectionStatus: t('common.tools.ntripScanner.page.connectionFailed') }
                 };
             } catch {
                 errorData = {
-                    message: err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다',
-                    details: { host: ip, port: Number(port), connectionStatus: '실패' }
+                    message: err instanceof Error ? err.message : t('common.tools.ntripScanner.page.unknownError'),
+                    details: { host: ip, port: Number(port), connectionStatus: t('common.tools.ntripScanner.page.connectionFailed') }
                 };
             }
             setError(errorData);
@@ -64,31 +66,31 @@ export default function NtripScanner() {
             <Card className="w-full max-w-md mx-auto">
                 <CardHeader>
                     <CardTitle className="text-center text-2xl font-bold text-gray-800">
-                        NTRIP Mount Point Scanner
+                        {t('common.tools.ntripScanner.page.title')}
                     </CardTitle>
                 </CardHeader>
                 <CardContent>
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="ip">Caster IP</Label>
+                            <Label htmlFor="ip">{t('common.tools.ntripScanner.page.casterIp')}</Label>
                             <Input
                                 id="ip"
                                 value={ip}
                                 onChange={(e) => setIp(e.target.value)}
-                                placeholder="예: rts2.ngii.go.kr"
+                                placeholder={t('common.tools.ntripScanner.page.hostPlaceholder')}
                             />
                         </div>
                         <div>
-                            <Label htmlFor="port">Port</Label>
+                            <Label htmlFor="port">{t('common.tools.ntripScanner.page.port')}</Label>
                             <Input
                                 id="port"
                                 value={port}
                                 onChange={(e) => setPort(e.target.value)}
-                                placeholder="예: 2101"
+                                placeholder={t('common.tools.ntripScanner.page.portPlaceholder')}
                             />
                         </div>
                         <div>
-                            <Label htmlFor="id">ID</Label>
+                            <Label htmlFor="id">{t('common.tools.ntripScanner.page.id')}</Label>
                             <Input
                                 id="id"
                                 value={id}
@@ -97,7 +99,7 @@ export default function NtripScanner() {
                             />
                         </div>
                         <div>
-                            <Label htmlFor="password">Password</Label>
+                            <Label htmlFor="password">{t('common.tools.ntripScanner.page.password')}</Label>
                             <Input
                                 id="password"
                                 type="password"
@@ -111,7 +113,7 @@ export default function NtripScanner() {
                             onClick={handleScan}
                             disabled={loading}
                         >
-                            {loading ? '스캔 중...' : '스캔 시작'}
+                            {loading ? t('common.tools.ntripScanner.page.scanning') : t('common.tools.ntripScanner.page.scanStart')}
                         </Button>
                         {error && (
                             <div className="text-red-500">
@@ -120,7 +122,7 @@ export default function NtripScanner() {
                         )}
                         {mountPoints.length > 0 && (
                             <div>
-                                <h2 className="text-xl font-bold">마운트포인트 리스트</h2>
+                                <h2 className="text-xl font-bold">{t('common.tools.ntripScanner.page.mountPointList')}</h2>
                                 <ul>
                                     {mountPoints.map((mountPoint, index) => (
                                         <li key={index}>{mountPoint}</li>

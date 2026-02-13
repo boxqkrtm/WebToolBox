@@ -33,11 +33,24 @@ export const translations = {
       tools: {
         escapedStringDecoder: {
           title: "Escaped String Decoder",
-          description: "Decode escaped strings"
+          description: "Decode escaped strings",
+          page: {
+            inputLabel: "Escaped String",
+            inputPlaceholder: "Enter escaped text (e.g. \"\\uAD00\")",
+            convert: "Convert",
+            outputLabel: "Converted Text",
+            errorPrefix: "Error"
+          }
         },
         xlsxToSql: {
           title: "XLSX to SQL",
-          description: "Convert Excel files to SQL statements"
+          description: "Convert Excel files to SQL statements",
+          page: {
+            converterTitle: "XLSX to SQL Converter",
+            uploadXlsxFile: "Upload XLSX File",
+            generatedSqlStatements: "Generated SQL Statements",
+            copyToClipboard: "Copy to Clipboard"
+          }
         },
         csvSorter: {
           title: "CSV Sorter",
@@ -54,6 +67,28 @@ export const translations = {
         discordColorMessageGenerator: {
           title: "Discord Color Message Generator",
           description: "Generate colored messages for Discord",
+          page: {
+            inputPlaceholder: "Enter your message...",
+            selectedRangeApply: "Apply to selected range",
+            styleLabel: "Style",
+            cancel: "Cancel",
+            charStylePicker: "Character Style Picker",
+            noTextColor: "No Text Color",
+            noBgColor: "No Background Color",
+            generateAndCopy: "Generate and Copy",
+            preview: "Preview",
+            howToTitle: "How to Use",
+            step1: "Enter your message.",
+            step2: "Select the text range to apply styles.",
+            step3: "Choose text color, text style, and background color.",
+            step4: "Apply styles to the selected range.",
+            step5: "Click Generate and Copy to copy the result.",
+            step6: "Paste it into a Discord code block.",
+            note: "Color rendering may vary depending on the Discord client.",
+            charTextColorTitle: "Character Text Color",
+            charTextStyleTitle: "Character Text Style",
+            charBgColorTitle: "Character Background Color"
+          },
           message: "Message",
           textColor: "Text Color",
           textStyle: "Text Style",
@@ -80,7 +115,15 @@ export const translations = {
         },
         imageToBase64: {
           title: "Image to Base64",
-          description: "Convert images to Base64 format"
+          description: "Convert images to Base64 format",
+          page: {
+            converterTitle: "Image to Base64 Converter",
+            uploadImage: "Upload Image",
+            base64Output: "Base64 Output",
+            copyBase64: "Copy Base64",
+            copyImgSrc: "Copy <img src>",
+            copyCssUrl: "Copy CSS url()"
+          }
         },
         kakaomapCoordOpener: {
           title: "KakaoMap Coord Opener",
@@ -92,7 +135,21 @@ export const translations = {
         },
         ntripScanner: {
           title: "NTRIP Scanner",
-          description: "Scan NTRIP casters for available streams"
+          description: "Scan NTRIP casters for available streams",
+          page: {
+            title: "NTRIP Scanner",
+            casterIp: "Caster IP",
+            port: "Port",
+            id: "ID",
+            password: "Password",
+            hostPlaceholder: "e.g. 127.0.0.1",
+            portPlaceholder: "e.g. 2101",
+            scanStart: "Start Scan",
+            scanning: "Scanning...",
+            mountPointList: "Mount Point List",
+            unknownError: "An unknown error occurred.",
+            connectionFailed: "Connection failed."
+          }
         },
         opticalPuyoReader: {
           title: "Optical Puyo Reader",
@@ -146,7 +203,15 @@ export const translations = {
             readingResult: "Reading result...",
             done: "Done!",
             memoryError: "Memory error: Try using a smaller video segment or reducing quality settings.",
-            errorProcessing: "Error processing video"
+            errorProcessing: "Error processing video",
+            selectedFile: "Selected File",
+            current: "Current",
+            limitOutputFileSize: "Limit Output File Size",
+            mbPlaceholder: "MB",
+            fixHighQuality: "Fix Video (High Quality)",
+            fixLowQuality: "Fix Video (Low Quality)",
+            largeFileWarning: "Large files may take longer to process.",
+            errorOccurred: "An error occurred."
           }
         },
         tetrioReplayEditor: {
@@ -170,7 +235,8 @@ export const translations = {
           noQrFound: "No QR code found in the image.",
           pasteHint: "Press Ctrl+V to paste a QR code image from clipboard",
           dragDropHint: "or drag & drop an image here",
-          downloadQr: "Download QR Code"
+          downloadQr: "Download QR Code",
+          previewAlt: "Generated QR code preview"
         }
       }
     }
@@ -209,11 +275,24 @@ export const translations = {
       tools: {
         escapedStringDecoder: {
           title: "이스케이프 문자열 디코더",
-          description: "이스케이프된 문자열 디코딩"
+          description: "이스케이프된 문자열 디코딩",
+          page: {
+            inputLabel: "이스케이프 문자열",
+            inputPlaceholder: "이스케이프 텍스트를 입력하세요 (예: \"\\uAD00\")",
+            convert: "변환",
+            outputLabel: "변환된 텍스트",
+            errorPrefix: "오류"
+          }
         },
         xlsxToSql: {
           title: "XLSX → SQL",
-          description: "엑셀 파일을 SQL 문으로 변환"
+          description: "엑셀 파일을 SQL 문으로 변환",
+          page: {
+            converterTitle: "XLSX → SQL 변환기",
+            uploadXlsxFile: "XLSX 파일 업로드",
+            generatedSqlStatements: "생성된 SQL 문",
+            copyToClipboard: "클립보드에 복사"
+          }
         },
         csvSorter: {
           title: "CSV 정렬기",
@@ -230,6 +309,28 @@ export const translations = {
         discordColorMessageGenerator: {
           title: "디스코드 컬러 메시지 생성기",
           description: "디스코드용 컬러 메시지 생성",
+          page: {
+            inputPlaceholder: "메시지를 입력하세요...",
+            selectedRangeApply: "선택 범위에 적용",
+            styleLabel: "스타일",
+            cancel: "취소",
+            charStylePicker: "문자 스타일 선택기",
+            noTextColor: "글자색 없음",
+            noBgColor: "배경색 없음",
+            generateAndCopy: "생성 후 복사",
+            preview: "미리보기",
+            howToTitle: "사용 방법",
+            step1: "메시지를 입력합니다.",
+            step2: "적용할 텍스트 범위를 선택합니다.",
+            step3: "글자색, 글자 스타일, 배경색을 선택합니다.",
+            step4: "선택 범위에 스타일을 적용합니다.",
+            step5: "생성 후 복사를 눌러 결과를 복사합니다.",
+            step6: "Discord 코드 블록에 붙여넣어 사용합니다.",
+            note: "Discord 클라이언트 환경에 따라 색상 표시가 다를 수 있습니다.",
+            charTextColorTitle: "문자 글자색",
+            charTextStyleTitle: "문자 글자 스타일",
+            charBgColorTitle: "문자 배경색"
+          },
           message: "메시지",
           textColor: "글자 색상",
           textStyle: "글자 스타일",
@@ -256,7 +357,15 @@ export const translations = {
         },
         imageToBase64: {
           title: "이미지 → Base64",
-          description: "이미지를 Base64 형식으로 변환"
+          description: "이미지를 Base64 형식으로 변환",
+          page: {
+            converterTitle: "이미지 → Base64 변환기",
+            uploadImage: "이미지 업로드",
+            base64Output: "Base64 출력",
+            copyBase64: "Base64 복사",
+            copyImgSrc: "<img src> 복사",
+            copyCssUrl: "CSS url() 복사"
+          }
         },
         kakaomapCoordOpener: {
           title: "카카오맵 좌표 열기",
@@ -268,7 +377,21 @@ export const translations = {
         },
         ntripScanner: {
           title: "NTRIP 스캐너",
-          description: "NTRIP 캐스터에서 사용 가능한 스트림 검색"
+          description: "NTRIP 캐스터에서 사용 가능한 스트림 검색",
+          page: {
+            title: "NTRIP 스캐너",
+            casterIp: "캐스터 IP",
+            port: "포트",
+            id: "ID",
+            password: "비밀번호",
+            hostPlaceholder: "예: 127.0.0.1",
+            portPlaceholder: "예: 2101",
+            scanStart: "스캔 시작",
+            scanning: "스캔 중...",
+            mountPointList: "마운트포인트 목록",
+            unknownError: "알 수 없는 오류가 발생했습니다.",
+            connectionFailed: "연결에 실패했습니다."
+          }
         },
         opticalPuyoReader: {
           title: "이미지 인식 뿌요 리더",
@@ -322,7 +445,15 @@ export const translations = {
             readingResult: "결과 읽는 중...",
             done: "완료!",
             memoryError: "메모리 오류: 더 작은 비디오 세그먼트를 사용하거나 품질 설정을 낮추세요.",
-            errorProcessing: "비디오 처리 오류"
+            errorProcessing: "비디오 처리 오류",
+            selectedFile: "선택한 파일",
+            current: "현재",
+            limitOutputFileSize: "출력 파일 크기 제한",
+            mbPlaceholder: "MB",
+            fixHighQuality: "비디오 수정 (고품질)",
+            fixLowQuality: "비디오 수정 (저품질)",
+            largeFileWarning: "큰 파일은 처리 시간이 오래 걸릴 수 있습니다.",
+            errorOccurred: "오류가 발생했습니다."
           }
         },
         tetrioReplayEditor: {
@@ -346,7 +477,8 @@ export const translations = {
           noQrFound: "이미지에서 QR코드를 찾을 수 없습니다.",
           pasteHint: "Ctrl+V로 클립보드의 QR코드 이미지를 붙여넣으세요",
           dragDropHint: "또는 이미지를 여기에 드래그 & 드롭",
-          downloadQr: "QR코드 다운로드"
+          downloadQr: "QR코드 다운로드",
+          previewAlt: "생성된 QR코드 미리보기"
         }
       }
     }
@@ -385,11 +517,24 @@ export const translations = {
       tools: {
         escapedStringDecoder: {
           title: "エスケープ文字列デコーダー",
-          description: "エスケープされた文字列をデコード"
+          description: "エスケープされた文字列をデコード",
+          page: {
+            inputLabel: "エスケープ文字列",
+            inputPlaceholder: "エスケープテキストを入力してください（例: \"\\uAD00\"）",
+            convert: "変換",
+            outputLabel: "変換されたテキスト",
+            errorPrefix: "エラー"
+          }
         },
         xlsxToSql: {
           title: "XLSX → SQL",
-          description: "ExcelファイルをSQL文に変換"
+          description: "ExcelファイルをSQL文に変換",
+          page: {
+            converterTitle: "XLSX → SQL 変換",
+            uploadXlsxFile: "XLSXファイルをアップロード",
+            generatedSqlStatements: "生成されたSQL文",
+            copyToClipboard: "クリップボードにコピー"
+          }
         },
         csvSorter: {
           title: "CSVソーター",
@@ -406,6 +551,28 @@ export const translations = {
         discordColorMessageGenerator: {
           title: "Discord カラーメッセージジェネレーター",
           description: "Discord用のカラーメッセージを生成",
+          page: {
+            inputPlaceholder: "メッセージを入力してください...",
+            selectedRangeApply: "選択範囲に適用",
+            styleLabel: "スタイル",
+            cancel: "キャンセル",
+            charStylePicker: "文字スタイルピッカー",
+            noTextColor: "文字色なし",
+            noBgColor: "背景色なし",
+            generateAndCopy: "生成してコピー",
+            preview: "プレビュー",
+            howToTitle: "使い方",
+            step1: "メッセージを入力します。",
+            step2: "適用するテキスト範囲を選択します。",
+            step3: "文字色、文字スタイル、背景色を選択します。",
+            step4: "選択範囲にスタイルを適用します。",
+            step5: "「生成してコピー」を押して結果をコピーします。",
+            step6: "Discordのコードブロックに貼り付けて使用します。",
+            note: "色の表示はDiscordのクライアント環境によって異なる場合があります。",
+            charTextColorTitle: "文字の色",
+            charTextStyleTitle: "文字スタイル",
+            charBgColorTitle: "文字の背景色"
+          },
           message: "メッセージ",
           textColor: "文字色",
           textStyle: "文字スタイル",
@@ -432,7 +599,15 @@ export const translations = {
         },
         imageToBase64: {
           title: "画像 → Base64",
-          description: "画像をBase64形式に変換"
+          description: "画像をBase64形式に変換",
+          page: {
+            converterTitle: "画像 → Base64 変換",
+            uploadImage: "画像をアップロード",
+            base64Output: "Base64出力",
+            copyBase64: "Base64をコピー",
+            copyImgSrc: "<img src> をコピー",
+            copyCssUrl: "CSS url() をコピー"
+          }
         },
         kakaomapCoordOpener: {
           title: "カカオマップ座標オープナー",
@@ -444,7 +619,21 @@ export const translations = {
         },
         ntripScanner: {
           title: "NTRIPスキャナー",
-          description: "NTRIPキャスターで利用可能なストリームを検索"
+          description: "NTRIPキャスターで利用可能なストリームを検索",
+          page: {
+            title: "NTRIPスキャナー",
+            casterIp: "キャスターIP",
+            port: "ポート",
+            id: "ID",
+            password: "パスワード",
+            hostPlaceholder: "例: 127.0.0.1",
+            portPlaceholder: "例: 2101",
+            scanStart: "スキャン開始",
+            scanning: "スキャン中...",
+            mountPointList: "マウントポイント一覧",
+            unknownError: "不明なエラーが発生しました。",
+            connectionFailed: "接続に失敗しました。"
+          }
         },
         opticalPuyoReader: {
           title: "光学ぷよぷよリーダー",
@@ -498,7 +687,15 @@ export const translations = {
             readingResult: "結果を読み取り中...",
             done: "完了！",
             memoryError: "メモリエラー：より小さいビデオセグメントを使用するか、品質設定を下げてください。",
-            errorProcessing: "ビデオ処理エラー"
+            errorProcessing: "ビデオ処理エラー",
+            selectedFile: "選択したファイル",
+            current: "現在",
+            limitOutputFileSize: "出力ファイルサイズを制限",
+            mbPlaceholder: "MB",
+            fixHighQuality: "ビデオ修正（高品質）",
+            fixLowQuality: "ビデオ修正（低品質）",
+            largeFileWarning: "ファイルが大きい場合、処理に時間がかかることがあります。",
+            errorOccurred: "エラーが発生しました。"
           }
         },
         tetrioReplayEditor: {
@@ -522,7 +719,8 @@ export const translations = {
           noQrFound: "画像からQRコードが見つかりませんでした。",
           pasteHint: "Ctrl+VでクリップボードのQRコード画像を貼り付けてください",
           dragDropHint: "または画像をここにドラッグ＆ドロップ",
-          downloadQr: "QRコードをダウンロード"
+          downloadQr: "QRコードをダウンロード",
+          previewAlt: "生成されたQRコードのプレビュー"
         }
       }
     }
@@ -561,11 +759,24 @@ export const translations = {
       tools: {
         escapedStringDecoder: {
           title: "转义字符串解码器",
-          description: "解码转义字符串"
+          description: "解码转义字符串",
+          page: {
+            inputLabel: "转义字符串",
+            inputPlaceholder: "输入转义文本（例如：\"\\uAD00\"）",
+            convert: "转换",
+            outputLabel: "转换后的文本",
+            errorPrefix: "错误"
+          }
         },
         xlsxToSql: {
           title: "XLSX 转 SQL",
-          description: "将Excel文件转换为SQL语句"
+          description: "将Excel文件转换为SQL语句",
+          page: {
+            converterTitle: "XLSX 转 SQL 转换器",
+            uploadXlsxFile: "上传 XLSX 文件",
+            generatedSqlStatements: "生成的 SQL 语句",
+            copyToClipboard: "复制到剪贴板"
+          }
         },
         csvSorter: {
           title: "CSV排序器",
@@ -582,6 +793,28 @@ export const translations = {
         discordColorMessageGenerator: {
           title: "Discord彩色消息生成器",
           description: "为Discord生成彩色消息",
+          page: {
+            inputPlaceholder: "请输入消息...",
+            selectedRangeApply: "应用到选中范围",
+            styleLabel: "样式",
+            cancel: "取消",
+            charStylePicker: "字符样式选择器",
+            noTextColor: "无文本颜色",
+            noBgColor: "无背景颜色",
+            generateAndCopy: "生成并复制",
+            preview: "预览",
+            howToTitle: "使用方法",
+            step1: "输入消息内容。",
+            step2: "选择要应用的文本范围。",
+            step3: "选择文本颜色、文本样式和背景颜色。",
+            step4: "将样式应用到选中范围。",
+            step5: "点击“生成并复制”复制结果。",
+            step6: "粘贴到 Discord 代码块中使用。",
+            note: "颜色显示效果可能因 Discord 客户端环境而异。",
+            charTextColorTitle: "字符文本颜色",
+            charTextStyleTitle: "字符文本样式",
+            charBgColorTitle: "字符背景颜色"
+          },
           message: "消息",
           textColor: "文本颜色",
           textStyle: "文本样式",
@@ -608,7 +841,15 @@ export const translations = {
         },
         imageToBase64: {
           title: "图片转Base64",
-          description: "将图片转换为Base64格式"
+          description: "将图片转换为Base64格式",
+          page: {
+            converterTitle: "图片转 Base64 转换器",
+            uploadImage: "上传图片",
+            base64Output: "Base64 输出",
+            copyBase64: "复制 Base64",
+            copyImgSrc: "复制 <img src>",
+            copyCssUrl: "复制 CSS url()"
+          }
         },
         kakaomapCoordOpener: {
           title: "KakaoMap坐标打开器",
@@ -620,7 +861,21 @@ export const translations = {
         },
         ntripScanner: {
           title: "NTRIP扫描器",
-          description: "扫描NTRIP广播器以查找可用流"
+          description: "扫描NTRIP广播器以查找可用流",
+          page: {
+            title: "NTRIP扫描器",
+            casterIp: "Caster IP",
+            port: "端口",
+            id: "ID",
+            password: "密码",
+            hostPlaceholder: "例如：127.0.0.1",
+            portPlaceholder: "例如：2101",
+            scanStart: "开始扫描",
+            scanning: "扫描中...",
+            mountPointList: "挂载点列表",
+            unknownError: "发生未知错误。",
+            connectionFailed: "连接失败。"
+          }
         },
         opticalPuyoReader: {
           title: "光学Puyo读取器",
@@ -674,7 +929,15 @@ export const translations = {
             readingResult: "正在读取结果...",
             done: "完成！",
             memoryError: "内存错误：请尝试使用较小的视频片段或降低质量设置。",
-            errorProcessing: "视频处理错误"
+            errorProcessing: "视频处理错误",
+            selectedFile: "已选择文件",
+            current: "当前",
+            limitOutputFileSize: "限制输出文件大小",
+            mbPlaceholder: "MB",
+            fixHighQuality: "修复视频（高质量）",
+            fixLowQuality: "修复视频（低质量）",
+            largeFileWarning: "大文件可能需要更长处理时间。",
+            errorOccurred: "发生错误。"
           }
         },
         tetrioReplayEditor: {
@@ -698,7 +961,8 @@ export const translations = {
           noQrFound: "在图片中未找到二维码。",
           pasteHint: "按Ctrl+V粘贴剪贴板中的二维码图片",
           dragDropHint: "或将图片拖放到此处",
-          downloadQr: "下载二维码"
+          downloadQr: "下载二维码",
+          previewAlt: "生成的二维码预览"
         }
       }
     }

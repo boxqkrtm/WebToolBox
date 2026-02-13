@@ -4,8 +4,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import UtilsLayout from "@/components/layout/UtilsLayout";
+import { useI18n } from "@/lib/i18n/i18nContext";
 
 export default function EscapedStringDecoder() {
+  const { t } = useI18n();
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
 
@@ -29,31 +31,31 @@ export default function EscapedStringDecoder() {
 
       setOutput(unescaped);
     } catch (error: any) {
-      setOutput(`Error: ${error.message}`);
+      setOutput(`${t('common.tools.escapedStringDecoder.page.errorPrefix')}: ${error.message}`);
     }
   };
 
   return (
     <UtilsLayout>
-      <h1 className="text-2xl font-bold mb-4">Escaped String Decoder</h1>
+      <h1 className="text-2xl font-bold mb-4">{t('common.tools.escapedStringDecoder.title')}</h1>
 
       <Card>
         <CardContent className="pt-6 space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="input">Escaped String</Label>
+            <Label htmlFor="input">{t('common.tools.escapedStringDecoder.page.inputLabel')}</Label>
             <Textarea
               id="input"
-              placeholder='Enter escaped text (e.g. "\uAD00")'
+              placeholder={t('common.tools.escapedStringDecoder.page.inputPlaceholder')}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               className="font-mono"
             />
           </div>
 
-          <Button onClick={convertText}>Convert</Button>
+          <Button onClick={convertText}>{t('common.tools.escapedStringDecoder.page.convert')}</Button>
 
           <div className="space-y-2">
-            <Label htmlFor="output">Converted Text</Label>
+            <Label htmlFor="output">{t('common.tools.escapedStringDecoder.page.outputLabel')}</Label>
             <Textarea
               id="output"
               value={output}

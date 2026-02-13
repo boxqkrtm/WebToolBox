@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { useI18n } from '@/lib/i18n/i18nContext'
 import * as XLSX from 'xlsx'
 
 export default function Component() {
+    const { t } = useI18n()
     const [sqlStatements, setSqlStatements] = useState<string>('')
 
     const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,10 +66,10 @@ export default function Component() {
 
     return (
         <div className="container mx-auto p-4 space-y-4">
-            <h1 className="text-2xl font-bold">XLSX to SQL Converter</h1>
+            <h1 className="text-2xl font-bold">{t('common.tools.xlsxToSql.page.converterTitle')}</h1>
 
             <div className="space-y-2">
-                <Label htmlFor="file">Upload XLSX File</Label>
+                <Label htmlFor="file">{t('common.tools.xlsxToSql.page.uploadXlsxFile')}</Label>
                 <Input
                     id="file"
                     type="file"
@@ -77,7 +79,7 @@ export default function Component() {
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="sql">Generated SQL Statements</Label>
+                <Label htmlFor="sql">{t('common.tools.xlsxToSql.page.generatedSqlStatements')}</Label>
                 <Textarea
                     id="sql"
                     value={sqlStatements}
@@ -88,7 +90,7 @@ export default function Component() {
 
             {sqlStatements && (
                 <Button onClick={handleCopy}>
-                    Copy to Clipboard
+                    {t('common.tools.xlsxToSql.page.copyToClipboard')}
                 </Button>
             )}
         </div>

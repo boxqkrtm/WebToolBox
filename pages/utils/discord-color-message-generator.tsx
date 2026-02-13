@@ -204,19 +204,19 @@ export default function DiscordColorMessageGenerator() {
     <div className="container mx-auto p-4 max-w-2xl">
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Discord Color Message Generator</CardTitle>
+          <CardTitle>{t('common.tools.discordColorMessageGenerator.title')}</CardTitle>
           <CardDescription>
-            Create colored messages for Discord using ANSI color codes
+            {t('common.tools.discordColorMessageGenerator.description')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
-              <Label htmlFor="message">메시지</Label>
+              <Label htmlFor="message">{t('common.tools.discordColorMessageGenerator.message')}</Label>
               <Textarea
                 id="message"
                 ref={textAreaRef}
-                placeholder="메시지를 입력하세요..."
+                placeholder={t('common.tools.discordColorMessageGenerator.page.inputPlaceholder')}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onMouseUp={handleTextSelection}
@@ -228,18 +228,18 @@ export default function DiscordColorMessageGenerator() {
             {selectedRange && (
               <div className="p-3 border rounded-md bg-gray-50 dark:bg-gray-800">
                 <div className="text-sm font-medium mb-2">
-                  선택된 텍스트 범위 ({selectedRange[0]} ~ {selectedRange[1]})에 적용:
+                  {t('common.tools.discordColorMessageGenerator.page.selectedRangeApply')} ({selectedRange[0]} ~ {selectedRange[1]})
                 </div>
                 <div className="flex flex-col gap-3">
                   <div>
-                    <Label className="block mb-1">색상:</Label>
+                    <Label className="block mb-1">{t('common.tools.discordColorMessageGenerator.textColor')}:</Label>
                     <div className="flex flex-wrap gap-1">
                       <Button 
                         variant="outline" 
                         className="h-8 px-2 py-0"
                         onClick={() => applyColorToRange("default")}
                       >
-                        없음
+                        {t('common.tools.discordColorMessageGenerator.none')}
                       </Button>
                       {ansiColors.map((color) => (
                         <Button 
@@ -260,41 +260,41 @@ export default function DiscordColorMessageGenerator() {
                   </div>
                   
                   <div>
-                    <Label className="block mb-1">스타일:</Label>
+                    <Label className="block mb-1">{t('common.tools.discordColorMessageGenerator.page.styleLabel')}:</Label>
                     <div className="flex gap-2">
                       <Button 
                         variant="outline" 
                         className="h-8"
                         onClick={() => applyStyleToRange("none")}
                       >
-                        일반
+                        {t('common.tools.discordColorMessageGenerator.none')}
                       </Button>
                       <Button 
                         variant="outline" 
                         className="h-8 font-bold"
                         onClick={() => applyStyleToRange("bold")}
                       >
-                        굵게
+                        {t('common.tools.discordColorMessageGenerator.bold')}
                       </Button>
                       <Button 
                         variant="outline" 
                         className="h-8 underline"
                         onClick={() => applyStyleToRange("underline")}
                       >
-                        밑줄
+                        {t('common.tools.discordColorMessageGenerator.underline')}
                       </Button>
                     </div>
                   </div>
                   
                   <div>
-                    <Label className="block mb-1">배경색:</Label>
+                    <Label className="block mb-1">{t('common.tools.discordColorMessageGenerator.bgColor')}:</Label>
                     <div className="flex flex-wrap gap-1">
                       <Button 
                         variant="outline" 
                         className="h-8 px-2 py-0"
                         onClick={() => applyBgColorToRange("default")}
                       >
-                        없음
+                        {t('common.tools.discordColorMessageGenerator.none')}
                       </Button>
                       {ansiColors.map((color) => (
                         <Button 
@@ -313,16 +313,16 @@ export default function DiscordColorMessageGenerator() {
                       ))}
                     </div>
                   </div>
-                  
+                   
                   <Button variant="outline" size="sm" onClick={() => setSelectedRange(null)} className="mt-1 self-start">
-                    취소
+                    {t('common.tools.discordColorMessageGenerator.page.cancel')}
                   </Button>
                 </div>
               </div>
             )}
             
             <div>
-              <Label className="block mb-2">글자별 스타일 선택</Label>
+              <Label className="block mb-2">{t('common.tools.discordColorMessageGenerator.page.charStylePicker')}</Label>
               <div className="mt-2 p-3 border rounded-md max-h-60 overflow-y-auto">
                 {message.split('').map((char, index) => (
                   <div key={index} className="inline-block mb-2 mr-2 text-center">
@@ -333,7 +333,7 @@ export default function DiscordColorMessageGenerator() {
                         value={characterColors[index] || "default"}
                         onValueChange={(value) => setCharacterColor(index, value === "default" ? "" : value)}
                       >
-                        <SelectTrigger className="w-10 h-8 p-0" title="글자 색상">
+                        <SelectTrigger className="w-10 h-8 p-0" title={t('common.tools.discordColorMessageGenerator.page.charTextColorTitle')}>
                           <div 
                             className="w-8 h-4 rounded" 
                             style={{ 
@@ -343,7 +343,7 @@ export default function DiscordColorMessageGenerator() {
                           ></div>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="default">색상 없음</SelectItem>
+                          <SelectItem value="default">{t('common.tools.discordColorMessageGenerator.page.noTextColor')}</SelectItem>
                           {ansiColors.map((color) => (
                             <SelectItem key={color.hex} value={color.hex}>
                               <div 
@@ -368,7 +368,7 @@ export default function DiscordColorMessageGenerator() {
                           }
                         }}
                       >
-                        <SelectTrigger className="w-10 h-8 p-0" title="글자 스타일">
+                        <SelectTrigger className="w-10 h-8 p-0" title={t('common.tools.discordColorMessageGenerator.page.charTextStyleTitle')}>
                           <div className="w-8 h-4 flex items-center justify-center text-xs">
                             {characterStyles[index] === "bold" && "B"}
                             {characterStyles[index] === "underline" && "U"}
@@ -376,9 +376,9 @@ export default function DiscordColorMessageGenerator() {
                           </div>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="none">일반</SelectItem>
-                          <SelectItem value="bold">굵게</SelectItem>
-                          <SelectItem value="underline">밑줄</SelectItem>
+                          <SelectItem value="none">{t('common.tools.discordColorMessageGenerator.none')}</SelectItem>
+                          <SelectItem value="bold">{t('common.tools.discordColorMessageGenerator.bold')}</SelectItem>
+                          <SelectItem value="underline">{t('common.tools.discordColorMessageGenerator.underline')}</SelectItem>
                         </SelectContent>
                       </Select>
                       
@@ -387,7 +387,7 @@ export default function DiscordColorMessageGenerator() {
                         value={characterBgColors[index] || "default"}
                         onValueChange={(value) => setCharacterBgColor(index, value === "default" ? "" : value)}
                       >
-                        <SelectTrigger className="w-10 h-8 p-0" title="배경 색상">
+                        <SelectTrigger className="w-10 h-8 p-0" title={t('common.tools.discordColorMessageGenerator.page.charBgColorTitle')}>
                           <div 
                             className="w-8 h-4 rounded border" 
                             style={{ 
@@ -397,7 +397,7 @@ export default function DiscordColorMessageGenerator() {
                           ></div>
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="default">배경 없음</SelectItem>
+                          <SelectItem value="default">{t('common.tools.discordColorMessageGenerator.page.noBgColor')}</SelectItem>
                           {ansiColors.map((color) => (
                             <SelectItem key={color.hex} value={color.hex}>
                               <div 
@@ -417,7 +417,7 @@ export default function DiscordColorMessageGenerator() {
           
           {/* eslint-disable-next-line react/no-unescaped-entities */}
           <Button onClick={generateColoredMessage} className="w-full mt-4">
-            색상 메시지 생성 및 복사
+            {t('common.tools.discordColorMessageGenerator.page.generateAndCopy')}
           </Button>
           
           {result && (
@@ -432,7 +432,7 @@ export default function DiscordColorMessageGenerator() {
                 />
               </div>
               <div className="mt-4">
-                <div className="text-sm font-medium">미리보기:</div>
+                <div className="text-sm font-medium">{t('common.tools.discordColorMessageGenerator.page.preview')}:</div>
                 <div
                   className="p-4 rounded-md border mt-2"
                   style={{ 
@@ -463,19 +463,19 @@ export default function DiscordColorMessageGenerator() {
 
       <Card>
         <CardHeader>
-          <CardTitle>사용 방법</CardTitle>
+          <CardTitle>{t('common.tools.discordColorMessageGenerator.page.howToTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
           <ol className="list-decimal list-inside space-y-2">
-            <li>메시지를 입력하세요</li>
-            <li>여러 글자를 드래그 선택하여 한번에 같은 색상, 스타일, 배경색을 적용할 수 있습니다</li>
-            <li>개별 글자마다 색상, 스타일, 배경색을 선택할 수도 있습니다</li>
-            <li>&quot;색상 메시지 생성 및 복사&quot; 버튼을 클릭하세요</li>
-            <li>생성된 코드가 자동으로 복사됩니다</li>
-            <li>디스코드 채팅에 붙여넣기 하세요</li>
+            <li>{t('common.tools.discordColorMessageGenerator.page.step1')}</li>
+            <li>{t('common.tools.discordColorMessageGenerator.page.step2')}</li>
+            <li>{t('common.tools.discordColorMessageGenerator.page.step3')}</li>
+            <li>{t('common.tools.discordColorMessageGenerator.page.step4')}</li>
+            <li>{t('common.tools.discordColorMessageGenerator.page.step5')}</li>
+            <li>{t('common.tools.discordColorMessageGenerator.page.step6')}</li>
           </ol>
           <p className="mt-4 text-sm text-gray-500">
-            참고: 색상 메시지는 모든 디스코드 클라이언트에서 동일하게 표시되지 않을 수 있습니다. 일부 클라이언트는 ANSI 포맷팅에 제한이 있을 수 있습니다.
+            {t('common.tools.discordColorMessageGenerator.page.note')}
           </p>
         </CardContent>
       </Card>

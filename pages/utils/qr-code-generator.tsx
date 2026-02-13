@@ -2,8 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n/i18nContext';
-import Link from 'next/link';
-import { HiArrowLeft, HiClipboardCopy, HiDownload, HiUpload, HiClipboard } from 'react-icons/hi';
+import { HiClipboardCopy, HiDownload, HiUpload, HiClipboard } from 'react-icons/hi';
 import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -149,12 +148,6 @@ export default function QrCodePage() {
 
   return (
     <div className="container mx-auto p-4 sm:p-6">
-      <Link href="/category/image-video" passHref>
-        <Button variant="outline" className="mb-6">
-          <HiArrowLeft className="mr-2 h-5 w-5" />
-          {t('common.backToCategories')}
-        </Button>
-      </Link>
       <h1 className="text-3xl font-bold mb-2">{t('common.tools.qrCode.title')}</h1>
       <p className="text-muted-foreground mb-6">{t('common.tools.qrCode.description')}</p>
 
@@ -255,7 +248,7 @@ export default function QrCodePage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={previewImage}
-                    alt="QR Preview"
+                    alt={t('common.tools.qrCode.previewAlt')}
                     className="max-w-full h-auto max-h-64 object-contain"
                     data-testid="qr-preview-image"
                   />

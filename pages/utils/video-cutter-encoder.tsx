@@ -187,9 +187,10 @@ export default function VideoCutterEncoder() {
       const fileSizeMB = videoFile.size / (1024 * 1024);
       if (fileSizeMB > 100) {
         setMessage(
-          `Warning: Large file (${fileSizeMB.toFixed(
-            1
-          )}MB) may cause memory issues. Consider using smaller segments.`
+          t('common.tools.videoCutterEncoder.page.largeFileWarning').replace(
+            '{size}',
+            fileSizeMB.toFixed(1)
+          )
         );
       }
 
@@ -390,7 +391,7 @@ export default function VideoCutterEncoder() {
         );
       } else {
         setMessage(
-          `An error occurred: ${
+          `${t('common.tools.videoCutterEncoder.page.errorOccurred')}: ${
             error instanceof Error ? error.message : String(error)
           }`
         );
@@ -430,7 +431,9 @@ export default function VideoCutterEncoder() {
                 d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
               />
             </svg>
-            {videoFile ? `Selected: ${videoFile.name}` : t('common.tools.videoCutterEncoder.page.chooseVideoFile')}
+            {videoFile
+              ? t('common.tools.videoCutterEncoder.page.selectedFile').replace('{name}', videoFile.name)
+              : t('common.tools.videoCutterEncoder.page.chooseVideoFile')}
           </Button>
         </div>
 
@@ -460,7 +463,7 @@ export default function VideoCutterEncoder() {
                 <div className="flex justify-between text-sm">
                   <span>{t('common.tools.videoCutterEncoder.page.start')}: {trimValues[0].toFixed(1)}s</span>
                   <span className="font-semibold">
-                    Current: {currentTime.toFixed(1)}s
+                    {t('common.tools.videoCutterEncoder.page.current')}: {currentTime.toFixed(1)}s
                   </span>
                   <span>{t('common.tools.videoCutterEncoder.page.end')}: {trimValues[1].toFixed(1)}s</span>
                 </div>
@@ -491,7 +494,7 @@ export default function VideoCutterEncoder() {
                   }
                 />
                 <Label htmlFor="size-limit-checkbox">
-                  Limit output file size
+                  {t('common.tools.videoCutterEncoder.page.limitOutputFileSize')}
                 </Label>
               </div>
 
@@ -519,7 +522,7 @@ export default function VideoCutterEncoder() {
                       value={customSizeLimit}
                       onChange={(e) => setCustomSizeLimit(e.target.value)}
                       min="1"
-                      placeholder="MB"
+                      placeholder={t('common.tools.videoCutterEncoder.page.mbPlaceholder')}
                     />
                   )}
                 </div>
@@ -575,7 +578,7 @@ export default function VideoCutterEncoder() {
                 disabled={isLoading || !videoFile}
                 variant="outline"
               >
-                Fix Video (High Quality)
+                {t('common.tools.videoCutterEncoder.page.fixHighQuality')}
               </Button>
               <Button
                 onClick={() => {
@@ -584,7 +587,7 @@ export default function VideoCutterEncoder() {
                 disabled={isLoading || !videoFile}
                 variant="outline"
               >
-                Fix Video (Low Quality)
+                {t('common.tools.videoCutterEncoder.page.fixLowQuality')}
               </Button>
             </div>
           </div>
