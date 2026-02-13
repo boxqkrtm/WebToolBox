@@ -7,7 +7,7 @@ import { useI18n } from '@/lib/i18n/i18nContext';
 export default function EtcCategoryPage() {
   const { t } = useI18n();
   return (
-    <div className="container mx-auto p-4 sm:p-6">
+    <div className="w-full p-4 sm:p-6">
       <Link href="/" passHref>
         <Button variant="outline" className="mb-6">
           <HiArrowLeft className="mr-2 h-5 w-5" />

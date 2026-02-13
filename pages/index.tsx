@@ -15,7 +15,7 @@ export default function Home() {
   const { t } = useI18n();
   
   return (
-    <div className="container mx-auto p-4 sm:p-6">
+    <div className="w-full p-4 sm:p-6">
       <h1 className="text-4xl font-bold text-center mb-2">{t('common.title')}</h1>
       <p className="text-xl text-muted-foreground text-center mb-8">{t('common.subtitle')}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

@@ -96,7 +96,16 @@ export const translations = {
         },
         opticalPuyoReader: {
           title: "Optical Puyo Reader",
-          description: "Read Puyo game board from images"
+          description: "Read Puyo game board from images",
+          uploadTip: "Upload a screenshot of the Puyo board. A 6x12 board will be recognized automatically.",
+          originalColors: "Original Colors",
+          categorizedColors: "Categorized Colors",
+          row: "Row",
+          column: "Column",
+          empty: "Empty",
+          colorSnapSensitivity: "Color snap sensitivity",
+          chainSimulatorLink: "Chain Simulator",
+          openInChainSimulator: "Open in Chain Simulator"
         },
         videoCutterEncoder: {
           title: "Video Cutter Encoder",
@@ -262,8 +271,17 @@ export const translations = {
           description: "NTRIP 캐스터에서 사용 가능한 스트림 검색"
         },
         opticalPuyoReader: {
-          title: "광학 뿌요 리더",
-          description: "이미지에서 뿌요 게임 보드 읽기"
+          title: "이미지 인식 뿌요 리더",
+          description: "이미지에서 뿌요 게임 보드 읽기",
+          uploadTip: "뿌요 보드 스크린샷을 업로드하세요. 6x12 보드를 자동 인식합니다.",
+          originalColors: "원본 색상",
+          categorizedColors: "분류된 색상",
+          row: "행",
+          column: "열",
+          empty: "빈칸",
+          colorSnapSensitivity: "색상 스냅 민감도",
+          chainSimulatorLink: "연쇄 시뮬레이터",
+          openInChainSimulator: "연쇄 시뮬레이터에서 열기"
         },
         videoCutterEncoder: {
           title: "비디오 커터 인코더",
@@ -430,7 +448,16 @@ export const translations = {
         },
         opticalPuyoReader: {
           title: "光学ぷよぷよリーダー",
-          description: "画像からぷよぷよゲームボードを読み取る"
+          description: "画像からぷよぷよゲームボードを読み取る",
+          uploadTip: "ぷよボードのスクリーンショットをアップロードしてください。6x12盤面を自動認識します。",
+          originalColors: "元の色",
+          categorizedColors: "分類後の色",
+          row: "行",
+          column: "列",
+          empty: "空",
+          colorSnapSensitivity: "色スナップ感度",
+          chainSimulatorLink: "連鎖シミュレーター",
+          openInChainSimulator: "連鎖シミュレーターで開く"
         },
         videoCutterEncoder: {
           title: "ビデオカッターエンコーダー",
@@ -597,7 +624,16 @@ export const translations = {
         },
         opticalPuyoReader: {
           title: "光学Puyo读取器",
-          description: "从图像中读取Puyo游戏板"
+          description: "从图像中读取Puyo游戏板",
+          uploadTip: "上传Puyo棋盘截图。系统会自动识别6x12棋盘。",
+          originalColors: "原始颜色",
+          categorizedColors: "分类后颜色",
+          row: "行",
+          column: "列",
+          empty: "空",
+          colorSnapSensitivity: "颜色吸附灵敏度",
+          chainSimulatorLink: "连锁模拟器",
+          openInChainSimulator: "在连锁模拟器中打开"
         },
         videoCutterEncoder: {
           title: "视频剪切编码器",
