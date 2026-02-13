@@ -19,10 +19,10 @@ export const Header: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'ko', name: '한국어' },
-    { code: 'ja', name: '日本語' },
-    { code: 'zh', name: '中文' }
+    { code: 'en', name: t('common.header.languages.en') },
+    { code: 'ko', name: t('common.header.languages.ko') },
+    { code: 'ja', name: t('common.header.languages.ja') },
+    { code: 'zh', name: t('common.header.languages.zh') }
   ];
 
   const handleBack = () => {
@@ -46,7 +46,7 @@ export const Header: React.FC = () => {
 
         <div className="flex items-center gap-4">
         <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[140px]" data-testid="language-selector">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -61,7 +61,8 @@ export const Header: React.FC = () => {
         <button
           onClick={toggleTheme}
           className="p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-          aria-label="Toggle theme"
+          aria-label={t('common.header.themeToggleAriaLabel')}
+          data-testid="theme-toggle"
         >
           {theme === 'light' ? (
             <HiMoon className="h-5 w-5" />

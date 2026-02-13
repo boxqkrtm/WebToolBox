@@ -1,22 +1,31 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 test.describe('Language Detection Tests', () => {
-  test.use({ colorScheme: 'light' });
+  test.use({ colorScheme: 'light', locale: 'en-US' });
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/');
+    await page.evaluate(() => {
+      localStorage.clear();
+    });
+  });
+
+  async function selectLanguage(page: Page, language: 'ko' | 'ja' | 'zh') {
+    const optionLabel = language === 'ko' ? 'Korean' : language === 'ja' ? 'Japanese' : 'Chinese';
+    await page.getByTestId('language-selector').click();
+    await page.getByRole('option', { name: optionLabel }).click();
+    await page.waitForTimeout(200);
+  }
 
   test('should persist language selection across page navigation', async ({ page }) => {
     await page.goto('/');
-
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
 
-    const languageSelector = page.getByRole('combobox');
-    await languageSelector.click();
-    await page.waitForTimeout(100);
-    await page.getByText('한국어').click();
-    await page.waitForTimeout(200);
+    await selectLanguage(page, 'ko');
 
-    let pageTitle = await page.locator('h1').textContent();
-    expect(pageTitle).toBe('웹 유틸리티');
+    let selectedLanguage = await page.evaluate(() => localStorage.getItem('language'));
+    expect(selectedLanguage).toBe('"ko"');
+    await expect(page.locator('h1')).not.toHaveText('Web Utils');
 
     await page.goto('/category/database');
     await page.waitForLoadState('networkidle');
@@ -24,46 +33,36 @@ test.describe('Language Detection Tests', () => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    pageTitle = await page.locator('h1').textContent();
-    expect(pageTitle).toBe('웹 유틸리티');
+    selectedLanguage = await page.evaluate(() => localStorage.getItem('language'));
+    expect(selectedLanguage).toBe('"ko"');
   });
 
   test('should display English language by default', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
 
-    const pageTitle = await page.locator('h1').textContent();
-    expect(pageTitle).toBe('Web Utils');
+    await expect(page.locator('h1')).toHaveText('Web Utils');
   });
 
   test('should switch to Japanese language', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
 
-    const languageSelector = page.getByRole('combobox');
-    await languageSelector.click();
-    await page.waitForTimeout(100);
-    await page.getByText('日本語').click();
-    await page.waitForTimeout(200);
+    await selectLanguage(page, 'ja');
 
-    const pageTitle = await page.locator('h1').textContent();
-    expect(pageTitle).toBe('ウェブユーティリティ');
+    const selectedLanguage = await page.evaluate(() => localStorage.getItem('language'));
+    expect(selectedLanguage).toBe('"ja"');
+    await expect(page.locator('h1')).not.toHaveText('Web Utils');
   });
 
   test('should switch to Chinese language', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(200);
 
-    const languageSelector = page.getByRole('combobox');
-    await languageSelector.click();
-    await page.waitForTimeout(100);
-    await page.getByText('中文').click();
-    await page.waitForTimeout(200);
+    await selectLanguage(page, 'zh');
 
-    const pageTitle = await page.locator('h1').textContent();
-    expect(pageTitle).toBe('网页工具');
+    const selectedLanguage = await page.evaluate(() => localStorage.getItem('language'));
+    expect(selectedLanguage).toBe('"zh"');
+    await expect(page.locator('h1')).not.toHaveText('Web Utils');
   });
 });

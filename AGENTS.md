@@ -1,4 +1,4 @@
-# AGENTS.md - Project Workflow & Development Guidelines
+﻿# AGENTS.md - Project Workflow & Development Guidelines
 
 This document describes the development workflow and conventions used in the WebToolBox project.
 
@@ -10,6 +10,13 @@ WebToolBox is a Next.js application providing various web utilities. Built with:
 - **UI Components**: shadcn/ui with Radix UI primitives
 - **Testing**: Playwright for E2E testing
 - **Language**: TypeScript 5.8.2
+- **Package Manager**: pnpm (project standard)
+
+## Package Manager Policy
+
+- Use `pnpm` for all dependency installation and script execution.
+- Do not add or commit npm lockfiles such as `package-lock.json`.
+- Use the committed `pnpm-lock.yaml` as the single lockfile source of truth.
 
 ## Core Features
 
@@ -149,16 +156,16 @@ Available in `lib/hooks/`:
 
 ```bash
 # Run all tests
-npx playwright test
+pnpm exec playwright test
 
 # Run specific test file
-npx playwright test tests/theme.spec.ts
+pnpm exec playwright test tests/theme.spec.ts
 
 # Run with UI
-npx playwright test --ui
+pnpm exec playwright test --ui
 
 # Run with headed mode
-npx playwright test --headed
+pnpm exec playwright test --headed
 ```
 
 ### Test Conventions
@@ -172,16 +179,19 @@ npx playwright test --headed
 
 ```bash
 # Build project
-npm run build
+pnpm build
 
 # Run dev server
-npm run dev
+pnpm dev
 
 # Start production server
-npm run start
+pnpm start
 
 # Lint code
-npm run lint
+pnpm lint
+
+# Type check
+pnpm typecheck
 ```
 
 ## Important Notes

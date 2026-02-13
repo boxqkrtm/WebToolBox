@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, CheckCircle, XCircle, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import UtilsLayout from '@/components/layout/UtilsLayout';
+import { useI18n } from '@/lib/i18n/i18nContext';
 
 const ggufQuants: { [key: string]: number } = {
   IQ1_S: 1.56,
@@ -66,6 +67,7 @@ interface ModelConfig {
 type SizeFetchStatus = 'idle' | 'loading' | 'fetched' | 'failed';
 
 export default function LlmVramCalculator() {
+  const { t } = useI18n();
   const [modelId, setModelId] = useState<string>("Qwen/Qwen3-0.6B");
   const [hfToken, setHfToken] = useState<string>("");
   const [modelConfig, setModelConfig] = useState<ModelConfig | null>(null);
@@ -97,7 +99,7 @@ export default function LlmVramCalculator() {
 
   const fetchModelConfigAndSize = useCallback(async () => {
     if (!modelId) {
-      setError("Please enter a Hugging Face model ID.");
+      setError(t('common.tools.llmVramCalculator.errors.enterModelId'));
       setModelConfig(null);
       setFetchedModelSizeB(null);
       setSizeFetchStatus('idle');
@@ -129,10 +131,10 @@ export default function LlmVramCalculator() {
     try {
       const configResponse = await fetch(configUrl, { headers });
       if (!configResponse.ok) {
-        if (configResponse.status === 401) throw new Error("Unauthorized: Check your Hugging Face token or model permissions for config.");
-        if (configResponse.status === 403) throw new Error("Forbidden: Your token may not have access to this gated/private model's config.");
-        if (configResponse.status === 404) throw new Error("Model config not found. Check the model ID.");
-        throw new Error(`Failed to fetch config: ${configResponse.statusText} (Status: ${configResponse.status})`);
+        if (configResponse.status === 401) throw new Error(t('common.tools.llmVramCalculator.errors.unauthorized'));
+        if (configResponse.status === 403) throw new Error(t('common.tools.llmVramCalculator.errors.forbidden'));
+        if (configResponse.status === 404) throw new Error(t('common.tools.llmVramCalculator.errors.modelConfigNotFound'));
+        throw new Error(`${t('common.tools.llmVramCalculator.errors.fetchConfigFailed')} ${configResponse.statusText}`);
       }
       let config = await configResponse.json();
 
@@ -141,7 +143,7 @@ export default function LlmVramCalculator() {
       }
 
       if (!config.hidden_size || !config.num_attention_heads || !config.num_hidden_layers) {
-        throw new Error("Incomplete model config: Missing required fields (hidden_size, num_attention_heads, num_hidden_layers).");
+        throw new Error(t('common.tools.llmVramCalculator.errors.incompleteConfig'));
       }
 
       const num_key_value_heads = config.num_key_value_heads || config.num_attention_heads;
@@ -159,7 +161,7 @@ export default function LlmVramCalculator() {
         if (!apiResponse.ok) {
           console.warn(`Failed to fetch model API info: ${apiResponse.statusText}. Model size needs manual input.`);
           setSizeFetchStatus('failed');
-          setError(prev => prev ? `${prev}\nCould not fetch model size info.` : "Could not fetch model size info. Please enter manually.");
+          setError(prev => prev ? `${prev}\n${t('common.tools.llmVramCalculator.errors.fetchModelSizeManual')}` : t('common.tools.llmVramCalculator.errors.fetchModelSizeManual'));
           return;
         }
         const apiData = await apiResponse.json();
@@ -179,22 +181,22 @@ export default function LlmVramCalculator() {
           setSizeFetchStatus('fetched');
         } else {
           setSizeFetchStatus('failed');
-          setError(prev => prev ? `${prev}\nCould not determine model size from API. Please enter manually.` : "Could not determine model size from API. Please enter manually.");
+          setError(prev => prev ? `${prev}\n${t('common.tools.llmVramCalculator.errors.fetchModelSizeManual')}` : t('common.tools.llmVramCalculator.errors.fetchModelSizeManual'));
         }
-      } catch (apiErr: any) {
+      } catch (_apiErr: any) {
         setSizeFetchStatus('failed');
-        setError(prev => prev ? `${prev}\nError fetching model size info. Please enter manually.` : `Error fetching model size info: ${apiErr.message}. Please enter manually.`);
+        setError(prev => prev ? `${prev}\n${t('common.tools.llmVramCalculator.errors.fetchModelSizeError')}` : t('common.tools.llmVramCalculator.errors.fetchModelSizeError'));
       }
 
     } catch (err: any) {
-      setError(err.message || "An unknown error occurred while fetching model data.");
+      setError(err.message || t('common.tools.llmVramCalculator.errors.unknownFetchError'));
       setModelConfig(null);
       setFetchedModelSizeB(null);
       setSizeFetchStatus('failed');
     } finally {
       setIsLoading(false);
     }
-  }, [modelId, hfToken]);
+  }, [modelId, hfToken, t]);
 
   const calculate = useCallback(() => {
     const sizeB = modelSize;
@@ -206,7 +208,7 @@ export default function LlmVramCalculator() {
 
     let currentError = error;
     if (currentError && (currentError.includes("Invalid") || currentError.includes("Cannot calculate"))) {
-        currentError = null;
+      currentError = null;
     }
 
     if (!modelConfig || sizeFetchStatus === 'loading' || isNaN(bsz) || bsz <= 0) {
@@ -215,16 +217,16 @@ export default function LlmVramCalculator() {
     }
 
     let validationError = null;
-    if (isNaN(sizeB) || sizeB <= 0) validationError = "Invalid Model Size.";
-    else if (isNaN(bpw) || bpw <= 0) validationError = "Invalid GGUF Quantization selected.";
-    else if (isNaN(context) || context < 1) validationError = "Invalid Context Length.";
-    else if (isNaN(kvBits) || kvBits <= 0) validationError = "Invalid KV Cache Quantization selected.";
-    else if (isNaN(extraOverhead) || extraOverhead < 0) validationError = "Invalid Overhead value.";
+    if (isNaN(sizeB) || sizeB <= 0) validationError = t('common.tools.llmVramCalculator.errors.invalidModelSize');
+    else if (isNaN(bpw) || bpw <= 0) validationError = t('common.tools.llmVramCalculator.errors.invalidGGUFQuant');
+    else if (isNaN(context) || context < 1) validationError = t('common.tools.llmVramCalculator.errors.invalidContextLength');
+    else if (isNaN(kvBits) || kvBits <= 0) validationError = t('common.tools.llmVramCalculator.errors.invalidKVQuant');
+    else if (isNaN(extraOverhead) || extraOverhead < 0) validationError = t('common.tools.llmVramCalculator.errors.invalidOverhead');
 
     if (validationError) {
-        setError(validationError);
-        setModelMemGB(NaN); setContextMemGB(NaN); setInputBufferGB(NaN); setComputeBufferGB(NaN); setTotalMemGB(NaN);
-        return;
+      setError(validationError);
+      setModelMemGB(NaN); setContextMemGB(NaN); setInputBufferGB(NaN); setComputeBufferGB(NaN); setTotalMemGB(NaN);
+      return;
     }
     setError(currentError);
 
@@ -239,25 +241,17 @@ export default function LlmVramCalculator() {
     const num_q_heads = modelConfig.num_attention_heads;
 
     if (isNaN(head_dim) || head_dim <= 0 || !Number.isInteger(head_dim)) {
-      const headError = "Invalid model config: Cannot calculate valid head dimension (hidden_size / num_attention_heads).";
+      const headError = t('common.tools.llmVramCalculator.errors.invalidHeadDimension');
       setError(headError);
       setModelMemGB(NaN); setContextMemGB(NaN); setInputBufferGB(NaN); setComputeBufferGB(NaN); setTotalMemGB(NaN);
       return;
     }
-    // kv
+
     const kvBytesPerTokenPerLayer = 2 * num_kv_heads * head_dim * (kvBits / 8);
     const totalKvBytes = context * num_layers * kvBytesPerTokenPerLayer;
 
-    // 절감률 계산 (full attention 기준: kv_heads = q_heads)
     const fullKvBytes = context * modelConfig.num_hidden_layers * (2 * num_q_heads * head_dim * (kvBits / 8));
     const savingFactor = fullKvBytes / totalKvBytes;
-
-    console.log(`Total KV Cache Size: ${(totalKvBytes / (1024 * 1024)).toFixed(2)} MB`);
-    if (savingFactor > 1) {
-      console.log(`💡 GQA enabled: KV cache uses ${savingFactor.toFixed(1)}x less memory than full attention.`);
-    } else {
-      console.log(`Standard attention: no KV memory saving.`);
-    }
 
     const calculatedCtxGB = totalKvBytes / bytes_per_gib;
 
@@ -284,7 +278,7 @@ export default function LlmVramCalculator() {
     setComputeBufferGB(calculatedComputeBufGB);
     setTotalMemGB(total);
 
-  }, [modelSize, quantKey, kvQuantKey, contextLength, overheadGB, modelConfig, error, sizeFetchStatus, batchSize]);
+  }, [modelSize, quantKey, kvQuantKey, contextLength, overheadGB, modelConfig, error, sizeFetchStatus, batchSize, t]);
 
   useEffect(() => {
     if (modelConfig && !isLoading && (sizeFetchStatus === 'fetched' || sizeFetchStatus === 'failed')) {
@@ -324,56 +318,56 @@ export default function LlmVramCalculator() {
     <UtilsLayout>
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader>
-          <CardTitle>LLM VRAM Calculator (GGUF Estimate)</CardTitle>
-          <CardDescription>Estimate VRAM usage including compute/input buffers based on Hugging Face model config and quantization.</CardDescription>
+          <CardTitle>{t('common.tools.llmVramCalculator.page.title')}</CardTitle>
+          <CardDescription>{t('common.tools.llmVramCalculator.page.description')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2 border p-4 rounded-md">
-            <Label htmlFor="modelId">Hugging Face Model ID</Label>
+            <Label htmlFor="modelId">{t('common.tools.llmVramCalculator.page.labels.modelId')}</Label>
             <Input
               id="modelId"
               type="text"
               value={modelId}
               onChange={(e) => setModelId(e.target.value)}
-              placeholder="e.g., mistralai/Mistral-7B-v0.1"
+              placeholder={t('common.tools.llmVramCalculator.page.placeholders.modelId')}
               disabled={isLoading}
             />
 
-            <Label htmlFor="hfToken">Hugging Face Token (Optional)</Label>
+            <Label htmlFor="hfToken">{t('common.tools.llmVramCalculator.page.labels.hfToken')}</Label>
             <Input
               id="hfToken"
               type="password"
               value={hfToken}
               onChange={(e) => setHfToken(e.target.value)}
-              placeholder="Enter token for private/gated models"
+              placeholder={t('common.tools.llmVramCalculator.page.placeholders.hfToken')}
               disabled={isLoading}
             />
-            <p className="text-sm text-muted-foreground">비공개 또는 게이트된 모델에 접근하려면 토큰이 필요합니다.</p>
+            <p className="text-sm text-muted-foreground">{t('common.tools.llmVramCalculator.page.descriptions.hfTokenHelp')}</p>
 
             <Button onClick={fetchModelConfigAndSize} disabled={isLoading || !modelId} className="w-full mt-2">
               {isLoading ? (
-                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading...</>
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('common.tools.llmVramCalculator.page.loading')}</>
               ) : (
-                "Load Model Info"
+                t('common.tools.llmVramCalculator.page.loadModelInfo')
               )}
             </Button>
           </div>
 
           {error && (
             <Alert variant="destructive">
-              <AlertTitle>Error</AlertTitle>
+              <AlertTitle>{t('common.tools.llmVramCalculator.page.alertTitleError')}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label htmlFor="modelSize">Model Size (Billion Parameters)</Label>
+              <Label htmlFor="modelSize">{t('common.tools.llmVramCalculator.page.labels.modelSize')}</Label>
               <div className="flex items-center space-x-1 text-xs text-muted-foreground">
-                {sizeFetchStatus === 'fetched' && <><CheckCircle className="h-3 w-3 text-green-500" /><span>Fetched</span></>}
-                {sizeFetchStatus === 'failed' && <><XCircle className="h-3 w-3 text-red-500" /><span>Fetch failed</span></>}
-                {sizeFetchStatus === 'loading' && <><Loader2 className="h-3 w-3 animate-spin" /><span>Fetching...</span></>}
-                {sizeFetchStatus === 'idle' && <><HelpCircle className="h-3 w-3" /><span>Load or enter manually</span></>}
+                {sizeFetchStatus === 'fetched' && <><CheckCircle className="h-3 w-3 text-green-500" /><span>{t('common.tools.llmVramCalculator.page.status.fetched')}</span></>}
+                {sizeFetchStatus === 'failed' && <><XCircle className="h-3 w-3 text-red-500" /><span>{t('common.tools.llmVramCalculator.page.status.fetchFailed')}</span></>}
+                {sizeFetchStatus === 'loading' && <><Loader2 className="h-3 w-3 animate-spin" /><span>{t('common.tools.llmVramCalculator.page.status.fetching')}</span></>}
+                {sizeFetchStatus === 'idle' && <><HelpCircle className="h-3 w-3" /><span>{t('common.tools.llmVramCalculator.page.status.loadOrEnter')}</span></>}
               </div>
             </div>
             <Input
@@ -384,17 +378,17 @@ export default function LlmVramCalculator() {
               value={isNaN(modelSize) ? '' : modelSize}
               onChange={handleNumberChange(setModelSize)}
               onBlur={handleNumberBlur(modelSize, setModelSize, 0, 0)}
-              placeholder="e.g., 7"
+              placeholder={t('common.tools.llmVramCalculator.page.placeholders.modelSize')}
               disabled={isLoading}
             />
             <p className="text-sm text-muted-foreground">
-              모델 가중치 메모리 계산에 사용됩니다. &apos;Load Model Info&apos; 버튼으로 가져오거나 수동 입력하세요.
-              {sizeFetchStatus === 'failed' && " 자동 가져오기 실패. 정확한 값을 입력해주세요."}
+              {t('common.tools.llmVramCalculator.page.descriptions.modelSize')}
+              {sizeFetchStatus === 'failed' && t('common.tools.llmVramCalculator.page.descriptions.modelSizeFailed')}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="batchSize">Batch Size (Tokens)</Label>
+            <Label htmlFor="batchSize">{t('common.tools.llmVramCalculator.page.labels.batchSize')}</Label>
             <Input
               id="batchSize"
               type="number"
@@ -403,14 +397,14 @@ export default function LlmVramCalculator() {
               value={isNaN(batchSize) ? '' : batchSize}
               onChange={handleNumberChange(setBatchSize)}
               onBlur={handleNumberBlur(batchSize, setBatchSize, 512, 1)}
-              placeholder="e.g., 512"
+              placeholder={t('common.tools.llmVramCalculator.page.placeholders.batchSize')}
               disabled={isLoading || !modelConfig}
             />
-            <p className="text-sm text-muted-foreground">Input/Compute 버퍼 계산에 사용됩니다. (llama.cpp 기본값: 512)</p>
+            <p className="text-sm text-muted-foreground">{t('common.tools.llmVramCalculator.page.descriptions.batchSize')}</p>
           </div>
 
           <div className="space-y-2">
-            <Label>Context Length (Tokens)</Label>
+            <Label>{t('common.tools.llmVramCalculator.page.labels.contextLength')}</Label>
             <RadioGroup value={contextLength} onValueChange={setContextLength} className="grid grid-cols-3 gap-2">
               {contextOptions.map(option => (
                 <div key={option.value} className="flex items-center space-x-2">
@@ -419,14 +413,14 @@ export default function LlmVramCalculator() {
                 </div>
               ))}
             </RadioGroup>
-            <p className="text-sm text-muted-foreground">모델 정보를 로드해야 활성화됩니다.</p>
+            <p className="text-sm text-muted-foreground">{t('common.tools.llmVramCalculator.page.descriptions.contextLength')}</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="quantSize">GGUF Weight Quantization</Label>
+            <Label htmlFor="quantSize">{t('common.tools.llmVramCalculator.page.labels.quantWeight')}</Label>
             <Select value={quantKey} onValueChange={setQuantKey} disabled={isLoading || !modelConfig}>
               <SelectTrigger id="quantSize">
-                <SelectValue placeholder="Select quantization" />
+                <SelectValue placeholder={t('common.tools.llmVramCalculator.page.placeholders.quantWeight')} />
               </SelectTrigger>
               <SelectContent>
                 {Object.keys(ggufQuants).map(key => (
@@ -434,14 +428,14 @@ export default function LlmVramCalculator() {
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">모델 가중치의 정밀도 (bits per weight). 모델 정보를 로드해야 활성화됩니다.</p>
+            <p className="text-sm text-muted-foreground">{t('common.tools.llmVramCalculator.page.descriptions.quantWeight')}</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="kvQuantSize">KV Cache Quantization</Label>
+            <Label htmlFor="kvQuantSize">{t('common.tools.llmVramCalculator.page.labels.quantKV')}</Label>
             <Select value={kvQuantKey} onValueChange={setKvQuantKey} disabled={isLoading || !modelConfig}>
               <SelectTrigger id="kvQuantSize">
-                <SelectValue placeholder="Select KV cache quantization" />
+                <SelectValue placeholder={t('common.tools.llmVramCalculator.page.placeholders.quantKV')} />
               </SelectTrigger>
               <SelectContent>
                 {Object.entries(kvCacheQuants).map(([key, value]) => (
@@ -449,11 +443,11 @@ export default function LlmVramCalculator() {
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-sm text-muted-foreground">K/V 캐시 요소의 정밀도. F16이 기본값입니다. 모델 정보를 로드해야 활성화됩니다.</p>
+            <p className="text-sm text-muted-foreground">{t('common.tools.llmVramCalculator.page.descriptions.quantKV')}</p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="overheadGB">Additional Overhead (GB)</Label>
+            <Label htmlFor="overheadGB">{t('common.tools.llmVramCalculator.page.labels.overhead')}</Label>
             <Input
               id="overheadGB"
               type="number"
@@ -462,33 +456,40 @@ export default function LlmVramCalculator() {
               value={isNaN(overheadGB) ? '' : overheadGB}
               onChange={handleNumberChange(setOverheadGB)}
               onBlur={handleNumberBlur(overheadGB, setOverheadGB, 0.5, 0)}
-              placeholder="e.g., 1.5"
+              placeholder={t('common.tools.llmVramCalculator.page.placeholders.overhead')}
               disabled={isLoading || !modelConfig}
             />
-            <p className="text-sm text-muted-foreground">CUDA 컨텍스트, 프레임워크, 기타 버퍼 등. 기본값 1.5GB에서 조절해보세요.</p>
+            <p className="text-sm text-muted-foreground">{t('common.tools.llmVramCalculator.page.descriptions.overhead')}</p>
           </div>
 
           <Card className={`bg-muted/50 ${(!modelConfig || error || modelSize <= 0 || sizeFetchStatus === 'loading') ? 'opacity-50' : ''}`}>
             <CardHeader className="p-4">
-              <CardTitle className="text-lg">Estimated VRAM Breakdown</CardTitle>
+              <CardTitle className="text-lg">{t('common.tools.llmVramCalculator.page.results.title')}</CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-2">
               {modelConfig && !error && modelSize > 0 && !isLoading && isFinite(totalMemGB) ? (
                 <>
-                  <p>Model Weights: <span className="font-semibold">{isFinite(modelMemGB) ? modelMemGB.toFixed(2) : 'N/A'}</span> GB</p>
-                  <p>KV Cache: <span className="font-semibold">{isFinite(contextMemGB) ? contextMemGB.toFixed(2) : 'N/A'}</span> GB</p>
-                  <p>Input Buffer: <span className="font-semibold">{isFinite(inputBufferGB) ? inputBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
-                  <p>Compute Buffer: <span className="font-semibold">{isFinite(computeBufferGB) ? computeBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
-                  <p>Overhead: <span className="font-semibold">{isFinite(overheadGB) ? overheadGB.toFixed(2) : 'N/A'}</span> GB</p>
-                  <p className="text-lg"><strong>Total Estimated VRAM: <span className="font-semibold">{totalMemGB.toFixed(2)}</span> GB</strong></p>
+                  <p>{t('common.tools.llmVramCalculator.page.results.modelWeights')} <span className="font-semibold">{isFinite(modelMemGB) ? modelMemGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>{t('common.tools.llmVramCalculator.page.results.kvCache')} <span className="font-semibold">{isFinite(contextMemGB) ? contextMemGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>{t('common.tools.llmVramCalculator.page.results.inputBuffer')} <span className="font-semibold">{isFinite(inputBufferGB) ? inputBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>{t('common.tools.llmVramCalculator.page.results.computeBuffer')} <span className="font-semibold">{isFinite(computeBufferGB) ? computeBufferGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p>{t('common.tools.llmVramCalculator.page.results.overhead')} <span className="font-semibold">{isFinite(overheadGB) ? overheadGB.toFixed(2) : 'N/A'}</span> GB</p>
+                  <p className="text-lg"><strong>{t('common.tools.llmVramCalculator.page.results.total')} <span className="font-semibold">{totalMemGB.toFixed(2)}</span> GB</strong></p>
                 </>
               ) : (
                 <p className="text-muted-foreground">
-                  {isLoading ? 'Loading data...' :
-                   (error ? `Calculation failed: ${error}` :
-                    (!modelConfig && sizeFetchStatus !== 'loading' ? 'Click "Load Model Info" to start.' :
-                     (modelSize <= 0 && sizeFetchStatus !== 'loading' ? 'Enter a valid model size or load model info.' :
-                      'Calculating...')))}
+                  {isLoading
+                    ? t('common.tools.llmVramCalculator.page.messages.loadingData')
+                    : (error
+                      ? `${t('common.tools.llmVramCalculator.page.messages.calculationFailedPrefix')}${error}`
+                      : (!modelConfig && sizeFetchStatus !== 'loading'
+                        ? t('common.tools.llmVramCalculator.page.messages.startPrompt')
+                        : (modelSize <= 0 && sizeFetchStatus !== 'loading'
+                          ? t('common.tools.llmVramCalculator.page.messages.validModelSizePrompt')
+                          : t('common.tools.llmVramCalculator.page.messages.calculating')
+                        )
+                      )
+                  )}
                 </p>
               )}
             </CardContent>

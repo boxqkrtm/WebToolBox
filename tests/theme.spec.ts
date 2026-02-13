@@ -11,7 +11,7 @@ test.describe('Dark Mode', () => {
   });
 
   test('should have theme toggle button visible', async ({ page }) => {
-    const themeToggleButton = page.getByRole('button', { name: 'Toggle theme' });
+    const themeToggleButton = page.getByTestId('theme-toggle');
     await expect(themeToggleButton).toBeVisible();
   });
 
@@ -23,7 +23,7 @@ test.describe('Dark Mode', () => {
 
   test('should toggle from dark to light mode', async ({ page }) => {
     const htmlElement = page.locator('html');
-    const themeToggleButton = page.getByRole('button', { name: 'Toggle theme' });
+    const themeToggleButton = page.getByTestId('theme-toggle');
 
     const hasDarkClassInitially = await htmlElement.evaluate(el => el.classList.contains('dark'));
     expect(hasDarkClassInitially).toBe(true);
@@ -37,7 +37,7 @@ test.describe('Dark Mode', () => {
 
   test('should toggle from light to dark mode', async ({ page }) => {
     const htmlElement = page.locator('html');
-    const themeToggleButton = page.getByRole('button', { name: 'Toggle theme' });
+    const themeToggleButton = page.getByTestId('theme-toggle');
 
     await themeToggleButton.click();
     await page.waitForTimeout(100);
@@ -53,7 +53,7 @@ test.describe('Dark Mode', () => {
   });
 
   test('should persist theme preference in localStorage', async ({ page }) => {
-    const themeToggleButton = page.getByRole('button', { name: 'Toggle theme' });
+    const themeToggleButton = page.getByTestId('theme-toggle');
 
     await themeToggleButton.click();
     await page.waitForTimeout(100);
@@ -71,7 +71,7 @@ test.describe('Dark Mode', () => {
   test('should change background color when toggling theme', async ({ page }) => {
     const htmlElement = page.locator('html');
     const mainDiv = page.locator('.min-h-screen');
-    const themeToggleButton = page.getByRole('button', { name: 'Toggle theme' });
+    const themeToggleButton = page.getByTestId('theme-toggle');
 
     const htmlClass = await htmlElement.evaluate(el => el.className);
     console.log('HTML class before click:', htmlClass);
@@ -96,4 +96,3 @@ test.describe('Dark Mode', () => {
   });
 
 });
-
