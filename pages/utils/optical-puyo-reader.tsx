@@ -202,12 +202,12 @@ export default function Component() {
         accept="image/png" 
         onChange={handleImageUpload} 
         className="mb-4" 
-        aria-label="Upload PNG image"
+        aria-label={t('common.tools.opticalPuyoReader.uploadPngImageAriaLabel')}
       />
       <p>{t('common.tools.opticalPuyoReader.uploadTip')}</p>
       {imageUrl && (
         <div className="mb-4">
-          <Image src={imageUrl} alt="Uploaded" width={imageDimensions.width} height={imageDimensions.height} className="max-w-full h-auto" />
+          <Image src={imageUrl} alt={t('common.tools.opticalPuyoReader.uploadedImageAlt')} width={imageDimensions.width} height={imageDimensions.height} className="max-w-full h-auto" />
         </div>
       )}
       <canvas ref={canvasRef} style={{ display: 'none' }} aria-hidden="true" />
