@@ -579,7 +579,56 @@
         },
         kakaotalkChatAnalyzer: {
           title: "카카오톡 채팅 분석기",
-          description: "카카오톡 로그로 순위와 시간대별 활동을 분석"
+          description: "카카오톡 로그로 순위와 시간대별 활동을 분석",
+          page: {
+            chatFileLabel: "채팅 로그 파일 업로드",
+            pasteLabel: "또는 채팅 텍스트 직접 붙여넣기",
+            rawTextPlaceholder: "[닉네임] [09:12] 메시지",
+            parsingText: "파싱 중...",
+            analyzeButton: "분석 시작",
+            sampleFormat: "예시 형식: [이름] [오전 10:12] 메시지",
+            parsedMessagesCount: "파싱된 메시지 수:",
+            targetMessagesCount: "현재 대상 메시지 수:",
+            preset: {
+              all: "전체",
+              last7: "최근 7일",
+              last30: "최근 30일",
+              thisYear: "올해"
+            },
+            startDateLabel: "시작 날짜",
+            endDateLabel: "종료 날짜",
+            openPicker: "열기",
+            datePickerMin: "최소",
+            datePickerMax: "최대",
+            datePickerClose: "닫기",
+            userHourlySection: "사용자별 시간대 활동",
+            nicknameLabel: "사용자 선택",
+            nicknameSearchPlaceholder: "사용자 검색 (부분 일치)",
+            searchingNickname: "검색 중...",
+            noNickname: "선택 안 함",
+            totalUniqueUsers: "전체 고유 사용자",
+            people: "명",
+            noSearchResult: "검색 결과가 없습니다.",
+            selectedUserHourlyTitle: "시간대 활동(메시지 수)",
+            selectedUserTopMessagesTitle: "자주 보낸 메시지 유형",
+            noMessageData: "메시지 데이터가 없습니다.",
+            table: {
+              head: {
+                rank: "순위",
+                message: "메시지",
+                count: "횟수",
+                nickname: "닉네임",
+                messageCount: "메시지 수",
+                occurrences: "등장 횟수"
+              }
+            },
+            hourlyActiveUsers: "시간대별 활성 사용자(고유 사용자)",
+            hourlyMessageActivity: "시간대별 메시지 수",
+            userActivityRankingTitle: "사용자 활동 순위(메시지 수)",
+            topMessagesTitle: "자주 등장한 메시지 순위",
+            topMessagesDescription: "순위 테이블 + 도넛 차트",
+            donutChartAriaLabel: "메시지 빈도 도넛 차트"
+          }
         },
         discordColorMessageGenerator: {
           title: "디스코드 컬러 메시지 생성기",
@@ -654,7 +703,82 @@
         },
         llmVramCalculator: {
           title: "LLM VRAM 계산기",
-          description: "LLM의 VRAM 요구사항 계산"
+          description: "LLM의 VRAM 요구사항 계산",
+          errors: {
+            enterModelId: "모델 ID를 입력하세요.",
+            unauthorized: "인증에 실패했습니다. 토큰 권한을 확인하세요.",
+            forbidden: "접근 권한이 없습니다.",
+            modelConfigNotFound: "모델 설정 파일을 찾을 수 없습니다.",
+            fetchConfigFailed: "모델 설정을 불러오지 못했습니다:",
+            incompleteConfig: "모델 설정 정보가 불완전합니다.",
+            fetchModelSizeManual: "모델 크기를 자동으로 가져오지 못했습니다. 수동으로 입력하세요.",
+            fetchModelSizeError: "API에서 모델 크기 조회에 실패했습니다.",
+            unknownFetchError: "모델 정보를 가져오는 중 알 수 없는 오류가 발생했습니다.",
+            invalidModelSize: "모델 크기 값이 올바르지 않습니다.",
+            invalidGGUFQuant: "가중치 양자화 값이 올바르지 않습니다.",
+            invalidContextLength: "컨텍스트 길이 값이 올바르지 않습니다.",
+            invalidKVQuant: "KV 캐시 양자화 값이 올바르지 않습니다.",
+            invalidOverhead: "오버헤드 값이 올바르지 않습니다.",
+            invalidHeadDimension: "모델 설정의 헤드 차원 값이 올바르지 않습니다."
+          },
+          page: {
+            title: "LLM VRAM 계산기 (GGUF 추정)",
+            description: "모델 가중치, KV 캐시, 버퍼, 오버헤드를 포함한 VRAM 사용량을 추정합니다.",
+            alertTitleError: "오류",
+            loading: "로딩 중...",
+            loadModelInfo: "모델 정보 불러오기",
+            labels: {
+              modelId: "모델 ID (Hugging Face)",
+              hfToken: "HF 토큰 (선택)",
+              modelSize: "모델 크기 (B 파라미터)",
+              batchSize: "배치 크기",
+              contextLength: "컨텍스트 길이",
+              quantWeight: "가중치 양자화 (GGUF)",
+              quantKV: "KV 캐시 양자화",
+              overhead: "추가 오버헤드 (GB)"
+            },
+            placeholders: {
+              modelId: "예: Qwen/Qwen3-0.6B",
+              hfToken: "hf_xxx (선택)",
+              modelSize: "예: 0.6",
+              batchSize: "예: 512",
+              quantWeight: "GGUF 양자화 선택",
+              quantKV: "KV 캐시 양자화 선택",
+              overhead: "예: 0.5"
+            },
+            descriptions: {
+              hfTokenHelp: "게이트/비공개 모델일 때만 토큰이 필요합니다.",
+              modelSize: "단위는 B(10억 파라미터)입니다.",
+              modelSizeFailed: " 자동 조회에 실패했습니다. 수동으로 입력하세요.",
+              batchSize: "입력/연산 버퍼 추정에 사용됩니다.",
+              contextLength: "KV 캐시 크기 추정에 사용됩니다.",
+              quantWeight: "모델 가중치 메모리 계산에 사용되는 비트/가중치 값입니다.",
+              quantKV: "KV 캐시 메모리 계산에 사용되는 비트 폭입니다.",
+              overhead: "런타임/시스템 추가 오버헤드(GB)입니다."
+            },
+            status: {
+              fetched: "자동 조회됨",
+              fetchFailed: "자동 조회 실패",
+              fetching: "조회 중...",
+              loadOrEnter: "불러오거나 직접 입력"
+            },
+            results: {
+              title: "예상 VRAM 상세",
+              modelWeights: "모델 가중치:",
+              kvCache: "KV 캐시:",
+              inputBuffer: "입력 버퍼:",
+              computeBuffer: "연산 버퍼:",
+              overhead: "오버헤드:",
+              total: "예상 총합:"
+            },
+            messages: {
+              loadingData: "모델 데이터를 불러오는 중...",
+              calculationFailedPrefix: "계산 불가: ",
+              startPrompt: "모델 정보를 불러오면 계산이 시작됩니다.",
+              validModelSizePrompt: "유효한 모델 크기를 입력하세요.",
+              calculating: "계산 중..."
+            }
+          }
         },
         ntripScanner: {
           title: "NTRIP 스캐너",
@@ -894,7 +1018,56 @@
         },
         kakaotalkChatAnalyzer: {
           title: "KakaoTalkチャット分析",
-          description: "KakaoTalkログからランキングと時間帯別アクティビティを分析"
+          description: "KakaoTalkログからランキングと時間帯別アクティビティを分析",
+          page: {
+            chatFileLabel: "チャットログファイルをアップロード",
+            pasteLabel: "またはチャットテキストを直接貼り付け",
+            rawTextPlaceholder: "[ニックネーム] [09:12] メッセージ",
+            parsingText: "解析中...",
+            analyzeButton: "分析開始",
+            sampleFormat: "サンプル形式: [名前] [10:12 AM] メッセージ",
+            parsedMessagesCount: "解析済みメッセージ数:",
+            targetMessagesCount: "現在の対象メッセージ数:",
+            preset: {
+              all: "すべて",
+              last7: "直近7日",
+              last30: "直近30日",
+              thisYear: "今年"
+            },
+            startDateLabel: "開始日",
+            endDateLabel: "終了日",
+            openPicker: "開く",
+            datePickerMin: "最小",
+            datePickerMax: "最大",
+            datePickerClose: "閉じる",
+            userHourlySection: "ユーザー別時間帯アクティビティ",
+            nicknameLabel: "ユーザー選択",
+            nicknameSearchPlaceholder: "ユーザー検索（部分一致）",
+            searchingNickname: "検索中...",
+            noNickname: "未選択",
+            totalUniqueUsers: "ユニークユーザー総数",
+            people: "人",
+            noSearchResult: "検索結果がありません。",
+            selectedUserHourlyTitle: "時間帯アクティビティ（メッセージ数）",
+            selectedUserTopMessagesTitle: "よく使うメッセージ種類",
+            noMessageData: "メッセージデータがありません。",
+            table: {
+              head: {
+                rank: "順位",
+                message: "メッセージ",
+                count: "回数",
+                nickname: "ニックネーム",
+                messageCount: "メッセージ数",
+                occurrences: "出現回数"
+              }
+            },
+            hourlyActiveUsers: "時間帯別アクティブユーザー（ユニーク）",
+            hourlyMessageActivity: "時間帯別メッセージ数",
+            userActivityRankingTitle: "ユーザー活動ランキング（メッセージ数）",
+            topMessagesTitle: "頻出メッセージランキング",
+            topMessagesDescription: "ランキング表 + ドーナツチャート",
+            donutChartAriaLabel: "メッセージ頻度ドーナツチャート"
+          }
         },
         discordColorMessageGenerator: {
           title: "Discord カラーメッセージジェネレーター",
@@ -969,7 +1142,82 @@
         },
         llmVramCalculator: {
           title: "LLM VRAM計算機",
-          description: "LLMのVRAM要件を計算"
+          description: "LLMのVRAM要件を計算",
+          errors: {
+            enterModelId: "モデルIDを入力してください。",
+            unauthorized: "認証に失敗しました。トークン権限を確認してください。",
+            forbidden: "アクセス権がありません。",
+            modelConfigNotFound: "モデル設定ファイルが見つかりません。",
+            fetchConfigFailed: "モデル設定の取得に失敗しました:",
+            incompleteConfig: "モデル設定情報が不完全です。",
+            fetchModelSizeManual: "モデルサイズを自動取得できませんでした。手動で入力してください。",
+            fetchModelSizeError: "APIからモデルサイズを取得できませんでした。",
+            unknownFetchError: "モデル情報の取得中に不明なエラーが発生しました。",
+            invalidModelSize: "モデルサイズが無効です。",
+            invalidGGUFQuant: "重み量子化値が無効です。",
+            invalidContextLength: "コンテキスト長が無効です。",
+            invalidKVQuant: "KVキャッシュ量子化値が無効です。",
+            invalidOverhead: "オーバーヘッド値が無効です。",
+            invalidHeadDimension: "モデル設定のヘッド次元が無効です。"
+          },
+          page: {
+            title: "LLM VRAM計算機（GGUF推定）",
+            description: "モデル重み、KVキャッシュ、バッファ、オーバーヘッドを含むVRAM使用量を推定します。",
+            alertTitleError: "エラー",
+            loading: "読み込み中...",
+            loadModelInfo: "モデル情報を読み込む",
+            labels: {
+              modelId: "モデルID（Hugging Face）",
+              hfToken: "HFトークン（任意）",
+              modelSize: "モデルサイズ（Bパラメータ）",
+              batchSize: "バッチサイズ",
+              contextLength: "コンテキスト長",
+              quantWeight: "重み量子化（GGUF）",
+              quantKV: "KVキャッシュ量子化",
+              overhead: "追加オーバーヘッド（GB）"
+            },
+            placeholders: {
+              modelId: "例: Qwen/Qwen3-0.6B",
+              hfToken: "hf_xxx（任意）",
+              modelSize: "例: 0.6",
+              batchSize: "例: 512",
+              quantWeight: "GGUF量子化を選択",
+              quantKV: "KVキャッシュ量子化を選択",
+              overhead: "例: 0.5"
+            },
+            descriptions: {
+              hfTokenHelp: "ゲート付き/非公開モデルの場合のみトークンが必要です。",
+              modelSize: "単位はB（10億パラメータ）です。",
+              modelSizeFailed: " 自動取得に失敗しました。手動で入力してください。",
+              batchSize: "入力/計算バッファ推定に使用します。",
+              contextLength: "KVキャッシュサイズ推定に使用します。",
+              quantWeight: "モデル重みメモリ計算に使うビット/重み値です。",
+              quantKV: "KVキャッシュメモリ計算に使うビット幅です。",
+              overhead: "ランタイム/システム追加オーバーヘッド（GB）です。"
+            },
+            status: {
+              fetched: "自動取得済み",
+              fetchFailed: "自動取得失敗",
+              fetching: "取得中...",
+              loadOrEnter: "読み込むか手動入力"
+            },
+            results: {
+              title: "推定VRAM内訳",
+              modelWeights: "モデル重み:",
+              kvCache: "KVキャッシュ:",
+              inputBuffer: "入力バッファ:",
+              computeBuffer: "計算バッファ:",
+              overhead: "オーバーヘッド:",
+              total: "推定合計:"
+            },
+            messages: {
+              loadingData: "モデルデータを読み込み中...",
+              calculationFailedPrefix: "計算不可: ",
+              startPrompt: "モデル情報を読み込むと推定を開始できます。",
+              validModelSizePrompt: "有効なモデルサイズを入力してください。",
+              calculating: "計算中..."
+            }
+          }
         },
         ntripScanner: {
           title: "NTRIPスキャナー",
@@ -1209,7 +1457,56 @@
         },
         kakaotalkChatAnalyzer: {
           title: "KakaoTalk聊天分析器",
-          description: "从KakaoTalk日志分析排名与分时活跃度"
+          description: "从KakaoTalk日志分析排名与分时活跃度",
+          page: {
+            chatFileLabel: "上传聊天日志文件",
+            pasteLabel: "或直接粘贴聊天文本",
+            rawTextPlaceholder: "[昵称] [09:12] 消息",
+            parsingText: "解析中...",
+            analyzeButton: "开始分析",
+            sampleFormat: "示例格式: [姓名] [10:12 AM] 消息",
+            parsedMessagesCount: "已解析消息数:",
+            targetMessagesCount: "当前目标消息数:",
+            preset: {
+              all: "全部",
+              last7: "最近7天",
+              last30: "最近30天",
+              thisYear: "今年"
+            },
+            startDateLabel: "开始日期",
+            endDateLabel: "结束日期",
+            openPicker: "打开",
+            datePickerMin: "最小",
+            datePickerMax: "最大",
+            datePickerClose: "关闭",
+            userHourlySection: "按用户分时活跃度",
+            nicknameLabel: "选择用户",
+            nicknameSearchPlaceholder: "搜索用户（部分匹配）",
+            searchingNickname: "搜索中...",
+            noNickname: "未选择",
+            totalUniqueUsers: "唯一用户总数",
+            people: "人",
+            noSearchResult: "未找到结果。",
+            selectedUserHourlyTitle: "分时活跃度（消息数）",
+            selectedUserTopMessagesTitle: "高频消息类型",
+            noMessageData: "暂无消息数据。",
+            table: {
+              head: {
+                rank: "排名",
+                message: "消息",
+                count: "次数",
+                nickname: "昵称",
+                messageCount: "消息数",
+                occurrences: "出现次数"
+              }
+            },
+            hourlyActiveUsers: "分时活跃用户数（唯一用户）",
+            hourlyMessageActivity: "分时消息数",
+            userActivityRankingTitle: "用户活跃排名（消息数）",
+            topMessagesTitle: "高频消息排名",
+            topMessagesDescription: "排名表 + 环形图",
+            donutChartAriaLabel: "消息频率环形图"
+          }
         },
         discordColorMessageGenerator: {
           title: "Discord彩色消息生成器",
@@ -1284,7 +1581,82 @@
         },
         llmVramCalculator: {
           title: "LLM VRAM计算器",
-          description: "计算LLM的VRAM需求"
+          description: "计算LLM的VRAM需求",
+          errors: {
+            enterModelId: "请输入模型ID。",
+            unauthorized: "认证失败，请检查令牌权限。",
+            forbidden: "无权访问该模型。",
+            modelConfigNotFound: "未找到模型配置文件。",
+            fetchConfigFailed: "获取模型配置失败:",
+            incompleteConfig: "模型配置信息不完整。",
+            fetchModelSizeManual: "无法自动获取模型大小，请手动输入。",
+            fetchModelSizeError: "从API获取模型大小失败。",
+            unknownFetchError: "获取模型信息时发生未知错误。",
+            invalidModelSize: "模型大小无效。",
+            invalidGGUFQuant: "权重量化值无效。",
+            invalidContextLength: "上下文长度无效。",
+            invalidKVQuant: "KV缓存量化值无效。",
+            invalidOverhead: "额外开销值无效。",
+            invalidHeadDimension: "模型配置中的头维度无效。"
+          },
+          page: {
+            title: "LLM VRAM计算器（GGUF估算）",
+            description: "估算包含模型权重、KV缓存、缓冲区和开销在内的VRAM占用。",
+            alertTitleError: "错误",
+            loading: "加载中...",
+            loadModelInfo: "加载模型信息",
+            labels: {
+              modelId: "模型ID（Hugging Face）",
+              hfToken: "HF令牌（可选）",
+              modelSize: "模型大小（B参数）",
+              batchSize: "批大小",
+              contextLength: "上下文长度",
+              quantWeight: "权重量化（GGUF）",
+              quantKV: "KV缓存量化",
+              overhead: "额外开销（GB）"
+            },
+            placeholders: {
+              modelId: "例如：Qwen/Qwen3-0.6B",
+              hfToken: "hf_xxx（可选）",
+              modelSize: "例如：0.6",
+              batchSize: "例如：512",
+              quantWeight: "选择GGUF量化",
+              quantKV: "选择KV缓存量化",
+              overhead: "例如：0.5"
+            },
+            descriptions: {
+              hfTokenHelp: "仅在受限/私有模型时需要令牌。",
+              modelSize: "单位为B（十亿参数）。",
+              modelSizeFailed: " 自动获取失败，请手动输入。",
+              batchSize: "用于估算输入/计算缓冲区。",
+              contextLength: "用于估算KV缓存大小。",
+              quantWeight: "用于计算模型权重内存的每权重比特数。",
+              quantKV: "用于计算KV缓存内存的比特宽度。",
+              overhead: "运行时/系统额外开销（GB）。"
+            },
+            status: {
+              fetched: "自动获取成功",
+              fetchFailed: "自动获取失败",
+              fetching: "获取中...",
+              loadOrEnter: "加载或手动输入"
+            },
+            results: {
+              title: "预计VRAM明细",
+              modelWeights: "模型权重:",
+              kvCache: "KV缓存:",
+              inputBuffer: "输入缓冲区:",
+              computeBuffer: "计算缓冲区:",
+              overhead: "额外开销:",
+              total: "预计总计:"
+            },
+            messages: {
+              loadingData: "正在加载模型数据...",
+              calculationFailedPrefix: "无法计算: ",
+              startPrompt: "加载模型信息后开始估算。",
+              validModelSizePrompt: "请输入有效的模型大小。",
+              calculating: "计算中..."
+            }
+          }
         },
         ntripScanner: {
           title: "NTRIP扫描器",
