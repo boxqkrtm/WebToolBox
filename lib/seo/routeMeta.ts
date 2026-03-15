@@ -115,6 +115,12 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Convert image files to Base64 output.",
     section: "Image & Video",
   },
+  "/utils/gif-optimizer": {
+    slug: "gif-optimizer",
+    title: "GIF Optimizer",
+    description: "Resize and optimize GIF files in your browser.",
+    section: "Image & Video",
+  },
   "/utils/escaped-string-decoder": {
     slug: "escaped-string-decoder",
     title: "Escaped String Decoder",
@@ -151,4 +157,3 @@ export function getRouteMeta(pathname: string): RouteMeta {
   const normalizedPath = normalizePathname(pathname);
   return routeMetaMap[normalizedPath] ?? defaultMeta;
 }
-

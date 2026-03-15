@@ -40,6 +40,16 @@ export default function ImageVideoCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/utils/gif-optimizer" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.gifOptimizer.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.gifOptimizer.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

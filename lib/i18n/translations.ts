@@ -241,6 +241,26 @@
             copyCssUrl: "Copy CSS url()"
           }
         },
+        gifOptimizer: {
+          title: "GIF Optimizer",
+          description: "Resize and optimize GIF files",
+          page: {
+            description: "Optimize GIF size by adjusting resolution, frame rate, and lossy value.",
+            upload: "Upload GIF",
+            gifsicleArgs: "gifsicle wasm args",
+            resizeWidth: "Resize Width",
+            frameRate: "Frame Rate",
+            lossy: "Lossy",
+            run: "Run Optimization",
+            loadingEngine: "Loading optimization engine...",
+            optimizing: "Optimizing GIF...",
+            done: "Optimization completed.",
+            error: "Error",
+            before: "Before",
+            after: "After",
+            download: "Download GIF"
+          }
+        },
         kakaomapCoordOpener: {
           title: "KakaoMap Coord Opener",
           description: "Open coordinates in KakaoMap",
@@ -691,6 +711,26 @@
             copyCssUrl: "CSS url() 복사"
           }
         },
+        gifOptimizer: {
+          title: "GIF 최적화",
+          description: "GIF 해상도/프레임을 조정하여 최적화",
+          page: {
+            description: "해상도, 프레임, lossy 값을 조절해 GIF 용량을 줄입니다.",
+            upload: "GIF 업로드",
+            gifsicleArgs: "gifsicle wasm 인자",
+            resizeWidth: "가로 해상도",
+            frameRate: "프레임",
+            lossy: "Lossy",
+            run: "최적화 실행",
+            loadingEngine: "최적화 엔진 로딩 중...",
+            optimizing: "GIF 최적화 중...",
+            done: "최적화가 완료되었습니다.",
+            error: "오류",
+            before: "변환 전",
+            after: "변환 후",
+            download: "GIF 다운로드"
+          }
+        },
         kakaomapCoordOpener: {
           title: "카카오맵 좌표 열기",
           description: "카카오맵에서 좌표 열기",
@@ -1130,6 +1170,26 @@
             copyCssUrl: "CSS url() をコピー"
           }
         },
+        gifOptimizer: {
+          title: "GIF 最適化",
+          description: "GIF の解像度とフレームを調整して最適化",
+          page: {
+            description: "解像度、フレーム、lossy 値を調整して GIF サイズを減らします。",
+            upload: "GIF をアップロード",
+            gifsicleArgs: "gifsicle wasm 引数",
+            resizeWidth: "幅の変更",
+            frameRate: "フレームレート",
+            lossy: "Lossy",
+            run: "最適化を実行",
+            loadingEngine: "最適化エンジンを読み込み中...",
+            optimizing: "GIF を最適化中...",
+            done: "最適化が完了しました。",
+            error: "エラー",
+            before: "変換前",
+            after: "変換後",
+            download: "GIF をダウンロード"
+          }
+        },
         kakaomapCoordOpener: {
           title: "カカオマップ座標オープナー",
           description: "カカオマップで座標を開く",
@@ -1567,6 +1627,26 @@
             copyBase64: "复制 Base64",
             copyImgSrc: "复制 <img src>",
             copyCssUrl: "复制 CSS url()"
+          }
+        },
+        gifOptimizer: {
+          title: "GIF 优化",
+          description: "调整分辨率和帧率来优化 GIF",
+          page: {
+            description: "通过调整分辨率、帧率和 lossy 值来减小 GIF 体积。",
+            upload: "上传 GIF",
+            gifsicleArgs: "gifsicle wasm 参数",
+            resizeWidth: "宽度调整",
+            frameRate: "帧率",
+            lossy: "Lossy",
+            run: "开始优化",
+            loadingEngine: "正在加载优化引擎...",
+            optimizing: "正在优化 GIF...",
+            done: "优化完成。",
+            error: "错误",
+            before: "优化前",
+            after: "优化后",
+            download: "下载 GIF"
           }
         },
         kakaomapCoordOpener: {
