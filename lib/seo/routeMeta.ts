@@ -67,6 +67,18 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Cut and encode video segments in your browser.",
     section: "Image & Video",
   },
+  "/utils/mp4-to-gif": {
+    slug: "mp4-to-gif",
+    title: "MP4 to GIF",
+    description: "Convert short video clips into GIF previews in your browser.",
+    section: "Image & Video",
+  },
+  "/utils/gif-optimizer": {
+    slug: "gif-optimizer",
+    title: "GIF Optimizer",
+    description: "Reduce GIF size by resizing and lowering frame rate in your browser.",
+    section: "Image & Video",
+  },
   "/utils/tetrio-replay-editor": {
     slug: "tetrio-replay-editor",
     title: "Tetrio Replay Editor",
@@ -151,4 +163,3 @@ export function getRouteMeta(pathname: string): RouteMeta {
   const normalizedPath = normalizePathname(pathname);
   return routeMetaMap[normalizedPath] ?? defaultMeta;
 }
-

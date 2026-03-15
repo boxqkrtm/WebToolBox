@@ -241,6 +241,54 @@
             copyCssUrl: "Copy CSS url()"
           }
         },
+        mp4ToGif: {
+          title: "MP4 to GIF",
+          description: "Convert MP4 video to animated GIF",
+          page: {
+            title: "MP4 to GIF Converter",
+            upload: "Upload MP4 file",
+            selected: "Selected",
+            fps: "Frames per second",
+            resolution: "Resolution scale",
+            estimatedSize: "Estimated size",
+            actualSize: "Actual output size",
+            sizeEstimateUnavailable: "Estimate unavailable (shown after conversion)",
+            run: "Convert",
+            converting: "Converting...",
+            preview: "Preview",
+            previewAlt: "Converted GIF preview",
+            download: "Download GIF",
+            loadingFfmpeg: "Loading FFmpeg core...",
+            done: "Conversion completed.",
+            error: "Conversion failed. Please try another file or lower settings.",
+            optimizeButton: "Optimize Size",
+            sendingButton: "Sending...",
+            transferError: "Could not open the GIF optimizer"
+          }
+        },
+        gifOptimizer: {
+          title: "GIF Optimizer",
+          description: "Resize and optimize GIF files",
+          page: {
+            description: "Optimize GIF size by adjusting resolution, frame rate, and lossy value.",
+            upload: "Upload GIF",
+            gifsicleArgs: "gifsicle wasm args",
+            resizeWidth: "Resize Width",
+            frameRate: "Frame Rate",
+            lossy: "Lossy",
+            run: "Run Optimization",
+            loadingEngine: "Loading optimization engine...",
+            optimizing: "Optimizing GIF...",
+            done: "Optimization completed.",
+            error: "Error",
+            before: "Before",
+            after: "After",
+            download: "Download GIF",
+            transferLoaded: "GIF preview loaded from the converter.",
+            transferNotFound: "Transferred GIF could not be found.",
+            transferError: "Could not load the transferred GIF"
+          }
+        },
         kakaomapCoordOpener: {
           title: "KakaoMap Coord Opener",
           description: "Open coordinates in KakaoMap",
@@ -691,6 +739,54 @@
             copyCssUrl: "CSS url() 복사"
           }
         },
+        mp4ToGif: {
+          title: "MP4 → GIF",
+          description: "MP4 비디오를 GIF 애니메이션으로 변환",
+          page: {
+            title: "MP4 → GIF 변환기",
+            upload: "MP4 파일 업로드",
+            selected: "선택됨",
+            fps: "초당 프레임 수",
+            resolution: "해상도 비율",
+            estimatedSize: "예상 크기",
+            actualSize: "실제 출력 크기",
+            sizeEstimateUnavailable: "예상 불가 (변환 후 표시)",
+            run: "변환",
+            converting: "변환 중...",
+            preview: "미리보기",
+            previewAlt: "변환된 GIF 미리보기",
+            download: "GIF 다운로드",
+            loadingFfmpeg: "FFmpeg 코어 로딩 중...",
+            done: "변환이 완료되었습니다.",
+            error: "변환에 실패했습니다. 다른 파일을 사용하거나 설정을 낮춰보세요.",
+            optimizeButton: "용량 최적화",
+            sendingButton: "전송 중...",
+            transferError: "GIF 최적화 페이지를 열 수 없습니다."
+          }
+        },
+        gifOptimizer: {
+          title: "GIF 최적화",
+          description: "GIF 파일 크기를 조절하고 최적화",
+          page: {
+            description: "해상도, 프레임 속도, lossy 값을 조정하여 GIF 용량을 줄입니다.",
+            upload: "GIF 업로드",
+            gifsicleArgs: "gifsicle wasm 인자",
+            resizeWidth: "가로 크기",
+            frameRate: "프레임 속도",
+            lossy: "Lossy",
+            run: "최적화 실행",
+            loadingEngine: "최적화 엔진 로딩 중...",
+            optimizing: "GIF 최적화 중...",
+            done: "최적화가 완료되었습니다.",
+            error: "오류",
+            before: "최적화 전",
+            after: "최적화 후",
+            download: "GIF 다운로드",
+            transferLoaded: "변환기에서 생성한 GIF를 불러왔습니다.",
+            transferNotFound: "전달된 GIF를 찾을 수 없습니다.",
+            transferError: "전달된 GIF를 불러오지 못했습니다."
+          }
+        },
         kakaomapCoordOpener: {
           title: "카카오맵 좌표 열기",
           description: "카카오맵에서 좌표 열기",
@@ -1130,6 +1226,54 @@
             copyCssUrl: "CSS url() をコピー"
           }
         },
+        mp4ToGif: {
+          title: "MP4からGIF",
+          description: "MP4動画をGIFアニメーションに変換",
+          page: {
+            title: "MP4からGIF変換",
+            upload: "MP4ファイルをアップロード",
+            selected: "選択済み",
+            fps: "フレーム毎秒",
+            resolution: "解像度倍率",
+            estimatedSize: "推定サイズ",
+            actualSize: "実際の出力サイズ",
+            sizeEstimateUnavailable: "推定不可（変換後に表示）",
+            run: "変換",
+            converting: "変換中...",
+            preview: "プレビュー",
+            previewAlt: "変換後のGIFプレビュー",
+            download: "GIFをダウンロード",
+            loadingFfmpeg: "FFmpegコアをロード中...",
+            done: "変換が完了しました。",
+            error: "変換に失敗しました。別のファイルを使うか設定を下げてください。",
+            optimizeButton: "容量を最適化",
+            sendingButton: "転送中...",
+            transferError: "GIF最適化ページを開けませんでした"
+          }
+        },
+        gifOptimizer: {
+          title: "GIF最適化",
+          description: "GIFのサイズを調整して最適化",
+          page: {
+            description: "解像度、フレームレート、lossy値を調整してGIF容量を削減します。",
+            upload: "GIFをアップロード",
+            gifsicleArgs: "gifsicle wasm 引数",
+            resizeWidth: "幅の調整",
+            frameRate: "フレームレート",
+            lossy: "Lossy",
+            run: "最適化を実行",
+            loadingEngine: "最適化エンジンをロード中...",
+            optimizing: "GIFを最適化中...",
+            done: "最適化が完了しました。",
+            error: "エラー",
+            before: "最適化前",
+            after: "最適化後",
+            download: "GIFをダウンロード",
+            transferLoaded: "コンバーターからGIFプレビューを読み込みました。",
+            transferNotFound: "転送されたGIFが見つかりませんでした。",
+            transferError: "転送されたGIFを読み込めませんでした"
+          }
+        },
         kakaomapCoordOpener: {
           title: "カカオマップ座標オープナー",
           description: "カカオマップで座標を開く",
@@ -1567,6 +1711,54 @@
             copyBase64: "复制 Base64",
             copyImgSrc: "复制 <img src>",
             copyCssUrl: "复制 CSS url()"
+          }
+        },
+        mp4ToGif: {
+          title: "MP4 转 GIF",
+          description: "将 MP4 视频转换为 GIF 动图",
+          page: {
+            title: "MP4 转 GIF 转换器",
+            upload: "上传 MP4 文件",
+            selected: "已选择",
+            fps: "每秒帧数",
+            resolution: "分辨率比例",
+            estimatedSize: "预计大小",
+            actualSize: "实际输出大小",
+            sizeEstimateUnavailable: "无法预估（转换后显示）",
+            run: "开始转换",
+            converting: "转换中...",
+            preview: "预览",
+            previewAlt: "转换后 GIF 预览",
+            download: "下载 GIF",
+            loadingFfmpeg: "正在加载 FFmpeg 内核...",
+            done: "转换完成。",
+            error: "转换失败，请尝试其他文件或降低设置。",
+            optimizeButton: "优化体积",
+            sendingButton: "传输中...",
+            transferError: "无法打开 GIF 优化页面"
+          }
+        },
+        gifOptimizer: {
+          title: "GIF 优化",
+          description: "调整分辨率和帧率来优化 GIF",
+          page: {
+            description: "通过调整分辨率、帧率和 lossy 值来减小 GIF 体积。",
+            upload: "上传 GIF",
+            gifsicleArgs: "gifsicle wasm 参数",
+            resizeWidth: "宽度调整",
+            frameRate: "帧率",
+            lossy: "Lossy",
+            run: "开始优化",
+            loadingEngine: "正在加载优化引擎...",
+            optimizing: "正在优化 GIF...",
+            done: "优化完成。",
+            error: "错误",
+            before: "优化前",
+            after: "优化后",
+            download: "下载 GIF",
+            transferLoaded: "已加载来自转换器的 GIF 预览。",
+            transferNotFound: "未找到传输的 GIF。",
+            transferError: "无法加载传输的 GIF"
           }
         },
         kakaomapCoordOpener: {
