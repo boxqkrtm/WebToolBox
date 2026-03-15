@@ -30,6 +30,16 @@ export default function ImageVideoCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/utils/mp4-to-gif" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.mp4ToGif.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.mp4ToGif.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
         <Link href="/utils/qr-code-generator" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>

@@ -413,6 +413,29 @@
             errorOccurred: "An error occurred."
           }
         },
+
+        mp4ToGif: {
+          title: "MP4 to GIF",
+          description: "Convert MP4 video to animated GIF",
+          page: {
+            title: "MP4 to GIF Converter",
+            upload: "Upload MP4 file",
+            selected: "Selected",
+            fps: "Frames per second",
+            resolution: "Resolution scale",
+            estimatedSize: "Estimated size",
+            actualSize: "Actual output size",
+            sizeEstimateUnavailable: "Estimate unavailable (shown after conversion)",
+            run: "Convert",
+            converting: "Converting...",
+            preview: "Preview",
+            previewAlt: "Converted GIF preview",
+            download: "Download GIF",
+            loadingFfmpeg: "Loading FFmpeg core...",
+            done: "Conversion completed.",
+            error: "Conversion failed. Please try another file or lower settings."
+          }
+        },
         tetrioReplayEditor: {
           title: "Tetrio Replay Editor",
           description: "Edit Tetrio replay files",
@@ -861,6 +884,28 @@
             errorOccurred: "오류가 발생했습니다."
           }
         },
+        mp4ToGif: {
+          title: "MP4 → GIF",
+          description: "MP4 비디오를 GIF 애니메이션으로 변환",
+          page: {
+            title: "MP4 → GIF 변환기",
+            upload: "MP4 파일 업로드",
+            selected: "선택됨",
+            fps: "초당 프레임",
+            resolution: "해상도 비율",
+            estimatedSize: "예상 용량",
+            actualSize: "실제 결과 용량",
+            sizeEstimateUnavailable: "예상 불가 (변환 후 표시)",
+            run: "실행",
+            converting: "변환 중...",
+            preview: "미리보기",
+            previewAlt: "변환된 GIF 미리보기",
+            download: "GIF 다운로드",
+            loadingFfmpeg: "FFmpeg 코어 로딩 중...",
+            done: "변환이 완료되었습니다.",
+            error: "변환에 실패했습니다. 다른 파일을 사용하거나 설정을 낮춰보세요."
+          }
+        },
         tetrioReplayEditor: {
           title: "테트리오 리플레이 편집기",
           description: "테트리오 리플레이 파일 편집"
@@ -1300,6 +1345,28 @@
             errorOccurred: "エラーが発生しました。"
           }
         },
+        mp4ToGif: {
+          title: "MP4 → GIF",
+          description: "MP4動画をアニメーションGIFに変換",
+          page: {
+            title: "MP4 → GIF 変換",
+            upload: "MP4ファイルをアップロード",
+            selected: "選択済み",
+            fps: "FPS",
+            resolution: "解像度スケール",
+            estimatedSize: "推定サイズ",
+            actualSize: "実際の出力サイズ",
+            sizeEstimateUnavailable: "推定不可（変換後に表示）",
+            run: "実行",
+            converting: "変換中...",
+            preview: "プレビュー",
+            previewAlt: "変換後GIFのプレビュー",
+            download: "GIFをダウンロード",
+            loadingFfmpeg: "FFmpeg コアを読み込み中...",
+            done: "変換が完了しました。",
+            error: "変換に失敗しました。別のファイルか低い設定をお試しください。"
+          }
+        },
         tetrioReplayEditor: {
           title: "テトリオリプレイエディター",
           description: "テトリオリプレイファイルを編集"
@@ -1737,6 +1804,28 @@
             fixLowQuality: "修复视频（低质量）",
             largeFileWarning: "大文件可能需要更长处理时间。",
             errorOccurred: "发生错误。"
+          }
+        },
+        mp4ToGif: {
+          title: "MP4 转 GIF",
+          description: "将 MP4 视频转换为 GIF 动图",
+          page: {
+            title: "MP4 转 GIF 转换器",
+            upload: "上传 MP4 文件",
+            selected: "已选择",
+            fps: "每秒帧数",
+            resolution: "分辨率比例",
+            estimatedSize: "预计大小",
+            actualSize: "实际输出大小",
+            sizeEstimateUnavailable: "无法预估（转换后显示）",
+            run: "开始转换",
+            converting: "转换中...",
+            preview: "预览",
+            previewAlt: "转换后 GIF 预览",
+            download: "下载 GIF",
+            loadingFfmpeg: "正在加载 FFmpeg 内核...",
+            done: "转换完成。",
+            error: "转换失败，请尝试其他文件或降低设置。"
           }
         },
         tetrioReplayEditor: {

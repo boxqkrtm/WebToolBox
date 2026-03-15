@@ -67,6 +67,12 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Cut and encode video segments in your browser.",
     section: "Image & Video",
   },
+  "/utils/mp4-to-gif": {
+    slug: "mp4-to-gif",
+    title: "MP4 to GIF",
+    description: "Convert MP4 videos into animated GIFs in your browser.",
+    section: "Image & Video",
+  },
   "/utils/tetrio-replay-editor": {
     slug: "tetrio-replay-editor",
     title: "Tetrio Replay Editor",
