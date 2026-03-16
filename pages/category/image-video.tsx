@@ -40,6 +40,16 @@ export default function ImageVideoCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/utils/gif-to-mp4-webp" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.gifToMp4Webp.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.gifToMp4Webp.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
         <Link href="/utils/gif-optimizer" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>

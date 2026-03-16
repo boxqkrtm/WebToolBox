@@ -266,6 +266,29 @@
             transferError: "Could not open the GIF optimizer"
           }
         },
+        gifToMp4Webp: {
+          title: "GIF to MP4 / WEBP",
+          description: "Convert animated GIF files to MP4 video or WEBP",
+          page: {
+            title: "GIF to MP4 / WEBP Converter",
+            description: "Upload a GIF, choose the output format, and convert it in the browser.",
+            upload: "Upload GIF file",
+            selected: "Selected",
+            outputFormat: "Output format",
+            mp4Label: "MP4 video",
+            webpLabel: "WEBP image",
+            run: "Convert",
+            converting: "Converting...",
+            preview: "Preview",
+            previewAlt: "Converted output preview",
+            download: "Download result",
+            loadingFfmpeg: "Loading FFmpeg core...",
+            done: "Conversion completed.",
+            error: "Conversion failed. Please try another file.",
+            source: "Source GIF",
+            result: "Converted result"
+          }
+        },
         gifOptimizer: {
           title: "GIF Optimizer",
           description: "Resize and optimize GIF files",
@@ -764,6 +787,29 @@
             transferError: "GIF 최적화 페이지를 열 수 없습니다."
           }
         },
+        gifToMp4Webp: {
+          title: "GIF → MP4 / WEBP",
+          description: "움직이는 GIF 파일을 MP4 또는 WEBP로 변환",
+          page: {
+            title: "GIF → MP4 / WEBP 변환기",
+            description: "GIF를 업로드하고 출력 포맷을 선택해 브라우저에서 변환하세요.",
+            upload: "GIF 파일 업로드",
+            selected: "선택됨",
+            outputFormat: "출력 형식",
+            mp4Label: "MP4 비디오",
+            webpLabel: "WEBP 이미지",
+            run: "변환",
+            converting: "변환 중...",
+            preview: "미리보기",
+            previewAlt: "변환 결과 미리보기",
+            download: "결과 다운로드",
+            loadingFfmpeg: "FFmpeg 코어 로딩 중...",
+            done: "변환이 완료되었습니다.",
+            error: "변환에 실패했습니다. 다른 파일로 다시 시도해 주세요.",
+            source: "원본 GIF",
+            result: "변환 결과"
+          }
+        },
         gifOptimizer: {
           title: "GIF 최적화",
           description: "GIF 파일 크기를 조절하고 최적화",
@@ -1251,6 +1297,29 @@
             transferError: "GIF最適化ページを開けませんでした"
           }
         },
+        gifToMp4Webp: {
+          title: "GIFからMP4 / WEBP",
+          description: "アニメーションGIFをMP4動画またはWEBPに変換",
+          page: {
+            title: "GIFからMP4 / WEBP変換",
+            description: "GIFをアップロードし、出力形式を選んでブラウザ内で変換します。",
+            upload: "GIFファイルをアップロード",
+            selected: "選択済み",
+            outputFormat: "出力形式",
+            mp4Label: "MP4動画",
+            webpLabel: "WEBP画像",
+            run: "変換",
+            converting: "変換中...",
+            preview: "プレビュー",
+            previewAlt: "変換結果のプレビュー",
+            download: "結果をダウンロード",
+            loadingFfmpeg: "FFmpegコアをロード中...",
+            done: "変換が完了しました。",
+            error: "変換に失敗しました。別のファイルで再試行してください。",
+            source: "元のGIF",
+            result: "変換結果"
+          }
+        },
         gifOptimizer: {
           title: "GIF最適化",
           description: "GIFのサイズを調整して最適化",
@@ -1736,6 +1805,29 @@
             optimizeButton: "优化体积",
             sendingButton: "传输中...",
             transferError: "无法打开 GIF 优化页面"
+          }
+        },
+        gifToMp4Webp: {
+          title: "GIF 转 MP4 / WEBP",
+          description: "将动态 GIF 转换为 MP4 视频或 WEBP",
+          page: {
+            title: "GIF 转 MP4 / WEBP 转换器",
+            description: "上传 GIF，选择输出格式，并在浏览器中完成转换。",
+            upload: "上传 GIF 文件",
+            selected: "已选择",
+            outputFormat: "输出格式",
+            mp4Label: "MP4 视频",
+            webpLabel: "WEBP 图片",
+            run: "开始转换",
+            converting: "转换中...",
+            preview: "预览",
+            previewAlt: "转换结果预览",
+            download: "下载结果",
+            loadingFfmpeg: "正在加载 FFmpeg 内核...",
+            done: "转换完成。",
+            error: "转换失败，请尝试其他文件。",
+            source: "原始 GIF",
+            result: "转换结果"
           }
         },
         gifOptimizer: {
