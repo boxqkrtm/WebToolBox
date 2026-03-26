@@ -70,6 +70,16 @@ export default function ImageVideoCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+        <Link href="/utils/svg-preview" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.svgPreview.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.svgPreview.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </div>
   );

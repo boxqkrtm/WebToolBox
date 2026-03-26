@@ -515,7 +515,27 @@
           pasteHint: "Press Ctrl+V to paste a QR code image from clipboard",
           dragDropHint: "or drag & drop an image here",
           downloadQr: "Download QR Code",
-          previewAlt: "Generated QR code preview"
+          previewAlt: "Generated QR code preview",
+        },
+        svgPreview: {
+          title: "SVG Preview",
+          description: "Preview SVG files and code visually",
+          tabFile: "File Upload",
+          tabText: "Text Input",
+          fileTitle: "Upload SVG File",
+          textTitle: "Enter SVG Code",
+          placeholder: "Enter SVG code to preview",
+          pasteHint: "Press Ctrl+V to paste an SVG from clipboard",
+          dragDropHint: "or drag & drop an SVG file here",
+          uploadFile: "Upload SVG File",
+          copySvg: "Copy SVG Code",
+          copied: "Copied!",
+          downloadSvg: "Download SVG",
+          clear: "Clear",
+          resultTitle: "Result",
+          renderError: "Unable to render SVG",
+          invalidFile: "Invalid SVG file",
+          notSvgFile: "File is not a valid SVG"
         }
       }
     }
@@ -1025,7 +1045,27 @@
           pasteHint: "Ctrl+V로 클립보드의 QR코드 이미지를 붙여넣으세요",
           dragDropHint: "또는 이미지를 여기에 드래그 & 드롭",
           downloadQr: "QR코드 다운로드",
-          previewAlt: "생성된 QR코드 미리보기"
+          previewAlt: "생성된 QR 코드 미리보기",
+        },
+        svgPreview: {
+          title: "SVG 미리보기",
+          description: "SVG 파일 및 코드를 시각적으로 미리보기",
+          tabFile: "파일 업로드",
+          tabText: "텍스트 입력",
+          fileTitle: "SVG 파일 업로드",
+          textTitle: "SVG 코드 입력",
+          placeholder: "미리볼 SVG 코드를 입력하세요",
+          pasteHint: "Ctrl+V 로 클립보드의 SVG 를 붙여넣으세요",
+          dragDropHint: "또는 SVG 파일을 여기에 드래그 & 드롭",
+          uploadFile: "SVG 파일 업로드",
+          copySvg: "SVG 코드 복사",
+          copied: "복사됨!",
+          downloadSvg: "SVG 다운로드",
+          clear: "초기화",
+          resultTitle: "결과",
+          renderError: "SVG 를 렌더링할 수 없습니다",
+          invalidFile: "잘못된 SVG 파일",
+          notSvgFile: "파일이 유효한 SVG 가 아닙니다"
         }
       }
     }
@@ -1535,7 +1575,27 @@
           pasteHint: "Ctrl+VでクリップボードのQRコード画像を貼り付けてください",
           dragDropHint: "または画像をここにドラッグ＆ドロップ",
           downloadQr: "QRコードをダウンロード",
-          previewAlt: "生成されたQRコードのプレビュー"
+          previewAlt: "生成された QR コードのプレビュー",
+        },
+        svgPreview: {
+          title: "SVG プレビュー",
+          description: "SVG ファイルとコードを視覚的にプレビュー",
+          tabFile: "ファイルアップロード",
+          tabText: "テキスト入力",
+          fileTitle: "SVG ファイルアップロード",
+          textTitle: "SVG コード入力",
+          placeholder: "プレビューする SVG コードを入力してください",
+          pasteHint: "Ctrl+V でクリップボードの SVG を貼り付けてください",
+          dragDropHint: "または SVG ファイルをここにドラッグ＆ドロップ",
+          uploadFile: "SVG ファイルをアップロード",
+          copySvg: "SVG コードをコピー",
+          copied: "コピーしました!",
+          downloadSvg: "SVG をダウンロード",
+          clear: "クリア",
+          resultTitle: "結果",
+          renderError: "SVG をレンダリングできません",
+          invalidFile: "無効な SVG ファイル",
+          notSvgFile: "ファイルは有効な SVG ではありません"
         }
       }
     }
@@ -2045,7 +2105,27 @@
           pasteHint: "按Ctrl+V粘贴剪贴板中的二维码图片",
           dragDropHint: "或将图片拖放到此处",
           downloadQr: "下载二维码",
-          previewAlt: "生成的二维码预览"
+          previewAlt: "生成的二维码预览",
+        },
+        svgPreview: {
+          title: "SVG 预览",
+          description: "视觉预览 SVG 文件和代码",
+          tabFile: "文件上传",
+          tabText: "文本输入",
+          fileTitle: "上传 SVG 文件",
+          textTitle: "输入 SVG 代码",
+          placeholder: "输入要预览的 SVG 代码",
+          pasteHint: "按 Ctrl+V 粘贴剪贴板中的 SVG",
+          dragDropHint: "或将 SVG 文件拖放到此处",
+          uploadFile: "上传 SVG 文件",
+          copySvg: "复制 SVG 代码",
+          copied: "已复制!",
+          downloadSvg: "下载 SVG",
+          clear: "清除",
+          resultTitle: "结果",
+          renderError: "无法渲染 SVG",
+          invalidFile: "无效的 SVG 文件",
+          notSvgFile: "文件不是有效的 SVG"
         }
       }
     }
