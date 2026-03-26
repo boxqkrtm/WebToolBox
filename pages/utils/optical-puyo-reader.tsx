@@ -2,7 +2,8 @@
 
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import { Input } from "@/components/ui/input"
+
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Slider } from "@/components/ui/slider"
 import UtilsLayout from '@/components/layout/UtilsLayout';
@@ -19,14 +20,13 @@ export default function Component() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [imageDimensions, setImageDimensions] = useState({ width: 0, height: 0 });
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleImageUpload = (file: File | null) => {
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => setImageUrl(e.target?.result as string);
-      reader.readAsDataURL(file);
+      const reader = new FileReader()
+      reader.onload = (e) => setImageUrl(e.target?.result as string)
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const handlePaste = (event: React.ClipboardEvent) => {
     const items = event.clipboardData?.items;
@@ -197,12 +197,12 @@ export default function Component() {
   return (
     <UtilsLayout onPaste={handlePaste}>
       <h1 className="text-2xl font-bold mb-4">{t('common.tools.opticalPuyoReader.title')}</h1>
-      <Input 
-        type="file" 
-        accept="image/png" 
-        onChange={handleImageUpload} 
-        className="mb-4" 
-        aria-label={t('common.tools.opticalPuyoReader.uploadPngImageAriaLabel')}
+      <FileUploadButton
+        id="optical-puyo-upload"
+        accept="image/png"
+        onFileSelect={handleImageUpload}
+        label={t('common.tools.opticalPuyoReader.uploadPngImageAriaLabel')}
+        className="mb-4"
       />
       <p>{t('common.tools.opticalPuyoReader.uploadTip')}</p>
       {imageUrl && (

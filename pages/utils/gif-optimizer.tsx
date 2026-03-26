@@ -6,8 +6,8 @@ import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
 import UtilsLayout from "@/components/layout/UtilsLayout";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label"
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { loadGifTransfer, removeGifTransfer } from "@/lib/gifTransfer";
 import { useI18n } from "@/lib/i18n/i18nContext";
 
@@ -182,12 +182,11 @@ export default function GifOptimizer() {
     }
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleFileChange = (file: File | null) => {
+    if (!file) return
 
-    applySourceFile(file);
-  };
+    applySourceFile(file)
+  }
 
   const handleOptimize = async () => {
     if (!sourceFile || !resizeHeight) return;
@@ -251,7 +250,12 @@ export default function GifOptimizer() {
 
         <div className="space-y-2">
           <Label htmlFor="gif-upload">{t("common.tools.gifOptimizer.page.upload")}</Label>
-          <Input id="gif-upload" type="file" accept="image/gif" onChange={handleFileChange} />
+          <FileUploadButton
+            id="gif-upload"
+            accept="image/gif"
+            onFileSelect={handleFileChange}
+            label={t("common.tools.gifOptimizer.page.upload")}
+          />
         </div>
 
         {sourceFile && (

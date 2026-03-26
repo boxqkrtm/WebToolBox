@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -56,20 +57,19 @@ export default function Component() {
         })
     }
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (file) {
-            setFileName(file.name)
-            const reader = new FileReader()
-            reader.onload = (e) => {
-                const text = e.target?.result as string
-                const rows = parseCSV(text)
-                setCsvData(rows)
-                setHeaders(rows[0])
-                setSortedData(rows.slice(1))
-            }
-            reader.readAsText(file)
+    const handleFileUpload = (file: File | null) => {
+        if (!file) return
+
+        setFileName(file.name)
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const text = e.target?.result as string
+            const rows = parseCSV(text)
+            setCsvData(rows)
+            setHeaders(rows[0])
+            setSortedData(rows.slice(1))
         }
+        reader.readAsText(file)
     }
 
     const sortData = useCallback(() => {
@@ -144,7 +144,12 @@ export default function Component() {
         <UtilsLayout>
             <div className="space-y-4">
                 <h1 className="text-2xl font-bold">Advanced CSV Sorter</h1>
-                <Input type="file" accept=".csv" onChange={handleFileUpload} />
+                <FileUploadButton
+                    id="csv-upload"
+                    accept=".csv"
+                    onFileSelect={handleFileUpload}
+                    label="Upload CSV File"
+                />
                 {csvData.length > 0 && (
                     <>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

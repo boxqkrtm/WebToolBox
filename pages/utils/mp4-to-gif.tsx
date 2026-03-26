@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/router'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import UtilsLayout from '@/components/layout/UtilsLayout'
@@ -174,8 +175,7 @@ export default function Mp4ToGifPage() {
     }
   }
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = event.target.files?.[0]
+  const onFileChange = (selected: File | null) => {
     if (!selected) return
 
     if (gifSrc) {
@@ -260,7 +260,12 @@ export default function Mp4ToGifPage() {
 
         <div className="space-y-2">
           <Label htmlFor="mp4-upload">{t('common.tools.mp4ToGif.page.upload')}</Label>
-          <Input id="mp4-upload" type="file" accept="video/mp4" onChange={onFileChange} />
+          <FileUploadButton
+            id="mp4-upload"
+            accept="video/mp4"
+            onFileSelect={onFileChange}
+            label={t('common.tools.mp4ToGif.page.upload')}
+          />
           {file && (
             <p className="text-sm text-muted-foreground">
               {t('common.tools.mp4ToGif.page.selected')}: {file.name}

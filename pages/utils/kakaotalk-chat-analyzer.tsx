@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react'
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import UtilsLayout from '@/components/layout/UtilsLayout';
 import { useI18n } from '@/lib/i18n/i18nContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -227,21 +228,20 @@ export default function KakaotalkChatAnalyzer() {
     resetQuery();
   };
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  const handleFileUpload = async (file: File | null) => {
     if (!file) {
-      return;
+      return
     }
 
-    const text = await file.text();
-    setRawText(text);
-    const parsed = await parseFromText(text);
+    const text = await file.text()
+    setRawText(text)
+    const parsed = await parseFromText(text)
     if (!parsed) {
-      return;
+      return
     }
-    setSelectedNickname('');
-    resetQuery();
-  };
+    setSelectedNickname('')
+    resetQuery()
+  }
 
   const applyPresetAndClose = (preset: 'all' | 'last7' | 'last30' | 'thisYear') => {
     applyDatePreset(preset);
@@ -260,7 +260,13 @@ export default function KakaotalkChatAnalyzer() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="chat-file">채팅 로그 파일 업로드 (.txt)</Label>
-              <Input id="chat-file" type="file" accept=".txt" onChange={handleFileUpload} disabled={isParsing} />
+              <FileUploadButton
+                id="chat-file"
+                accept=".txt"
+                onFileSelect={handleFileUpload}
+                label="채팅 로그 파일 업로드"
+                disabled={isParsing}
+              />
             </div>
 
             <div className="space-y-2">

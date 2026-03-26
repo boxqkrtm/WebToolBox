@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import UtilsLayout from '@/components/layout/UtilsLayout'
@@ -14,20 +15,19 @@ export default function ImageToBase64() {
   const [fileName, setFileName] = useState('')
   const [mimeType, setMimeType] = useState('')
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      setFileName(file.name)
-      setMimeType(file.type)
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        const result = e.target?.result as string
-        // The result from FileReader includes the data URL prefix, so we need to remove it.
-        const base64 = result.split(',')[1]
-        setBase64Data(base64)
-      }
-      reader.readAsDataURL(file)
+  const handleImageUpload = (file: File | null) => {
+    if (!file) return
+
+    setFileName(file.name)
+    setMimeType(file.type)
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const result = e.target?.result as string
+      // The result from FileReader includes the data URL prefix, so we need to remove it.
+      const base64 = result.split(',')[1]
+      setBase64Data(base64)
     }
+    reader.readAsDataURL(file)
   }
 
   const copyToClipboard = (text: string) => {
@@ -40,7 +40,12 @@ export default function ImageToBase64() {
         <h1 className="text-2xl font-bold">{t('common.tools.imageToBase64.page.converterTitle')}</h1>
         <div className="space-y-2">
           <Label htmlFor="image-upload">{t('common.tools.imageToBase64.page.uploadImage')}</Label>
-          <Input id="image-upload" type="file" accept="image/*" onChange={handleImageUpload} />
+          <FileUploadButton
+            id="image-upload"
+            accept="image/*"
+            onFileSelect={handleImageUpload}
+            label={t('common.tools.imageToBase64.page.uploadImage')}
+          />
         </div>
 
         {base64Data && (

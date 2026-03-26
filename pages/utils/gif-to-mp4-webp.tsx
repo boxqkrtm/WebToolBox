@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import UtilsLayout from "@/components/layout/UtilsLayout";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+
+import { FileUploadButton } from '@/components/ui/file-upload-button';
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useI18n } from "@/lib/i18n/i18nContext";
@@ -67,23 +68,22 @@ export default function GifToMp4WebpPage() {
     return ffmpegRef.current;
   };
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = event.target.files?.[0];
-    if (!selected) return;
+  const handleFileChange = (selected: File | null) => {
+    if (!selected) return
 
     if (sourceUrl) {
-      URL.revokeObjectURL(sourceUrl);
+      URL.revokeObjectURL(sourceUrl)
     }
     if (resultUrl) {
-      URL.revokeObjectURL(resultUrl);
-      setResultUrl("");
+      URL.revokeObjectURL(resultUrl)
+      setResultUrl('')
     }
 
-    setFile(selected);
-    setSourceUrl(URL.createObjectURL(selected));
-    setResultSize(null);
-    setStatus("");
-  };
+    setFile(selected)
+    setSourceUrl(URL.createObjectURL(selected))
+    setResultSize(null)
+    setStatus('')
+  }
 
   const convert = async () => {
     if (!file) return;
@@ -166,7 +166,12 @@ export default function GifToMp4WebpPage() {
 
         <div className="space-y-2">
           <Label htmlFor="gif-upload">{t("common.tools.gifToMp4Webp.page.upload")}</Label>
-          <Input id="gif-upload" type="file" accept="image/gif" onChange={handleFileChange} />
+          <FileUploadButton
+            id="gif-upload"
+            accept="image/gif"
+            onFileSelect={handleFileChange}
+            label={t("common.tools.gifToMp4Webp.page.upload")}
+          />
           {file && (
             <p className="text-sm text-muted-foreground">
               {t("common.tools.gifToMp4Webp.page.selected")}: {file.name}

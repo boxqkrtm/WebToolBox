@@ -2,7 +2,8 @@
 
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+
+import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useI18n } from '@/lib/i18n/i18nContext'
@@ -12,52 +13,53 @@ export default function Component() {
     const { t } = useI18n()
     const [sqlStatements, setSqlStatements] = useState<string>('')
 
-    const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0]
-        if (file) {
-            const reader = new FileReader()
-            reader.onload = (e) => {
-                const data = new Uint8Array(e.target?.result as ArrayBuffer)
-                const workbook = XLSX.read(data, { type: 'array' })
+    const handleFileUpload = (file: File | null) => {
+        if (!file) {
+            return
+        }
 
-                // Process all sheets
-                const allStatements = workbook.SheetNames.map(sheetName => {
-                    const sheet = workbook.Sheets[sheetName]
-                    // Add defval option to handle empty cells and ensure all columns are included
-                    const jsonData = XLSX.utils.sheet_to_json(sheet, {
-                        defval: null,
-                        raw: true
-                    })
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const data = new Uint8Array(e.target?.result as ArrayBuffer)
+            const workbook = XLSX.read(data, { type: 'array' })
 
-                    if (jsonData.length === 0) return ''
+            // Process all sheets
+            const allStatements = workbook.SheetNames.map(sheetName => {
+                const sheet = workbook.Sheets[sheetName]
+                // Add defval option to handle empty cells and ensure all columns are included
+                const jsonData = XLSX.utils.sheet_to_json(sheet, {
+                    defval: null,
+                    raw: true
+                })
 
-                    // Get header row (column names) directly from the sheet
-                    const range = XLSX.utils.decode_range(sheet['!ref'] || 'A1')
-                    const columns = Array.from({ length: range.e.c + 1 }, (_, i) => {
-                        const cell = sheet[XLSX.utils.encode_cell({ r: 0, c: i })]
-                        return cell ? cell.v : null
-                    }).filter(Boolean)
+                if (jsonData.length === 0) return ''
 
-                    const tableName = sheetName.toLowerCase().replace(/\s+/g, '_')
+                // Get header row (column names) directly from the sheet
+                const range = XLSX.utils.decode_range(sheet['!ref'] || 'A1')
+                const columns = Array.from({ length: range.e.c + 1 }, (_, i) => {
+                    const cell = sheet[XLSX.utils.encode_cell({ r: 0, c: i })]
+                    return cell ? cell.v : null
+                }).filter(Boolean)
 
-                    const insertStatements = jsonData.map(row => {
-                        const values = columns.map(col => {
-                            const value = (row as any)[col]
-                            if (value === null || value === undefined) return 'NULL'
-                            if (typeof value === 'string') return `'${value.replace(/'/g, "''")}'`
-                            return value
-                        }).join(', ')
+                const tableName = sheetName.toLowerCase().replace(/\s+/g, '_')
 
-                        return `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${values});`
-                    }).join('\n')
+                const insertStatements = jsonData.map(row => {
+                    const values = columns.map(col => {
+                        const value = (row as any)[col]
+                        if (value === null || value === undefined) return 'NULL'
+                        if (typeof value === 'string') return `'${value.replace(/'/g, "''")}'`
+                        return value
+                    }).join(', ')
 
-                    return `-- Table: ${sheetName}\n${insertStatements}\n`
+                    return `INSERT INTO ${tableName} (${columns.join(', ')}) VALUES (${values});`
                 }).join('\n')
 
-                setSqlStatements(allStatements)
-            }
-            reader.readAsArrayBuffer(file)
+                return `-- Table: ${sheetName}\n${insertStatements}\n`
+            }).join('\n')
+
+            setSqlStatements(allStatements)
         }
+        reader.readAsArrayBuffer(file)
     }
 
     const handleCopy = () => {
@@ -70,11 +72,11 @@ export default function Component() {
 
             <div className="space-y-2">
                 <Label htmlFor="file">{t('common.tools.xlsxToSql.page.uploadXlsxFile')}</Label>
-                <Input
+                <FileUploadButton
                     id="file"
-                    type="file"
                     accept=".xlsx, .xls"
-                    onChange={handleFileUpload}
+                    onFileSelect={handleFileUpload}
+                    label={t('common.tools.xlsxToSql.page.uploadXlsxFile')}
                 />
             </div>
 
