@@ -4,6 +4,7 @@ import { useTheme } from '@/lib/theme/themeContext';
 import { Language } from '@/lib/i18n/translations';
 import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { HiSun, HiMoon, HiArrowLeft } from 'react-icons/hi';
 import {
   Select,
@@ -36,7 +37,7 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-      <div className="container mx-auto px-4 py-3 flex justify-between items-center gap-4">
+      <PageContainer className="py-3" contentClassName="flex items-center justify-between gap-4">
         {router.pathname !== '/' ? (
           <Button type="button" variant="outline" className="flex items-center" onClick={handleBack}>
             <HiArrowLeft className="mr-2 h-4 w-4" />
@@ -44,34 +45,34 @@ export const Header: React.FC = () => {
           </Button>
         ) : <div />}
 
-        <div className="flex items-center gap-4">
-        <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
-          <SelectTrigger className="w-[140px]" data-testid="language-selector">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {languages.map(lang => (
-              <SelectItem key={lang.code} value={lang.code}>
-                {lang.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        
-        <button
-          onClick={toggleTheme}
-          className="p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
-          aria-label={t('common.header.themeToggleAriaLabel')}
-          data-testid="theme-toggle"
-        >
-          {theme === 'light' ? (
-            <HiMoon className="h-5 w-5" />
-          ) : (
-            <HiSun className="h-5 w-5" />
-          )}
-        </button>
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
+            <SelectTrigger className="w-[140px]" data-testid="language-selector">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {languages.map(lang => (
+                <SelectItem key={lang.code} value={lang.code}>
+                  {lang.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <button
+            onClick={toggleTheme}
+            className="rounded-md p-2 transition-colors hover:bg-accent hover:text-accent-foreground"
+            aria-label={t('common.header.themeToggleAriaLabel')}
+            data-testid="theme-toggle"
+          >
+            {theme === 'light' ? (
+              <HiMoon className="h-5 w-5" />
+            ) : (
+              <HiSun className="h-5 w-5" />
+            )}
+          </button>
         </div>
-      </div>
+      </PageContainer>
     </header>
   );
 };

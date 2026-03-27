@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PageContainer } from "@/components/layout/PageContainer";
 import { useI18n } from '@/lib/i18n/i18nContext';
 
 export default function DiscordColorMessageGenerator() {
@@ -201,7 +202,7 @@ export default function DiscordColorMessageGenerator() {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
+    <PageContainer contentClassName="max-w-2xl space-y-8">
       <Card className="mb-8">
         <CardHeader>
           <CardTitle>{t('common.tools.discordColorMessageGenerator.title')}</CardTitle>
@@ -479,6 +480,6 @@ export default function DiscordColorMessageGenerator() {
           </p>
         </CardContent>
       </Card>
-    </div>
+    </PageContainer>
   );
 }

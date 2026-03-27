@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 
+import { PageContainer } from '@/components/layout/PageContainer'
 import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
@@ -67,7 +68,7 @@ export default function Component() {
     }
 
     return (
-        <div className="container mx-auto p-4 space-y-4">
+        <PageContainer contentClassName="max-w-5xl space-y-6">
             <h1 className="text-2xl font-bold">{t('common.tools.xlsxToSql.page.converterTitle')}</h1>
 
             <div className="space-y-2">
@@ -95,6 +96,6 @@ export default function Component() {
                     {t('common.tools.xlsxToSql.page.copyToClipboard')}
                 </Button>
             )}
-        </div>
+        </PageContainer>
     )
 }

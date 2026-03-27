@@ -63,13 +63,13 @@ export default function NtripScanner() {
 
     return (
         <UtilsLayout>
-            <Card className="w-full max-w-md mx-auto">
+            <Card className="mx-auto w-full max-w-md">
                 <CardHeader>
-                    <CardTitle className="text-center text-2xl font-bold text-gray-800">
+                    <CardTitle className="text-center text-2xl font-bold">
                         {t('common.tools.ntripScanner.page.title')}
                     </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="space-y-4">
                     <div className="space-y-4">
                         <div>
                             <Label htmlFor="ip">{t('common.tools.ntripScanner.page.casterIp')}</Label>
@@ -121,9 +121,9 @@ export default function NtripScanner() {
                             </div>
                         )}
                         {mountPoints.length > 0 && (
-                            <div>
+                            <div className="space-y-2">
                                 <h2 className="text-xl font-bold">{t('common.tools.ntripScanner.page.mountPointList')}</h2>
-                                <ul>
+                                <ul className="space-y-1 text-sm text-muted-foreground">
                                     {mountPoints.map((mountPoint, index) => (
                                         <li key={index}>{mountPoint}</li>
                                     ))}

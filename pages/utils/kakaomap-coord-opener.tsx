@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import UtilsLayout from '@/components/layout/UtilsLayout'
+import { useI18n } from '@/lib/i18n/i18nContext'
 
 export default function Component() {
+    const { t } = useI18n()
     const defaultLatitude = '37.402056'
     const defaultLongitude = '127.108212'
 
@@ -23,18 +25,17 @@ export default function Component() {
 
     return (
         <UtilsLayout>
-            <Card className="w-full max-w-md mx-auto">
-                <CardHeader>
-                    <CardTitle>Kakaomap Coord Opener</CardTitle>
+            <Card className="mx-auto w-full max-w-md">
+                <CardHeader className="space-y-2">
+                    <CardTitle>{t('common.tools.kakaomapCoordOpener.title')}</CardTitle>
                     <CardDescription>
-                        위도와 경도를 입력하여 카카오맵에서 해당 위치를 확인하세요.
-                        입력하지 않으면 기본 좌표(37.402056, 127.108212)가 사용됩니다.
+                        {t('common.tools.kakaomapCoordOpener.page.description')}
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="grid w-full items-center gap-4">
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="latitude">위도</Label>
+                            <Label htmlFor="latitude">{t('common.tools.kakaomapCoordOpener.page.latitudeLabel')}</Label>
                             <Input
                                 id="latitude"
                                 placeholder={defaultLatitude}
@@ -43,7 +44,7 @@ export default function Component() {
                             />
                         </div>
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="longitude">경도</Label>
+                            <Label htmlFor="longitude">{t('common.tools.kakaomapCoordOpener.page.longitudeLabel')}</Label>
                             <Input
                                 id="longitude"
                                 placeholder={defaultLongitude}
@@ -54,7 +55,9 @@ export default function Component() {
                     </div>
                 </CardContent>
                 <CardFooter>
-                    <Button className="w-full" onClick={handleOpenMap}>카카오맵에서 열기</Button>
+                    <Button className="w-full" onClick={handleOpenMap}>
+                        {t('common.tools.kakaomapCoordOpener.page.openButton')}
+                    </Button>
                 </CardFooter>
             </Card>
         </UtilsLayout>

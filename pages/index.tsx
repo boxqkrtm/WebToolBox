@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { PageContainer } from '@/components/layout/PageContainer';
 import {
   HiCode,
   HiDatabase,
@@ -15,10 +16,12 @@ export default function Home() {
   const { t } = useI18n();
   
   return (
-    <div className="w-full p-4 sm:p-6">
-      <h1 className="text-4xl font-bold text-center mb-2">{t('common.title')}</h1>
-      <p className="text-xl text-muted-foreground text-center mb-8">{t('common.subtitle')}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <PageContainer contentClassName="space-y-8">
+      <div className="space-y-2 text-center">
+        <h1 className="text-4xl font-bold">{t('common.title')}</h1>
+        <p className="text-xl text-muted-foreground">{t('common.subtitle')}</p>
+      </div>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
 
         <Link href="/category/database" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
@@ -93,6 +96,6 @@ export default function Home() {
         </Link>
 
       </div>
-    </div>
+    </PageContainer>
   );
 }

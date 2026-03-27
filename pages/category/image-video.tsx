@@ -1,15 +1,18 @@
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { useI18n } from '@/lib/i18n/i18nContext';
 
 export default function ImageVideoCategoryPage() {
   const { t } = useI18n();
   return (
-    <div className="container mx-auto p-4 sm:p-6">
-      <h1 className="text-3xl font-bold mb-2">{t('common.categories.imageVideo.title')}</h1>
-      <p className="text-muted-foreground mb-6">{t('common.categories.imageVideo.description')}</p>
+    <PageContainer contentClassName="space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">{t('common.categories.imageVideo.title')}</h1>
+        <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-6">
         <Link href="/utils/image-to-base64" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>
@@ -81,6 +84,6 @@ export default function ImageVideoCategoryPage() {
           </Card>
         </Link>
       </div>
-    </div>
+    </PageContainer>
   );
 }

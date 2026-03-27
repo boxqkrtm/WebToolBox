@@ -316,7 +316,7 @@ export default function LlmVramCalculator() {
 
   return (
     <UtilsLayout>
-      <Card className="w-full max-w-lg mx-auto">
+      <Card className="mx-auto w-full max-w-lg">
         <CardHeader>
           <CardTitle>{t('common.tools.llmVramCalculator.page.title')}</CardTitle>
           <CardDescription>{t('common.tools.llmVramCalculator.page.description')}</CardDescription>

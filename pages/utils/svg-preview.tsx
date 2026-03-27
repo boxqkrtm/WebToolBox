@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { useI18n } from '@/lib/i18n/i18nContext';
 import { HiClipboardCopy, HiUpload, HiDownload, HiCheck } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -129,9 +130,11 @@ export default function SvgPreviewPage() {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
-      <h1 className="text-3xl font-bold mb-2">{t('common.tools.svgPreview.title')}</h1>
-      <p className="text-muted-foreground mb-6">{t('common.tools.svgPreview.description')}</p>
+    <PageContainer contentClassName="max-w-5xl space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">{t('common.tools.svgPreview.title')}</h1>
+        <p className="text-muted-foreground">{t('common.tools.svgPreview.description')}</p>
+      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -277,8 +280,8 @@ export default function SvgPreviewPage() {
               </div>
             </div>
           </CardContent>
-        </Card>
-      )}
-    </div>
+          </Card>
+        )}
+    </PageContainer>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n/i18nContext';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { HiClipboardCopy, HiDownload, HiUpload, HiClipboard } from 'react-icons/hi';
 import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -147,9 +148,11 @@ export default function QrCodePage() {
   };
 
   return (
-    <div className="container mx-auto p-4 sm:p-6">
-      <h1 className="text-3xl font-bold mb-2">{t('common.tools.qrCode.title')}</h1>
-      <p className="text-muted-foreground mb-6">{t('common.tools.qrCode.description')}</p>
+    <PageContainer contentClassName="max-w-5xl space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">{t('common.tools.qrCode.title')}</h1>
+        <p className="text-muted-foreground">{t('common.tools.qrCode.description')}</p>
+      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -297,6 +300,6 @@ export default function QrCodePage() {
           </div>
         </TabsContent>
       </Tabs>
-    </div>
+    </PageContainer>
   );
 }

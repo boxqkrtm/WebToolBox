@@ -32,7 +32,7 @@ export function FileUploadButton({
   }
 
   return (
-    <>
+    <div className="mt-2">
       <input
         id={id}
         ref={fileInputRef}
@@ -51,6 +51,6 @@ export function FileUploadButton({
         <HiUpload className="mr-2 h-4 w-4" />
         {label}
       </Button>
-    </>
+    </div>
   )
 }
