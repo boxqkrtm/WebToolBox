@@ -4,6 +4,10 @@
       title: "Web Utils",
       subtitle: "A collection of useful tools and utilities.",
       backToCategories: "Back to Categories",
+      uploadZone: {
+        pasteHint: "Press Ctrl+V to paste from clipboard",
+        dragDropHint: "or drag & drop a file here"
+      },
       header: {
         themeToggleAriaLabel: "Toggle theme",
         languages: {
@@ -545,6 +549,10 @@
       title: "웹 유틸리티",
       subtitle: "유용한 도구 및 유틸리티 모음",
       backToCategories: "카테고리로 돌아가기",
+      uploadZone: {
+        pasteHint: "Ctrl+V로 클립보드 파일을 붙여넣으세요",
+        dragDropHint: "또는 파일을 여기에 드래그 & 드롭"
+      },
       header: {
         themeToggleAriaLabel: "테마 전환",
         languages: {
@@ -1075,6 +1083,10 @@
       title: "ウェブユーティリティ",
       subtitle: "便利なツールとユーティリティのコレクション",
       backToCategories: "カテゴリーに戻る",
+      uploadZone: {
+        pasteHint: "Ctrl+Vでクリップボードのファイルを貼り付けてください",
+        dragDropHint: "またはファイルをここにドラッグ＆ドロップ"
+      },
       header: {
         themeToggleAriaLabel: "テーマ切替",
         languages: {
@@ -1605,6 +1617,10 @@
       title: "网页工具",
       subtitle: "实用工具和实用程序集合",
       backToCategories: "返回分类",
+      uploadZone: {
+        pasteHint: "按 Ctrl+V 粘贴剪贴板中的文件",
+        dragDropHint: "或将文件拖放到此处"
+      },
       header: {
         themeToggleAriaLabel: "切换主题",
         languages: {

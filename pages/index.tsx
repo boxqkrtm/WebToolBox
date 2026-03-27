@@ -6,7 +6,6 @@ import {
   HiDatabase,
   HiPuzzle,
   HiVideoCamera,
-  HiLightningBolt,
   HiLocationMarker,
   HiCollection,
 } from 'react-icons/hi';
@@ -55,18 +54,6 @@ export default function Home() {
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/llm" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiLightningBolt className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.llm.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.llm.description')}</p>
             </CardContent>
           </Card>
         </Link>

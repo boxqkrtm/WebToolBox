@@ -37,12 +37,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Tools for image conversion, QR processing, and video editing.",
     section: "Category",
   },
-  "/category/llm": {
-    slug: "category-llm",
-    title: "LLM Tools",
-    description: "Utilities for large language model calculations and workflows.",
-    section: "Category",
-  },
   "/category/geolocation": {
     slug: "category-geolocation",
     title: "Geolocation Tools",
@@ -102,12 +96,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     title: "NTRIP Scanner",
     description: "Scan NTRIP casters for available mount points.",
     section: "Geolocation",
-  },
-  "/utils/llm-vram-calculator": {
-    slug: "llm-vram-calculator",
-    title: "LLM VRAM Calculator",
-    description: "Estimate VRAM requirements for LLM inference.",
-    section: "LLM",
   },
   "/utils/kakaotalk-chat-analyzer": {
     slug: "kakaotalk-chat-analyzer",
