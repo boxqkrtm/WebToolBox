@@ -65,4 +65,27 @@ test.describe('Language Detection Tests', () => {
     expect(selectedLanguage).toBe('"zh"');
     await expect(page.locator('h1')).not.toHaveText('Web Utils');
   });
+
+  test('should render translated gif crop drag hint instead of raw key', async ({ page }) => {
+    await page.goto('/utils/gif-crop');
+    await page.waitForLoadState('networkidle');
+
+    await selectLanguage(page, 'ko');
+
+    const gifInput = page.locator('input#gif-upload');
+    const gifFixture = Buffer.from(
+      'R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
+      'base64'
+    );
+    await gifInput.setInputFiles({
+      name: 'tiny.gif',
+      mimeType: 'image/gif',
+      buffer: gifFixture,
+    });
+
+    await expect(
+      page.getByText('드래그로 이동, 테두리 드래그로 크기 조절', { exact: true })
+    ).toBeVisible();
+  });
 });
+

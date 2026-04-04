@@ -588,6 +588,7 @@
             originalPreview: "Original (crop area shown)",
             croppedPreview: "Cropped Result",
             previewAlt: "GIF preview",
+            dragHint: "Drag to move, drag edges to resize",
             download: "Download GIF"
           }
         },
@@ -1194,6 +1195,7 @@
             originalPreview: "원본 (크롭 영역 표시)",
             croppedPreview: "크롭 결과",
             previewAlt: "GIF 미리보기",
+            dragHint: "드래그로 이동, 테두리 드래그로 크기 조절",
             download: "GIF 다운로드"
           }
         },
@@ -1800,6 +1802,7 @@
             originalPreview: "元画像（クロップ範囲を表示）",
             croppedPreview: "クロップ結果",
             previewAlt: "GIFプレビュー",
+            dragHint: "ドラッグで移動、枠線ドラッグでサイズ変更",
             download: "GIFをダウンロード"
           }
         },
@@ -2406,6 +2409,7 @@
             originalPreview: "原图（显示裁剪区域）",
             croppedPreview: "裁剪结果",
             previewAlt: "GIF 预览",
+            dragHint: "拖动可移动，拖动边框可调整大小",
             download: "下载 GIF"
           }
         },
