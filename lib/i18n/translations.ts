@@ -30,6 +30,10 @@
           title: "Image & Video",
           description: "Tools for video and image manipulation."
         },
+        gif: {
+          title: "GIF",
+          description: "Tools for GIF creation and conversion."
+        },
         llm: {
           title: "LLM",
           description: "Tools for Large Language Models."
@@ -540,6 +544,74 @@
           renderError: "Unable to render SVG",
           invalidFile: "Invalid SVG file",
           notSvgFile: "File is not a valid SVG"
+        },
+        gifSpeedChanger: {
+          title: "GIF Speed Changer",
+          description: "Change GIF playback speed",
+          page: {
+            upload: "Upload GIF",
+            selected: "Selected",
+            speed: "Speed",
+            faster: "Faster",
+            slower: "Slower",
+            normal: "Normal",
+            originalDuration: "Original duration",
+            estimatedDuration: "Estimated duration",
+            processing: "Processing...",
+            run: "Change Speed",
+            done: "Done!",
+            error: "Processing failed",
+            loadingFfmpeg: "Loading FFmpeg...",
+            outputSize: "Output size",
+            preview: "Preview",
+            previewAlt: "Converted GIF preview",
+            download: "Download GIF"
+          }
+        },
+        gifCrop: {
+          title: "GIF Crop",
+          description: "Crop GIF to selected region",
+          page: {
+            upload: "Upload GIF",
+            selected: "Selected",
+            cropLeft: "Crop from left",
+            cropRight: "Crop from right",
+            cropTop: "Crop from top",
+            cropBottom: "Crop from bottom",
+            outputDimensions: "Output dimensions",
+            processing: "Processing...",
+            run: "Crop GIF",
+            done: "Done!",
+            error: "Processing failed",
+            loadingFfmpeg: "Loading FFmpeg...",
+            outputSize: "Output size",
+            originalPreview: "Original (crop area shown)",
+            croppedPreview: "Cropped Result",
+            previewAlt: "GIF preview",
+            download: "Download GIF"
+          }
+        },
+        gifCutter: {
+          title: "GIF Cutter",
+          description: "Cut/trim GIF by start and end time",
+          page: {
+            upload: "Upload GIF",
+            selected: "Selected",
+            frames: "frames",
+            startTime: "Start time",
+            endTime: "End time",
+            selectedDuration: "Selected duration",
+            estimatedFrames: "Estimated frames",
+            processing: "Processing...",
+            run: "Cut GIF",
+            done: "Done!",
+            error: "Processing failed",
+            loadingFfmpeg: "Loading FFmpeg...",
+            outputSize: "Output size",
+            preview: "Preview",
+            previewAlt: "Cut GIF preview",
+            download: "Download GIF"
+          }
         }
       }
     }
@@ -574,6 +646,10 @@
         imageVideo: {
           title: "이미지 및 비디오",
           description: "비디오 및 이미지 편집 도구"
+        },
+        gif: {
+          title: "GIF",
+          description: "GIF 생성 및 변환 도구"
         },
         llm: {
           title: "LLM",
@@ -1074,6 +1150,74 @@
           renderError: "SVG 를 렌더링할 수 없습니다",
           invalidFile: "잘못된 SVG 파일",
           notSvgFile: "파일이 유효한 SVG 가 아닙니다"
+        },
+        gifSpeedChanger: {
+          title: "GIF 속도 변경",
+          description: "GIF 재생 속도를 변경합니다",
+          page: {
+            upload: "GIF 업로드",
+            selected: "선택됨",
+            speed: "속도",
+            faster: "빠르게",
+            slower: "느리게",
+            normal: "보통",
+            originalDuration: "원본 길이",
+            estimatedDuration: "예상 길이",
+            processing: "처리 중...",
+            run: "속도 변경",
+            done: "완료!",
+            error: "처리 실패",
+            loadingFfmpeg: "FFmpeg 로딩 중...",
+            outputSize: "출력 크기",
+            preview: "미리보기",
+            previewAlt: "변환된 GIF 미리보기",
+            download: "GIF 다운로드"
+          }
+        },
+        gifCrop: {
+          title: "GIF 크롭",
+          description: "GIF를 선택한 영역으로 크롭합니다",
+          page: {
+            upload: "GIF 업로드",
+            selected: "선택됨",
+            cropLeft: "왼쪽에서 자르기",
+            cropRight: "오른쪽에서 자르기",
+            cropTop: "위에서 자르기",
+            cropBottom: "아래에서 자르기",
+            outputDimensions: "출력 크기",
+            processing: "처리 중...",
+            run: "크롭 실행",
+            done: "완료!",
+            error: "처리 실패",
+            loadingFfmpeg: "FFmpeg 로딩 중...",
+            outputSize: "출력 크기",
+            originalPreview: "원본 (크롭 영역 표시)",
+            croppedPreview: "크롭 결과",
+            previewAlt: "GIF 미리보기",
+            download: "GIF 다운로드"
+          }
+        },
+        gifCutter: {
+          title: "GIF 커터",
+          description: "시작과 끝 시간으로 GIF를 자릅니다",
+          page: {
+            upload: "GIF 업로드",
+            selected: "선택됨",
+            frames: "프레임",
+            startTime: "시작 시간",
+            endTime: "종료 시간",
+            selectedDuration: "선택한 길이",
+            estimatedFrames: "예상 프레임",
+            processing: "처리 중...",
+            run: "GIF 자르기",
+            done: "완료!",
+            error: "처리 실패",
+            loadingFfmpeg: "FFmpeg 로딩 중...",
+            outputSize: "출력 크기",
+            preview: "미리보기",
+            previewAlt: "자른 GIF 미리보기",
+            download: "GIF 다운로드"
+          }
         }
       }
     }
@@ -1108,6 +1252,10 @@
         imageVideo: {
           title: "画像・動画",
           description: "動画と画像の編集ツール"
+        },
+        gif: {
+          title: "GIF",
+          description: "GIF作成および変換ツール"
         },
         llm: {
           title: "LLM",
@@ -1608,6 +1756,74 @@
           renderError: "SVG をレンダリングできません",
           invalidFile: "無効な SVG ファイル",
           notSvgFile: "ファイルは有効な SVG ではありません"
+        },
+        gifSpeedChanger: {
+          title: "GIF 速度変更",
+          description: "GIFの再生速度を変更します",
+          page: {
+            upload: "GIFをアップロード",
+            selected: "選択済み",
+            speed: "速度",
+            faster: "速く",
+            slower: "遅く",
+            normal: "通常",
+            originalDuration: "元の長さ",
+            estimatedDuration: "推定長さ",
+            processing: "処理中...",
+            run: "速度を変更",
+            done: "完了！",
+            error: "処理に失敗しました",
+            loadingFfmpeg: "FFmpegを読み込み中...",
+            outputSize: "出力サイズ",
+            preview: "プレビュー",
+            previewAlt: "変換後のGIFプレビュー",
+            download: "GIFをダウンロード"
+          }
+        },
+        gifCrop: {
+          title: "GIF クロップ",
+          description: "GIFを選択した領域にクロップします",
+          page: {
+            upload: "GIFをアップロード",
+            selected: "選択済み",
+            cropLeft: "左から切り取り",
+            cropRight: "右から切り取り",
+            cropTop: "上から切り取り",
+            cropBottom: "下から切り取り",
+            outputDimensions: "出力サイズ",
+            processing: "処理中...",
+            run: "クロップ実行",
+            done: "完了！",
+            error: "処理に失敗しました",
+            loadingFfmpeg: "FFmpegを読み込み中...",
+            outputSize: "出力サイズ",
+            originalPreview: "元画像（クロップ範囲を表示）",
+            croppedPreview: "クロップ結果",
+            previewAlt: "GIFプレビュー",
+            download: "GIFをダウンロード"
+          }
+        },
+        gifCutter: {
+          title: "GIF カッター",
+          description: "開始時間と終了時間でGIFを切り取ります",
+          page: {
+            upload: "GIFをアップロード",
+            selected: "選択済み",
+            frames: "フレーム",
+            startTime: "開始時間",
+            endTime: "終了時間",
+            selectedDuration: "選択した長さ",
+            estimatedFrames: "推定フレーム数",
+            processing: "処理中...",
+            run: "GIFを切り取る",
+            done: "完了！",
+            error: "処理に失敗しました",
+            loadingFfmpeg: "FFmpegを読み込み中...",
+            outputSize: "出力サイズ",
+            preview: "プレビュー",
+            previewAlt: "切り取ったGIFプレビュー",
+            download: "GIFをダウンロード"
+          }
         }
       }
     }
@@ -1642,6 +1858,10 @@
         imageVideo: {
           title: "图片和视频",
           description: "视频和图像编辑工具"
+        },
+        gif: {
+          title: "GIF",
+          description: "GIF创建和转换工具"
         },
         llm: {
           title: "LLM",
@@ -2142,6 +2362,74 @@
           renderError: "无法渲染 SVG",
           invalidFile: "无效的 SVG 文件",
           notSvgFile: "文件不是有效的 SVG"
+        },
+        gifSpeedChanger: {
+          title: "GIF 速度调节器",
+          description: "更改 GIF 播放速度",
+          page: {
+            upload: "上传 GIF",
+            selected: "已选择",
+            speed: "速度",
+            faster: "更快",
+            slower: "更慢",
+            normal: "正常",
+            originalDuration: "原始时长",
+            estimatedDuration: "预计时长",
+            processing: "处理中...",
+            run: "更改速度",
+            done: "完成！",
+            error: "处理失败",
+            loadingFfmpeg: "正在加载 FFmpeg...",
+            outputSize: "输出大小",
+            preview: "预览",
+            previewAlt: "转换后的 GIF 预览",
+            download: "下载 GIF"
+          }
+        },
+        gifCrop: {
+          title: "GIF 裁剪",
+          description: "将 GIF 裁剪到选定区域",
+          page: {
+            upload: "上传 GIF",
+            selected: "已选择",
+            cropLeft: "从左裁剪",
+            cropRight: "从右裁剪",
+            cropTop: "从上裁剪",
+            cropBottom: "从下裁剪",
+            outputDimensions: "输出尺寸",
+            processing: "处理中...",
+            run: "裁剪 GIF",
+            done: "完成！",
+            error: "处理失败",
+            loadingFfmpeg: "正在加载 FFmpeg...",
+            outputSize: "输出大小",
+            originalPreview: "原图（显示裁剪区域）",
+            croppedPreview: "裁剪结果",
+            previewAlt: "GIF 预览",
+            download: "下载 GIF"
+          }
+        },
+        gifCutter: {
+          title: "GIF 剪辑器",
+          description: "按开始和结束时间剪辑 GIF",
+          page: {
+            upload: "上传 GIF",
+            selected: "已选择",
+            frames: "帧",
+            startTime: "开始时间",
+            endTime: "结束时间",
+            selectedDuration: "选定时长",
+            estimatedFrames: "预计帧数",
+            processing: "处理中...",
+            run: "剪辑 GIF",
+            done: "完成！",
+            error: "处理失败",
+            loadingFfmpeg: "正在加载 FFmpeg...",
+            outputSize: "输出大小",
+            preview: "预览",
+            previewAlt: "剪辑后的 GIF 预览",
+            download: "下载 GIF"
+          }
         }
       }
     }
