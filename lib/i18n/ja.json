@@ -1,0 +1,656 @@
+{
+  "common": {
+    "title": "ウェブユーティリティ",
+    "subtitle": "便利なツールのコレクションです。",
+    "backToCategories": "カテゴリに戻る",
+    "uploadZone": {
+      "pasteHint": "クリップボードから Ctrl+V を押して貼り付けます",
+      "dragDropHint": "またはファイルをドラッグ & ドロップ"
+    },
+    "header": {
+      "themeToggleAriaLabel": "テーマ切り替え",
+      "languages": {
+        "en": "English",
+        "ko": "한국어",
+        "ja": "日本語",
+        "zh": "中文"
+      }
+    },
+    "categories": {
+      "database": {
+        "title": "データベース",
+        "description": "JSON、CSV、SQL データベース用ツール。"
+      },
+      "game": {
+        "title": "ゲーム",
+        "description": "各種ゲームに役立つユーティリティ。"
+      },
+      "imageVideo": {
+        "title": "画像 & ビデオ",
+        "description": "ビデオおよび画像操作ツール。"
+      },
+      "gif": {
+        "title": "GIF",
+        "description": "GIF 作成および変換ツール。"
+      },
+      "llm": {
+        "title": "LLM",
+        "description": "大規模言語モデル用ツール。"
+      },
+      "geolocation": {
+        "title": "地理位置",
+        "description": "地理データを取り扱うためのツール。"
+      },
+      "etc": {
+        "title": "その他",
+        "description": "その他の汎用ユーティリティ。"
+      }
+    },
+    "tools": {
+      "escapedStringDecoder": {
+        "title": "Escaped String Decoder",
+        "description": "Escaped strings をデコードします。",
+        "page": {
+          "inputLabel": "Escaped String",
+          "inputPlaceholder": "Escaped テキストを入力 (例: \\uAD00)",
+          "convert": "変換",
+          "outputLabel": "変換されたテキスト",
+          "errorPrefix": "エラー"
+        }
+      },
+      "xlsxToSql": {
+        "title": "XLSX to SQL",
+        "description": "Excel ファイルを SQL 文に変換します。",
+        "page": {
+          "converterTitle": "XLSX to SQL コンバータ",
+          "uploadXlsxFile": "XLSX ファイルのアップロード",
+          "generatedSqlStatements": "生成された SQL 文",
+          "copyToClipboard": "クリップボードにコピー"
+        }
+      },
+      "imageToBase64": {
+        "title": "Image to Base64",
+        "description": "画像を Base64 に変換",
+        "page": {
+          "uploadImage": "画像アップロード",
+          "base64Output": "Base64 出力",
+          "copyBase64": "Base64 コピー",
+          "copyImgSrc": "Img Src コピー",
+          "copyCssUrl": "CSS URL コピー",
+          "converterTitle": "画像 → Base64 変換"
+        }
+      },
+      "svgPreview": {
+        "title": "SVG プレビュー",
+        "description": "SVG ファイルプレビュー",
+        "page": {
+          "invalidFile": "無効なファイルタイプ",
+          "notSvgFile": "SVG ファイルではない",
+          "tabFile": "ファイル",
+          "tabText": "テキスト",
+          "fileTitle": "ファイルタイトル",
+          "pasteHint": "貼り付けヒント",
+          "dragDropHint": "ドラッグアンドドロップヒント",
+          "uploadFile": "ファイルアップロード",
+          "textTitle": "テキストタイトル",
+          "placeholder": "プレースホルダー",
+          "resultTitle": "結果タイトル",
+          "renderError": "レンダリングエラー",
+          "copied": "コピー済み",
+          "copySvg": "SVG コピー",
+          "downloadSvg": "SVG ダウンロード",
+          "clear": "クリア"
+        },
+        "tabFile": "ファイルアップロード",
+        "tabText": "テキスト入力",
+        "fileTitle": "SVG ファイルアップロード",
+        "textTitle": "SVG コード入力",
+        "placeholder": "プレビューする SVG コードを入力してください",
+        "pasteHint": "Ctrl+V でクリップボードの SVG を貼り付けてください",
+        "dragDropHint": "または SVG ファイルをここにドラッグ＆ドロップ",
+        "uploadFile": "SVG ファイルをアップロード",
+        "copySvg": "SVG コードをコピー",
+        "copied": "コピーしました!",
+        "downloadSvg": "SVG をダウンロード",
+        "clear": "クリア",
+        "resultTitle": "結果",
+        "renderError": "SVG をレンダリングできません",
+        "invalidFile": "無効な SVG ファイル",
+        "notSvgFile": "ファイルは有効な SVG ではありません"
+      },
+      "qrCode": {
+        "title": "QR コードジェネレータ",
+        "description": "QR コード生成",
+        "page": {
+          "noQrFound": "QR コードが見つからない",
+          "tabGenerate": "生成",
+          "tabRead": "読み取り",
+          "generateTitle": "生成タイトル",
+          "placeholder": "プレースホルダー",
+          "downloadQr": "QR ダウンロード",
+          "readTitle": "読み取りタイトル",
+          "pasteHint": "貼り付けヒント",
+          "dragDropHint": "ドラッグアンドドロップヒント",
+          "uploadFile": "ファイルアップロード",
+          "previewAlt": "プレビュー alt",
+          "decodedResult": "デコードされた結果",
+          "copied": "コピー済み",
+          "copyResult": "結果コピー"
+        },
+        "placeholder": "QRコードを生成するテキストを入力してください",
+        "tabGenerate": "生成",
+        "tabRead": "読み取り",
+        "generateTitle": "QRコード生成",
+        "readTitle": "QRコード読み取り",
+        "pasteFromClipboard": "クリップボードから貼り付け (Ctrl+V)",
+        "orUploadFile": "またはQRコード画像をアップロード",
+        "uploadFile": "画像をアップロード",
+        "decodedResult": "読み取り結果",
+        "copyResult": "コピー",
+        "copied": "コピーしました！",
+        "noQrFound": "画像からQRコードが見つかりませんでした。",
+        "pasteHint": "Ctrl+VでクリップボードのQRコード画像を貼り付けてください",
+        "dragDropHint": "または画像をここにドラッグ＆ドロップ",
+        "downloadQr": "QRコードをダウンロード",
+        "previewAlt": "生成された QR コードのプレビュー"
+      },
+      "discordColorMessageGenerator": {
+        "title": "Discord カラーメッセージジェネレータ",
+        "description": "Discord のカラーメッセージ生成",
+        "page": {
+          "message": "メッセージ",
+          "inputPlaceholder": "入力プレースホルダー",
+          "selectedRangeApply": "選択範囲適用",
+          "textColor": "テキストカラー",
+          "styleLabel": "スタイルレベル",
+          "bgColor": "背景カラー",
+          "charStylePicker": "キャラクタースタイルピッカー",
+          "charTextColorTitle": "キャラクターテキストカラータイトル",
+          "noTextColor": "テキストカラーなし",
+          "charTextStyleTitle": "キャラクターテキストスタイルタイトル",
+          "bold": "太字",
+          "underline": "下線",
+          "none": "なし",
+          "charBgColorTitle": "キャラクター背景カラータイトル",
+          "noBgColor": "背景カラーなし",
+          "generateAndCopy": "生成してコピー",
+          "preview": "プレビュー",
+          "howToTitle": "使い方",
+          "step1": "ステップ 1",
+          "step2": "ステップ 2",
+          "step3": "ステップ 3",
+          "step4": "ステップ 4",
+          "step5": "ステップ 5",
+          "step6": "ステップ 6",
+          "note": "ノート",
+          "cancel": "キャンセル"
+        },
+        "message": "メッセージ",
+        "textColor": "文字色",
+        "textStyle": "文字スタイル",
+        "bgColor": "背景色",
+        "default": "デフォルト",
+        "black": "黒",
+        "red": "赤",
+        "green": "緑",
+        "yellow": "黄",
+        "blue": "青",
+        "purple": "紫",
+        "cyan": "水色",
+        "white": "白",
+        "none": "なし",
+        "bold": "太字",
+        "underline": "下線",
+        "apply": "適用",
+        "generate": "生成",
+        "copy": "コピー",
+        "copied": "コピーしました！",
+        "selectedRange": "選択されたテキスト範囲",
+        "applyTo": "適用対象",
+        "clear": "クリア"
+      },
+      "ntripScanner": {
+        "title": "NTRIP スキャナ",
+        "description": "NTRIP 接続スキャン",
+        "page": {
+          "unknownError": "不明なエラー",
+          "connectionFailed": "接続失敗",
+          "casterIp": "キャスター IP",
+          "hostPlaceholder": "ホストプレースホルダー",
+          "port": "ポート",
+          "portPlaceholder": "ポートプレースホルダー",
+          "id": "ID",
+          "password": "パスワード",
+          "scanning": "スキャン中...",
+          "scanStart": "スキャン開始",
+          "mountPointList": "マウントポイントリスト",
+          "title": "NTRIPスキャナー"
+        }
+      },
+      "videoCutterEncoder": {
+        "title": "ビデオカッターエンコーダ",
+        "description": "ビデオファイルのカットとエンコード",
+        "page": {
+          "ffmpegNotLoaded": "FFmpeg が読み込まれていない",
+          "loadingFFmpeg": "FFmpeg の読み込み中...",
+          "ffmpegLoaded": "FFmpeg が読み込まれた",
+          "writingFile": "ファイルの書き込み中...",
+          "largeFileWarning": "大ファイル警告",
+          "processing": "処理中",
+          "trimmingFast": "トリミング (高速)...",
+          "invalidSizeLimit": "無効なサイズ制限",
+          "targetSizeSmaller": "目標サイズが小さい",
+          "targetSizeTooSmall": "目標サイズが小さすぎる",
+          "targetSizeLarger": "目標サイズが大きすぎる",
+          "trimmingLowQuality": "トリミング (低品質)...",
+          "trimmingPrecise": "トリミング (精密)...",
+          "readingResult": "結果の読み取り中...",
+          "done": "完了!",
+          "memoryError": "メモリエラー",
+          "errorOccurred": "エラーが発生しました",
+          "selectVideo": "ビデオ選択",
+          "selectedFile": "選択されたファイル",
+          "chooseVideoFile": "ビデオファイルを選択",
+          "originalVideo": "元ビデオ",
+          "trimRange": "トリミング範囲",
+          "start": "開始",
+          "current": "現在",
+          "end": "終了",
+          "limitOutputFileSize": "出力ファイルサイズ制限",
+          "selectSizeLimit": "サイズ制限を選択",
+          "custom": "カスタム",
+          "mbPlaceholder": "MB プレースホルダー",
+          "formatRequiresReencoding": "フォーマットは再エンコードを必要とする",
+          "process": "処理",
+          "sizeLimitRequiresReencoding": "サイズ制限は再エンコードを必要とする",
+          "processFastTrim": "高速トリミング処理",
+          "formatRequiresReencodingLonger": "フォーマットはより長い再エンコードを必要とする",
+          "trimmedVideo": "トリミングされたビデオ",
+          "downloadTrimmedVideo": "トリミングされたビデオのダウンロード",
+          "fixHighQuality": "高品質修復",
+          "fixLowQuality": "低品質修復",
+          "selected": "選択済み",
+          "enableSizeLimit": "サイズ制限を有効にする",
+          "fixVideoReEncode": "ビデオ修正（再エンコード）",
+          "lowQualitySmallSize": "低品質（小さいサイズ）",
+          "fileTooBig": "ファイルが大きすぎてブラウザで処理できません。最大サイズは2GBです。",
+          "errorProcessing": "ビデオ処理エラー"
+        }
+      },
+      "csvSorter": {
+        "title": "CSV ソーター",
+        "description": "列ごとに CSV データをソートします。",
+        "page": {
+          "title": "高度な CSV ソーター",
+          "labels": {
+            "sortColumn": "ソート列",
+            "columnPosition": "列位置",
+            "secondaryColumns": "二次ソート列",
+            "sortOrder": "ソート順序",
+            "sortMethod": "ソート方法",
+            "caseSensitiveSort": "大文字小文字の区別を有効にする",
+            "handleMissing": "欠落値の処理",
+            "customMissingValue": "カスタム欠落値",
+            "deleteComments": "コメントの削除",
+            "commentSymbol": "コメント記号",
+            "deleteEmptyLines": "空白行の削除"
+          },
+          "placeholders": {
+            "selectColumn": "列を選択",
+            "secondaryColumns": "例：column1, column2",
+            "selectOrder": "順序を選択",
+            "selectMethod": "方法を選択",
+            "selectMethodForMissing": "方法を選択"
+          },
+          "sortOrderOptions": {
+            "asc": "昇順",
+            "desc": "降順"
+          },
+          "sortMethodOptions": {
+            "alphabetical": "文字列順",
+            "numeric": "数値順"
+          },
+          "missingValueOptions": {
+            "unchanged": "変更なし",
+            "blank": "空白",
+            "custom": "カスタム"
+          },
+          "downloadButton": "ソートされた CSV のダウンロード",
+          "messages": {
+            "showingPrefix": "合計",
+            "showingSuffix": "行の最初の 10 件を表示"
+          }
+        }
+      },
+      "boothAlgorithmMultiplier": {
+        "title": "ブースアルゴリズム乗算器",
+        "description": "ブースアルゴリズムを使用したバイナリ乗算",
+        "page": {
+          "title": "ブースアルゴリズム乗算器",
+          "labels": {
+            "multiplicand": "被乗数 M (-8 ~ 7):",
+            "multiplier": "乗数 Q (-8 ~ 7):"
+          },
+          "calculate": "計算",
+          "resultsTitle": "結果",
+          "finalTitle": "計算結果",
+          "productLabel": "積: ",
+          "headers": {
+            "step": "ステップ",
+            "operation": "演算",
+            "q": "q0"
+          },
+          "rangeError": "入力値は -8 から 7 の範囲である必要があります。"
+        }
+      },
+      "kakaotalkChatAnalyzer": {
+        "title": "KakaoTalkチャット分析",
+        "description": "KakaoTalkログからランキングと時間帯別アクティビティを分析",
+        "page": {
+          "chatFileLabel": "チャットログファイルをアップロード",
+          "pasteLabel": "またはチャットテキストを直接貼り付け",
+          "rawTextPlaceholder": "[ニックネーム] [09:12] メッセージ",
+          "parsingText": "解析中...",
+          "analyzeButton": "分析開始",
+          "sampleFormat": "サンプル形式: [名前] [10:12 AM] メッセージ",
+          "parsedMessagesCount": "解析済みメッセージ数:",
+          "targetMessagesCount": "現在の対象メッセージ数:",
+          "preset": {
+            "all": "すべて",
+            "last7": "直近7日",
+            "last30": "直近30日",
+            "thisYear": "今年"
+          },
+          "startDateLabel": "開始日",
+          "endDateLabel": "終了日",
+          "openPicker": "開く",
+          "datePickerMin": "最小",
+          "datePickerMax": "最大",
+          "datePickerClose": "閉じる",
+          "userHourlySection": "ユーザー別時間帯アクティビティ",
+          "nicknameLabel": "ユーザー選択",
+          "nicknameSearchPlaceholder": "ユーザー検索（部分一致）",
+          "searchingNickname": "検索中...",
+          "noNickname": "未選択",
+          "totalUniqueUsers": "ユニークユーザー総数",
+          "people": "人",
+          "noSearchResult": "検索結果がありません。",
+          "selectedUserHourlyTitle": "時間帯アクティビティ（メッセージ数）",
+          "selectedUserTopMessagesTitle": "よく使うメッセージ種類",
+          "noMessageData": "メッセージデータがありません。",
+          "table": {
+            "head": {
+              "rank": "順位",
+              "message": "メッセージ",
+              "count": "回数",
+              "nickname": "ニックネーム",
+              "messageCount": "メッセージ数",
+              "occurrences": "出現回数"
+            }
+          },
+          "hourlyActiveUsers": "時間帯別アクティブユーザー（ユニーク）",
+          "hourlyMessageActivity": "時間帯別メッセージ数",
+          "userActivityRankingTitle": "ユーザー活動ランキング（メッセージ数）",
+          "topMessagesTitle": "頻出メッセージランキング",
+          "topMessagesDescription": "ランキング表 + ドーナツチャート",
+          "donutChartAriaLabel": "メッセージ頻度ドーナツチャート"
+        }
+      },
+      "mp4ToGif": {
+        "title": "MP4からGIF",
+        "description": "MP4動画をGIFアニメーションに変換",
+        "page": {
+          "title": "MP4からGIF変換",
+          "upload": "MP4ファイルをアップロード",
+          "selected": "選択済み",
+          "fps": "フレーム毎秒",
+          "resolution": "解像度倍率",
+          "estimatedSize": "推定サイズ",
+          "actualSize": "実際の出力サイズ",
+          "sizeEstimateUnavailable": "推定不可（変換後に表示）",
+          "run": "変換",
+          "converting": "変換中...",
+          "preview": "プレビュー",
+          "previewAlt": "変換後のGIFプレビュー",
+          "download": "GIFをダウンロード",
+          "loadingFfmpeg": "FFmpegコアをロード中...",
+          "done": "変換が完了しました。",
+          "error": "変換に失敗しました。別のファイルを使うか設定を下げてください。",
+          "optimizeButton": "容量を最適化",
+          "sendingButton": "転送中...",
+          "transferError": "GIF最適化ページを開けませんでした"
+        }
+      },
+      "gifToMp4Webp": {
+        "title": "GIFからMP4 / WEBP",
+        "description": "アニメーションGIFをMP4動画またはWEBPに変換",
+        "page": {
+          "title": "GIFからMP4 / WEBP変換",
+          "description": "GIFをアップロードし、出力形式を選んでブラウザ内で変換します。",
+          "upload": "GIFファイルをアップロード",
+          "selected": "選択済み",
+          "outputFormat": "出力形式",
+          "mp4Label": "MP4動画",
+          "webpLabel": "WEBP画像",
+          "run": "変換",
+          "converting": "変換中...",
+          "preview": "プレビュー",
+          "previewAlt": "変換結果のプレビュー",
+          "download": "結果をダウンロード",
+          "loadingFfmpeg": "FFmpegコアをロード中...",
+          "done": "変換が完了しました。",
+          "error": "変換に失敗しました。別のファイルで再試行してください。",
+          "source": "元のGIF",
+          "result": "変換結果"
+        }
+      },
+      "gifOptimizer": {
+        "title": "GIF最適化",
+        "description": "GIFのサイズを調整して最適化",
+        "page": {
+          "description": "解像度、フレームレート、lossy値を調整してGIF容量を削減します。",
+          "upload": "GIFをアップロード",
+          "gifsicleArgs": "gifsicle wasm 引数",
+          "resizeWidth": "幅の調整",
+          "frameRate": "フレームレート",
+          "lossy": "Lossy",
+          "run": "最適化を実行",
+          "loadingEngine": "最適化エンジンをロード中...",
+          "optimizing": "GIFを最適化中...",
+          "done": "最適化が完了しました。",
+          "error": "エラー",
+          "before": "最適化前",
+          "after": "最適化後",
+          "download": "GIFをダウンロード",
+          "transferLoaded": "コンバーターからGIFプレビューを読み込みました。",
+          "transferNotFound": "転送されたGIFが見つかりませんでした。",
+          "transferError": "転送されたGIFを読み込めませんでした"
+        }
+      },
+      "kakaomapCoordOpener": {
+        "title": "カカオマップ座標オープナー",
+        "description": "カカオマップで座標を開く",
+        "page": {
+          "description": "緯度・経度を入力してカカオマップで座標を直接開きます。",
+          "latitudeLabel": "緯度",
+          "longitudeLabel": "経度",
+          "openButton": "カカオマップで開く"
+        }
+      },
+      "llmVramCalculator": {
+        "title": "LLM VRAM計算機",
+        "description": "LLMのVRAM要件を計算",
+        "errors": {
+          "enterModelId": "モデルIDを入力してください。",
+          "unauthorized": "認証に失敗しました。トークン権限を確認してください。",
+          "forbidden": "アクセス権がありません。",
+          "modelConfigNotFound": "モデル設定ファイルが見つかりません。",
+          "fetchConfigFailed": "モデル設定の取得に失敗しました:",
+          "incompleteConfig": "モデル設定情報が不完全です。",
+          "fetchModelSizeManual": "モデルサイズを自動取得できませんでした。手動で入力してください。",
+          "fetchModelSizeError": "APIからモデルサイズを取得できませんでした。",
+          "unknownFetchError": "モデル情報の取得中に不明なエラーが発生しました。",
+          "invalidModelSize": "モデルサイズが無効です。",
+          "invalidGGUFQuant": "重み量子化値が無効です。",
+          "invalidContextLength": "コンテキスト長が無効です。",
+          "invalidKVQuant": "KVキャッシュ量子化値が無効です。",
+          "invalidOverhead": "オーバーヘッド値が無効です。",
+          "invalidHeadDimension": "モデル設定のヘッド次元が無効です。"
+        },
+        "page": {
+          "title": "LLM VRAM計算機（GGUF推定）",
+          "description": "モデル重み、KVキャッシュ、バッファ、オーバーヘッドを含むVRAM使用量を推定します。",
+          "alertTitleError": "エラー",
+          "loading": "読み込み中...",
+          "loadModelInfo": "モデル情報を読み込む",
+          "labels": {
+            "modelId": "モデルID（Hugging Face）",
+            "hfToken": "HFトークン（任意）",
+            "modelSize": "モデルサイズ（Bパラメータ）",
+            "batchSize": "バッチサイズ",
+            "contextLength": "コンテキスト長",
+            "quantWeight": "重み量子化（GGUF）",
+            "quantKV": "KVキャッシュ量子化",
+            "overhead": "追加オーバーヘッド（GB）"
+          },
+          "placeholders": {
+            "modelId": "例: Qwen/Qwen3-0.6B",
+            "hfToken": "hf_xxx（任意）",
+            "modelSize": "例: 0.6",
+            "batchSize": "例: 512",
+            "quantWeight": "GGUF量子化を選択",
+            "quantKV": "KVキャッシュ量子化を選択",
+            "overhead": "例: 0.5"
+          },
+          "descriptions": {
+            "hfTokenHelp": "ゲート付き/非公開モデルの場合のみトークンが必要です。",
+            "modelSize": "単位はB（10億パラメータ）です。",
+            "modelSizeFailed": " 自動取得に失敗しました。手動で入力してください。",
+            "batchSize": "入力/計算バッファ推定に使用します。",
+            "contextLength": "KVキャッシュサイズ推定に使用します。",
+            "quantWeight": "モデル重みメモリ計算に使うビット/重み値です。",
+            "quantKV": "KVキャッシュメモリ計算に使うビット幅です。",
+            "overhead": "ランタイム/システム追加オーバーヘッド（GB）です。"
+          },
+          "status": {
+            "fetched": "自動取得済み",
+            "fetchFailed": "自動取得失敗",
+            "fetching": "取得中...",
+            "loadOrEnter": "読み込むか手動入力"
+          },
+          "results": {
+            "title": "推定VRAM内訳",
+            "modelWeights": "モデル重み:",
+            "kvCache": "KVキャッシュ:",
+            "inputBuffer": "入力バッファ:",
+            "computeBuffer": "計算バッファ:",
+            "overhead": "オーバーヘッド:",
+            "total": "推定合計:"
+          },
+          "messages": {
+            "loadingData": "モデルデータを読み込み中...",
+            "calculationFailedPrefix": "計算不可: ",
+            "startPrompt": "モデル情報を読み込むと推定を開始できます。",
+            "validModelSizePrompt": "有効なモデルサイズを入力してください。",
+            "calculating": "計算中..."
+          }
+        }
+      },
+      "opticalPuyoReader": {
+        "title": "光学ぷよぷよリーダー",
+        "description": "画像からぷよぷよゲームボードを読み取る",
+        "uploadPngImageAriaLabel": "PNG画像をアップロード",
+        "uploadedImageAlt": "アップロードされた盤面画像",
+        "uploadTip": "ぷよボードのスクリーンショットをアップロードしてください。6x12盤面を自動認識します。",
+        "originalColors": "元の色",
+        "categorizedColors": "分類後の色",
+        "row": "行",
+        "column": "列",
+        "empty": "空",
+        "colorSnapSensitivity": "色スナップ感度",
+        "chainSimulatorLink": "連鎖シミュレーター",
+        "openInChainSimulator": "連鎖シミュレーターで開く"
+      },
+      "tetrioReplayEditor": {
+        "title": "テトリオリプレイエディター",
+        "description": "テトリオリプレイファイルを編集"
+      },
+      "gifSpeedChanger": {
+        "title": "GIF 速度変更",
+        "description": "GIFの再生速度を変更します",
+        "page": {
+          "upload": "GIFをアップロード",
+          "selected": "選択済み",
+          "speed": "速度",
+          "faster": "速く",
+          "slower": "遅く",
+          "normal": "通常",
+          "originalDuration": "元の長さ",
+          "estimatedDuration": "推定長さ",
+          "processing": "処理中...",
+          "run": "速度を変更",
+          "done": "完了！",
+          "error": "処理に失敗しました",
+          "loadingFfmpeg": "FFmpegを読み込み中...",
+          "outputSize": "出力サイズ",
+          "preview": "プレビュー",
+          "previewAlt": "変換後のGIFプレビュー",
+          "download": "GIFをダウンロード"
+        }
+      },
+      "gifCrop": {
+        "title": "GIF クロップ",
+        "description": "GIFを選択した領域にクロップします",
+        "page": {
+          "upload": "GIFをアップロード",
+          "selected": "選択済み",
+          "cropLeft": "左から切り取り",
+          "cropRight": "右から切り取り",
+          "cropTop": "上から切り取り",
+          "cropBottom": "下から切り取り",
+          "outputDimensions": "出力サイズ",
+          "processing": "処理中...",
+          "run": "クロップ実行",
+          "done": "完了！",
+          "error": "処理に失敗しました",
+          "loadingFfmpeg": "FFmpegを読み込み中...",
+          "outputSize": "出力サイズ",
+          "originalPreview": "元画像（クロップ範囲を表示）",
+          "croppedPreview": "クロップ結果",
+          "previewAlt": "GIFプレビュー",
+          "dragHint": "ドラッグで移動、枠線ドラッグでサイズ変更",
+          "download": "GIFをダウンロード"
+        }
+      },
+      "gifCutter": {
+        "title": "GIF カッター",
+        "description": "開始時間と終了時間でGIFを切り取ります",
+        "page": {
+          "upload": "GIFをアップロード",
+          "selected": "選択済み",
+          "frames": "フレーム",
+          "startTime": "開始時間",
+          "endTime": "終了時間",
+          "selectedDuration": "選択した長さ",
+          "estimatedFrames": "推定フレーム数",
+          "processing": "処理中...",
+          "run": "GIFを切り取る",
+          "done": "完了！",
+          "error": "処理に失敗しました",
+          "loadingFfmpeg": "FFmpegを読み込み中...",
+          "outputSize": "出力サイズ",
+          "preview": "プレビュー",
+          "previewAlt": "切り取ったGIFプレビュー",
+          "download": "GIFをダウンロード"
+        }
+      }
+    }
+  },
+  "errors": {
+    "common": {
+      "invalidFile": "無効なファイルタイプ。",
+      "invalidJson": "無効な JSON。",
+      "unknownError": "不明なエラーが発生しました。"
+    }
+  }
+}

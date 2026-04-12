@@ -45,15 +45,15 @@ export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        value = translations.en;
+        let fallback: any = translations.en;
         for (const fallbackKey of keys) {
-          if (value && typeof value === 'object' && fallbackKey in value) {
-            value = value[fallbackKey];
+          if (fallback && typeof fallback === 'object' && fallbackKey in fallback) {
+            fallback = fallback[fallbackKey];
           } else {
             return key;
           }
         }
-        break;
+        return typeof fallback === 'string' ? fallback : key;
       }
     }
     

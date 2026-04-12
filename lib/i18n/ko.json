@@ -1,0 +1,661 @@
+{
+  "common": {
+    "title": "웹 유틸",
+    "subtitle": "실用的한 도구 모음입니다.",
+    "backToCategories": "카테고리로 돌아가기",
+    "uploadZone": {
+      "pasteHint": "클립보드에서 Ctrl+V 를 눌러 붙여넣으세요",
+      "dragDropHint": "또는 파일을 드래그 & 드롭하세요"
+    },
+    "header": {
+      "themeToggleAriaLabel": "테마 전환",
+      "languages": {
+        "en": "영어",
+        "ko": "한국어",
+        "ja": "일본어",
+        "zh": "중국어"
+      }
+    },
+    "categories": {
+      "database": {
+        "title": "데이터베이스",
+        "description": "JSON, CSV, SQL 데이터베이스용 도구."
+      },
+      "game": {
+        "title": "게임",
+        "description": "여러 게임에 유용한 유틸리티."
+      },
+      "imageVideo": {
+        "title": "이미지 & 비디오",
+        "description": "비디오 및 이미지 조작 도구."
+      },
+      "gif": {
+        "title": "GIF",
+        "description": "GIF 생성 및 변환 도구."
+      },
+      "llm": {
+        "title": "LLM",
+        "description": "Large Language Models 의 도구."
+      },
+      "geolocation": {
+        "title": "지리위치",
+        "description": "지리적 데이터를 다루는 도구."
+      },
+      "etc": {
+        "title": "기타",
+        "description": "기타 다양한 유틸리티."
+      }
+    },
+    "tools": {
+      "escapedStringDecoder": {
+        "title": "Escaped String Decoder",
+        "description": "Escaped strings 를 디코드합니다.",
+        "page": {
+          "inputLabel": "Escaped String",
+          "inputPlaceholder": "Escaped 텍스트 입력 (예: \\uAD00)",
+          "convert": "변환",
+          "outputLabel": "변환된 텍스트",
+          "errorPrefix": "오류"
+        }
+      },
+      "xlsxToSql": {
+        "title": "XLSX to SQL",
+        "description": "엑셀 파일을 SQL 문으로 변환합니다.",
+        "page": {
+          "converterTitle": "XLSX to SQL 변환기",
+          "uploadXlsxFile": "XLSX 파일 업로드",
+          "generatedSqlStatements": "생성된 SQL 문",
+          "copyToClipboard": "클립보드에 복사"
+        }
+      },
+      "imageToBase64": {
+        "title": "이미지를 Base64 로 변환",
+        "description": "이미지를 Base64 로 변환",
+        "page": {
+          "uploadImage": "이미지 업로드",
+          "base64Output": "Base64 출력",
+          "copyBase64": "Base64 복사",
+          "copyImgSrc": "Img Src 복사",
+          "copyCssUrl": "CSS URL 복사",
+          "converterTitle": "이미지 → Base64 변환기"
+        }
+      },
+      "svgPreview": {
+        "title": "SVG 미리보기",
+        "description": "SVG 파일 미리보기",
+        "page": {
+          "invalidFile": "잘못된 파일 유형",
+          "notSvgFile": "SVG 파일이 아님",
+          "tabFile": "파일",
+          "tabText": "텍스트",
+          "fileTitle": "파일 제목",
+          "pasteHint": "붙여넣기 힌트",
+          "dragDropHint": "드래그 & 드롭 힌트",
+          "uploadFile": "파일 업로드",
+          "textTitle": "텍스트 제목",
+          "placeholder": "플레이스홀더",
+          "resultTitle": "결과 제목",
+          "renderError": "렌더링 오류",
+          "copied": "복사됨",
+          "copySvg": "SVG 복사",
+          "downloadSvg": "SVG 다운로드",
+          "clear": "초기화"
+        },
+        "tabFile": "파일 업로드",
+        "tabText": "텍스트 입력",
+        "fileTitle": "SVG 파일 업로드",
+        "textTitle": "SVG 코드 입력",
+        "placeholder": "미리볼 SVG 코드를 입력하세요",
+        "pasteHint": "Ctrl+V 로 클립보드의 SVG 를 붙여넣으세요",
+        "dragDropHint": "또는 SVG 파일을 여기에 드래그 & 드롭",
+        "uploadFile": "SVG 파일 업로드",
+        "copySvg": "SVG 코드 복사",
+        "copied": "복사됨!",
+        "downloadSvg": "SVG 다운로드",
+        "clear": "초기화",
+        "resultTitle": "결과",
+        "renderError": "SVG 를 렌더링할 수 없습니다",
+        "invalidFile": "잘못된 SVG 파일",
+        "notSvgFile": "파일이 유효한 SVG 가 아닙니다"
+      },
+      "qrCode": {
+        "title": "QR 코드 생성기",
+        "description": "QR 코드 생성",
+        "page": {
+          "noQrFound": "QR 코드가 없음",
+          "tabGenerate": "생성",
+          "tabRead": "읽기",
+          "generateTitle": "생성 제목",
+          "placeholder": "플레이스홀더",
+          "downloadQr": "QR 다운로드",
+          "readTitle": "읽기 제목",
+          "pasteHint": "붙여넣기 힌트",
+          "dragDropHint": "드래그 & 드롭 힌트",
+          "uploadFile": "파일 업로드",
+          "previewAlt": "미리보기 alt",
+          "decodedResult": "디코딩된 결과",
+          "copied": "복사됨",
+          "copyResult": "결과 복사"
+        },
+        "placeholder": "QR 코드를 생성할 텍스트를 입력하세요",
+        "tabGenerate": "생성",
+        "tabRead": "인식",
+        "generateTitle": "QR코드 생성",
+        "readTitle": "QR코드 인식",
+        "pasteFromClipboard": "클립보드에서 붙여넣기 (Ctrl+V)",
+        "orUploadFile": "또는 QR코드 이미지 업로드",
+        "uploadFile": "이미지 업로드",
+        "decodedResult": "인식 결과",
+        "copyResult": "복사",
+        "copied": "복사됨!",
+        "noQrFound": "이미지에서 QR코드를 찾을 수 없습니다.",
+        "pasteHint": "Ctrl+V로 클립보드의 QR코드 이미지를 붙여넣으세요",
+        "dragDropHint": "또는 이미지를 여기에 드래그 & 드롭",
+        "downloadQr": "QR코드 다운로드",
+        "previewAlt": "생성된 QR 코드 미리보기"
+      },
+      "discordColorMessageGenerator": {
+        "title": "디스코드 컬러 메시지 생성기",
+        "description": "디스코드에 컬러 메시지 생성",
+        "page": {
+          "message": "메시지",
+          "inputPlaceholder": "입력 플레이스홀더",
+          "selectedRangeApply": "선택한 범위 적용",
+          "textColor": "텍스트 색상",
+          "styleLabel": "스타일 레이블",
+          "bgColor": "배경 색상",
+          "charStylePicker": "캐릭터 스타일 피커",
+          "charTextColorTitle": "캐릭터 텍스트 색상 제목",
+          "noTextColor": "텍스트 색상 없음",
+          "charTextStyleTitle": "캐릭터 텍스트 스타일 제목",
+          "bold": "굵게",
+          "underline": "밑줄",
+          "none": "없음",
+          "charBgColorTitle": "캐릭터 배경 색상 제목",
+          "noBgColor": "배경 색상 없음",
+          "generateAndCopy": "생성 및 복사",
+          "preview": "미리보기",
+          "howToTitle": "사용법",
+          "step1": "단계 1",
+          "step2": "단계 2",
+          "step3": "단계 3",
+          "step4": "단계 4",
+          "step5": "단계 5",
+          "step6": "단계 6",
+          "note": "참고",
+          "cancel": "취소"
+        },
+        "message": "메시지",
+        "textColor": "글자 색상",
+        "textStyle": "글자 스타일",
+        "bgColor": "배경 색상",
+        "default": "기본값",
+        "black": "검정",
+        "red": "빨강",
+        "green": "초록",
+        "yellow": "노랑",
+        "blue": "파랑",
+        "purple": "보라",
+        "cyan": "청록",
+        "white": "흰색",
+        "none": "없음",
+        "bold": "굵게",
+        "underline": "밑줄",
+        "apply": "적용",
+        "generate": "생성",
+        "copy": "복사",
+        "copied": "복사됨!",
+        "selectedRange": "선택된 텍스트 범위",
+        "applyTo": "적용 대상",
+        "clear": "지우기"
+      },
+      "ntripScanner": {
+        "title": "NTRIP 스캐너",
+        "description": "NTRIP 연결 스캔",
+        "page": {
+          "unknownError": "알 수 없는 오류",
+          "connectionFailed": "연결 실패",
+          "casterIp": "캐스터 IP",
+          "hostPlaceholder": "호스트 플레이스홀더",
+          "port": "포트",
+          "portPlaceholder": "포트 플레이스홀더",
+          "id": "ID",
+          "password": "비밀번호",
+          "scanning": "스캔 중...",
+          "scanStart": "스캔 시작",
+          "mountPointList": "마운트 포인트 목록",
+          "title": "NTRIP 스캐너"
+        }
+      },
+      "videoCutterEncoder": {
+        "title": "비디오 컷터 인코더",
+        "description": "비디오 파일 컷 및 인코딩",
+        "page": {
+          "ffmpegNotLoaded": "FFmpeg 로딩 실패",
+          "loadingFFmpeg": "FFmpeg 로딩 중...",
+          "ffmpegLoaded": "FFmpeg 로딩 완료",
+          "writingFile": "파일 작성 중...",
+          "largeFileWarning": "큰 파일 경고",
+          "processing": "처리 중",
+          "trimmingFast": "트림 (빠름)...",
+          "invalidSizeLimit": "잘못된 크기 제한",
+          "targetSizeSmaller": "목표 크기 작음",
+          "targetSizeTooSmall": "목표 크기 너무 작음",
+          "targetSizeLarger": "목표 크기 큼",
+          "trimmingLowQuality": "트림 (낮은 품질)...",
+          "trimmingPrecise": "트림 (정밀)...",
+          "readingResult": "결과 판독 중...",
+          "done": "완료!",
+          "memoryError": "메모리 오류",
+          "errorOccurred": "오류 발생",
+          "selectVideo": "비디오 선택",
+          "selectedFile": "선택된 파일",
+          "chooseVideoFile": "비디오 파일 선택",
+          "originalVideo": "원본 비디오",
+          "trimRange": "트림 범위",
+          "start": "시작",
+          "current": "현재",
+          "end": "끝",
+          "limitOutputFileSize": "출력 파일 크기 제한",
+          "selectSizeLimit": "크기 제한 선택",
+          "custom": "사용자 지정",
+          "mbPlaceholder": "MB 플레이스홀더",
+          "formatRequiresReencoding": "포맷은 재인코딩 필요",
+          "process": "프로세스",
+          "sizeLimitRequiresReencoding": "크기 제한은 재인코딩 필요",
+          "processFastTrim": "빠른 트림 처리",
+          "formatRequiresReencodingLonger": "포맷은 더 긴 재인코딩 필요",
+          "trimmedVideo": "트림된 비디오",
+          "downloadTrimmedVideo": "트림된 비디오 다운로드",
+          "fixHighQuality": "고품질 수정",
+          "fixLowQuality": "낮은 품질 수정",
+          "selected": "선택됨",
+          "enableSizeLimit": "크기 제한 사용",
+          "fixVideoReEncode": "비디오 수정 (재인코딩)",
+          "lowQualitySmallSize": "저품질 (작은 크기)",
+          "fileTooBig": "파일이 너무 커서 브라우저에서 처리할 수 없습니다. 최대 크기는 2GB입니다.",
+          "errorProcessing": "비디오 처리 오류"
+        }
+      },
+      "csvSorter": {
+        "title": "CSV 정렬기",
+        "description": "열 기준으로 CSV 데이터를 정렬합니다.",
+        "page": {
+          "title": "고급 CSV 정렬기",
+          "labels": {
+            "sortColumn": "정렬 열",
+            "columnPosition": "열 위치",
+            "secondaryColumns": "보조 정렬 열",
+            "sortOrder": "정렬 순서",
+            "sortMethod": "정렬 방법",
+            "caseSensitiveSort": "대소문자 구분 정렬",
+            "handleMissing": "누락값 처리",
+            "customMissingValue": "사용자 지정 누락값",
+            "deleteComments": "주석 삭제",
+            "commentSymbol": "주석 기호",
+            "deleteEmptyLines": "빈 줄 삭제"
+          },
+          "placeholders": {
+            "selectColumn": "열 선택",
+            "secondaryColumns": "예: column1, column2",
+            "selectOrder": "순서 선택",
+            "selectMethod": "방법 선택",
+            "selectMethodForMissing": "방법 선택"
+          },
+          "sortOrderOptions": {
+            "asc": "오름차순",
+            "desc": "내림차순"
+          },
+          "sortMethodOptions": {
+            "alphabetical": "사전순",
+            "numeric": "숫자"
+          },
+          "missingValueOptions": {
+            "unchanged": "변경 없음",
+            "blank": "빈값",
+            "custom": "사용자 지정"
+          },
+          "downloadButton": "정렬된 CSV 다운로드",
+          "messages": {
+            "showingPrefix": "총",
+            "showingSuffix": "행 중 앞의 10 개 표시"
+          }
+        }
+      },
+      "gifCrop": {
+        "title": "GIF Crop",
+        "description": "선택한 영역으로 GIF 자르기",
+        "page": {
+          "loadingFfmpeg": "FFmpeg 로딩 중...",
+          "processing": "처리 중...",
+          "done": "완료!",
+          "error": "오류 발생",
+          "upload": "GIF 업로드",
+          "selected": "선택된 파일",
+          "originalPreview": "원본 미리보기",
+          "previewAlt": "GIF 미리보기",
+          "run": "자르기 실행",
+          "dragHint": "드래그로 이동, 테두리 드래그로 크기 조절",
+          "outputSize": "출력 크기",
+          "croppedPreview": "자른 미리보기",
+          "download": "다운로드",
+          "cropLeft": "왼쪽에서 자르기",
+          "cropRight": "오른쪽에서 자르기",
+          "cropTop": "위에서 자르기",
+          "cropBottom": "아래에서 자르기",
+          "outputDimensions": "출력 크기"
+        }
+      },
+      "gifCutter": {
+        "title": "GIF Cutter",
+        "description": "선택한 영역으로 GIF 자르기",
+        "page": {
+          "loadingFfmpeg": "FFmpeg 로딩 중...",
+          "processing": "처리 중...",
+          "done": "완료!",
+          "error": "오류 발생",
+          "upload": "GIF 업로드",
+          "selected": "선택된 파일",
+          "frames": "프레임",
+          "selectedDuration": "선택된 지속 시간",
+          "estimatedFrames": "예상 프레임",
+          "run": "자르기 실행",
+          "preview": "미리보기",
+          "previewAlt": "GIF 미리보기",
+          "download": "다운로드",
+          "startTime": "시작 시간",
+          "endTime": "종료 시간",
+          "outputSize": "출력 크기"
+        }
+      },
+      "gifSpeedChanger": {
+        "title": "GIF 속도 변경기",
+        "description": "GIF 속도 변경",
+        "page": {
+          "loadingFfmpeg": "FFmpeg 로딩 중...",
+          "processing": "처리 중...",
+          "done": "완료!",
+          "error": "오류 발생",
+          "upload": "GIF 업로드",
+          "selected": "선택된 파일",
+          "speed": "속도",
+          "faster": "빠르게",
+          "slower": "서서히",
+          "originalDuration": "원본 지속 시간",
+          "estimatedDuration": "예상 지속 시간",
+          "run": "속도 변경 실행",
+          "preview": "미리보기",
+          "previewAlt": "GIF 미리보기",
+          "download": "다운로드",
+          "normal": "보통",
+          "outputSize": "출력 크기"
+        }
+      },
+      "gifToMp4Webp": {
+        "title": "GIF to MP4/WebP",
+        "description": "GIF 를 MP4 또는 WebP 로 변환",
+        "page": {
+          "loadingFfmpeg": "FFmpeg 로딩 중...",
+          "processing": "처리 중...",
+          "done": "완료!",
+          "error": "오류 발생",
+          "upload": "GIF 업로드",
+          "selected": "선택된 파일",
+          "run": "변환 실행",
+          "preview": "미리보기",
+          "download": "다운로드",
+          "title": "GIF → MP4 / WEBP 변환기",
+          "description": "GIF를 업로드하고 출력 포맷을 선택해 브라우저에서 변환하세요.",
+          "outputFormat": "출력 형식",
+          "mp4Label": "MP4 비디오",
+          "webpLabel": "WEBP 이미지",
+          "converting": "변환 중...",
+          "previewAlt": "변환 결과 미리보기",
+          "source": "원본 GIF",
+          "result": "변환 결과"
+        }
+      },
+      "gifOptimizer": {
+        "title": "GIF 최적화기",
+        "description": "GIF 파일 최적화",
+        "page": {
+          "loadingFfmpeg": "FFmpeg 로딩 중...",
+          "processing": "처리 중...",
+          "done": "완료!",
+          "error": "오류 발생",
+          "upload": "GIF 업로드",
+          "selected": "선택된 파일",
+          "run": "최적화 실행",
+          "preview": "미리보기",
+          "download": "다운로드",
+          "description": "해상도, 프레임 속도, lossy 값을 조정하여 GIF 용량을 줄입니다.",
+          "gifsicleArgs": "gifsicle wasm 인자",
+          "resizeWidth": "가로 크기",
+          "frameRate": "프레임 속도",
+          "lossy": "Lossy",
+          "loadingEngine": "최적화 엔진 로딩 중...",
+          "optimizing": "GIF 최적화 중...",
+          "before": "최적화 전",
+          "after": "최적화 후",
+          "transferLoaded": "변환기에서 생성한 GIF를 불러왔습니다.",
+          "transferNotFound": "전달된 GIF를 찾을 수 없습니다.",
+          "transferError": "전달된 GIF를 불러오지 못했습니다."
+        }
+      },
+      "boothAlgorithmMultiplier": {
+        "title": "부스 알고리즘 곱셈기",
+        "description": "부스 알고리즘을 사용한 이진 곱셈",
+        "page": {
+          "title": "부스 알고리즘 곱셈기",
+          "labels": {
+            "multiplicand": "피승수 M (-8 ~ 7):",
+            "multiplier": "승수 Q (-8 ~ 7):"
+          },
+          "calculate": "계산",
+          "resultsTitle": "결과",
+          "finalTitle": "계산 결과",
+          "productLabel": "곱: ",
+          "headers": {
+            "step": "단계",
+            "operation": "연산",
+            "q": "q0"
+          },
+          "rangeError": "입력값은 -8에서 7 사이여야 합니다."
+        }
+      },
+      "kakaotalkChatAnalyzer": {
+        "title": "카카오톡 채팅 분석기",
+        "description": "카카오톡 로그로 순위와 시간대별 활동을 분석",
+        "page": {
+          "chatFileLabel": "채팅 로그 파일 업로드",
+          "pasteLabel": "또는 채팅 텍스트 직접 붙여넣기",
+          "rawTextPlaceholder": "[닉네임] [09:12] 메시지",
+          "parsingText": "파싱 중...",
+          "analyzeButton": "분석 시작",
+          "sampleFormat": "예시 형식: [이름] [오전 10:12] 메시지",
+          "parsedMessagesCount": "파싱된 메시지 수:",
+          "targetMessagesCount": "현재 대상 메시지 수:",
+          "preset": {
+            "all": "전체",
+            "last7": "최근 7일",
+            "last30": "최근 30일",
+            "thisYear": "올해"
+          },
+          "startDateLabel": "시작 날짜",
+          "endDateLabel": "종료 날짜",
+          "openPicker": "열기",
+          "datePickerMin": "최소",
+          "datePickerMax": "최대",
+          "datePickerClose": "닫기",
+          "userHourlySection": "사용자별 시간대 활동",
+          "nicknameLabel": "사용자 선택",
+          "nicknameSearchPlaceholder": "사용자 검색 (부분 일치)",
+          "searchingNickname": "검색 중...",
+          "noNickname": "선택 안 함",
+          "totalUniqueUsers": "전체 고유 사용자",
+          "people": "명",
+          "noSearchResult": "검색 결과가 없습니다.",
+          "selectedUserHourlyTitle": "시간대 활동(메시지 수)",
+          "selectedUserTopMessagesTitle": "자주 보낸 메시지 유형",
+          "noMessageData": "메시지 데이터가 없습니다.",
+          "table": {
+            "head": {
+              "rank": "순위",
+              "message": "메시지",
+              "count": "횟수",
+              "nickname": "닉네임",
+              "messageCount": "메시지 수",
+              "occurrences": "등장 횟수"
+            }
+          },
+          "hourlyActiveUsers": "시간대별 활성 사용자(고유 사용자)",
+          "hourlyMessageActivity": "시간대별 메시지 수",
+          "userActivityRankingTitle": "사용자 활동 순위(메시지 수)",
+          "topMessagesTitle": "자주 등장한 메시지 순위",
+          "topMessagesDescription": "순위 테이블 + 도넛 차트",
+          "donutChartAriaLabel": "메시지 빈도 도넛 차트"
+        }
+      },
+      "mp4ToGif": {
+        "title": "MP4 → GIF",
+        "description": "MP4 비디오를 GIF 애니메이션으로 변환",
+        "page": {
+          "title": "MP4 → GIF 변환기",
+          "upload": "MP4 파일 업로드",
+          "selected": "선택됨",
+          "fps": "초당 프레임 수",
+          "resolution": "해상도 비율",
+          "estimatedSize": "예상 크기",
+          "actualSize": "실제 출력 크기",
+          "sizeEstimateUnavailable": "예상 불가 (변환 후 표시)",
+          "run": "변환",
+          "converting": "변환 중...",
+          "preview": "미리보기",
+          "previewAlt": "변환된 GIF 미리보기",
+          "download": "GIF 다운로드",
+          "loadingFfmpeg": "FFmpeg 코어 로딩 중...",
+          "done": "변환이 완료되었습니다.",
+          "error": "변환에 실패했습니다. 다른 파일을 사용하거나 설정을 낮춰보세요.",
+          "optimizeButton": "용량 최적화",
+          "sendingButton": "전송 중...",
+          "transferError": "GIF 최적화 페이지를 열 수 없습니다."
+        }
+      },
+      "kakaomapCoordOpener": {
+        "title": "카카오맵 좌표 열기",
+        "description": "카카오맵에서 좌표 열기",
+        "page": {
+          "description": "위도/경도를 입력하고 카카오맵에서 바로 좌표를 엽니다.",
+          "latitudeLabel": "위도",
+          "longitudeLabel": "경도",
+          "openButton": "카카오맵에서 열기"
+        }
+      },
+      "llmVramCalculator": {
+        "title": "LLM VRAM 계산기",
+        "description": "LLM의 VRAM 요구사항 계산",
+        "errors": {
+          "enterModelId": "모델 ID를 입력하세요.",
+          "unauthorized": "인증에 실패했습니다. 토큰 권한을 확인하세요.",
+          "forbidden": "접근 권한이 없습니다.",
+          "modelConfigNotFound": "모델 설정 파일을 찾을 수 없습니다.",
+          "fetchConfigFailed": "모델 설정을 불러오지 못했습니다:",
+          "incompleteConfig": "모델 설정 정보가 불완전합니다.",
+          "fetchModelSizeManual": "모델 크기를 자동으로 가져오지 못했습니다. 수동으로 입력하세요.",
+          "fetchModelSizeError": "API에서 모델 크기 조회에 실패했습니다.",
+          "unknownFetchError": "모델 정보를 가져오는 중 알 수 없는 오류가 발생했습니다.",
+          "invalidModelSize": "모델 크기 값이 올바르지 않습니다.",
+          "invalidGGUFQuant": "가중치 양자화 값이 올바르지 않습니다.",
+          "invalidContextLength": "컨텍스트 길이 값이 올바르지 않습니다.",
+          "invalidKVQuant": "KV 캐시 양자화 값이 올바르지 않습니다.",
+          "invalidOverhead": "오버헤드 값이 올바르지 않습니다.",
+          "invalidHeadDimension": "모델 설정의 헤드 차원 값이 올바르지 않습니다."
+        },
+        "page": {
+          "title": "LLM VRAM 계산기 (GGUF 추정)",
+          "description": "모델 가중치, KV 캐시, 버퍼, 오버헤드를 포함한 VRAM 사용량을 추정합니다.",
+          "alertTitleError": "오류",
+          "loading": "로딩 중...",
+          "loadModelInfo": "모델 정보 불러오기",
+          "labels": {
+            "modelId": "모델 ID (Hugging Face)",
+            "hfToken": "HF 토큰 (선택)",
+            "modelSize": "모델 크기 (B 파라미터)",
+            "batchSize": "배치 크기",
+            "contextLength": "컨텍스트 길이",
+            "quantWeight": "가중치 양자화 (GGUF)",
+            "quantKV": "KV 캐시 양자화",
+            "overhead": "추가 오버헤드 (GB)"
+          },
+          "placeholders": {
+            "modelId": "예: Qwen/Qwen3-0.6B",
+            "hfToken": "hf_xxx (선택)",
+            "modelSize": "예: 0.6",
+            "batchSize": "예: 512",
+            "quantWeight": "GGUF 양자화 선택",
+            "quantKV": "KV 캐시 양자화 선택",
+            "overhead": "예: 0.5"
+          },
+          "descriptions": {
+            "hfTokenHelp": "게이트/비공개 모델일 때만 토큰이 필요합니다.",
+            "modelSize": "단위는 B(10억 파라미터)입니다.",
+            "modelSizeFailed": " 자동 조회에 실패했습니다. 수동으로 입력하세요.",
+            "batchSize": "입력/연산 버퍼 추정에 사용됩니다.",
+            "contextLength": "KV 캐시 크기 추정에 사용됩니다.",
+            "quantWeight": "모델 가중치 메모리 계산에 사용되는 비트/가중치 값입니다.",
+            "quantKV": "KV 캐시 메모리 계산에 사용되는 비트 폭입니다.",
+            "overhead": "런타임/시스템 추가 오버헤드(GB)입니다."
+          },
+          "status": {
+            "fetched": "자동 조회됨",
+            "fetchFailed": "자동 조회 실패",
+            "fetching": "조회 중...",
+            "loadOrEnter": "불러오거나 직접 입력"
+          },
+          "results": {
+            "title": "예상 VRAM 상세",
+            "modelWeights": "모델 가중치:",
+            "kvCache": "KV 캐시:",
+            "inputBuffer": "입력 버퍼:",
+            "computeBuffer": "연산 버퍼:",
+            "overhead": "오버헤드:",
+            "total": "예상 총합:"
+          },
+          "messages": {
+            "loadingData": "모델 데이터를 불러오는 중...",
+            "calculationFailedPrefix": "계산 불가: ",
+            "startPrompt": "모델 정보를 불러오면 계산이 시작됩니다.",
+            "validModelSizePrompt": "유효한 모델 크기를 입력하세요.",
+            "calculating": "계산 중..."
+          }
+        }
+      },
+      "opticalPuyoReader": {
+        "title": "이미지 인식 뿌요 리더",
+        "description": "이미지에서 뿌요 게임 보드 읽기",
+        "uploadPngImageAriaLabel": "PNG 이미지 업로드",
+        "uploadedImageAlt": "업로드된 보드 이미지",
+        "uploadTip": "뿌요 보드 스크린샷을 업로드하세요. 6x12 보드를 자동 인식합니다.",
+        "originalColors": "원본 색상",
+        "categorizedColors": "분류된 색상",
+        "row": "행",
+        "column": "열",
+        "empty": "빈칸",
+        "colorSnapSensitivity": "색상 스냅 민감도",
+        "chainSimulatorLink": "연쇄 시뮬레이터",
+        "openInChainSimulator": "연쇄 시뮬레이터에서 열기"
+      },
+      "tetrioReplayEditor": {
+        "title": "테트리오 리플레이 편집기",
+        "description": "테트리오 리플레이 파일 편집"
+      }
+    }
+  },
+  "errors": {
+    "common": {
+      "invalidFile": "무효한 파일 유형.",
+      "invalidJson": "무효한 JSON.",
+      "unknownError": "알 수 없는 오류가 발생했습니다."
+    }
+  }
+}

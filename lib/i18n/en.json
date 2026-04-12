@@ -1,0 +1,683 @@
+{
+  "common": {
+    "title": "Web Utils",
+    "subtitle": "A collection of useful tools and utilities.",
+    "backToCategories": "Back to Categories",
+    "uploadZone": {
+      "pasteHint": "Press Ctrl+V to paste from clipboard",
+      "dragDropHint": "or drag & drop a file here"
+    },
+    "header": {
+      "themeToggleAriaLabel": "Toggle theme",
+      "languages": {
+        "en": "English",
+        "ko": "Korean",
+        "ja": "Japanese",
+        "zh": "Chinese"
+      }
+    },
+    "categories": {
+      "database": {
+        "title": "Database",
+        "description": "Tools for JSON, CSV, and SQL database."
+      },
+      "game": {
+        "title": "Game",
+        "description": "Utilities for various games."
+      },
+      "imageVideo": {
+        "title": "Image & Video",
+        "description": "Tools for video and image manipulation."
+      },
+      "gif": {
+        "title": "GIF",
+        "description": "Tools for GIF creation and conversion."
+      },
+      "llm": {
+        "title": "LLM",
+        "description": "Tools for Large Language Models."
+      },
+      "geolocation": {
+        "title": "Geolocation",
+        "description": "Tools for working with geographic data."
+      },
+      "etc": {
+        "title": "Etc",
+        "description": "Other miscellaneous utilities."
+      }
+    },
+    "tools": {
+      "escapedStringDecoder": {
+        "title": "Escaped String Decoder",
+        "description": "Decode escaped strings",
+        "page": {
+          "inputLabel": "Escaped String",
+          "inputPlaceholder": "Enter escaped text (e.g. \\uAD00)",
+          "convert": "Convert",
+          "outputLabel": "Converted Text",
+          "errorPrefix": "Error"
+        }
+      },
+      "xlsxToSql": {
+        "title": "XLSX to SQL",
+        "description": "Convert Excel files to SQL statements",
+        "page": {
+          "converterTitle": "XLSX to SQL Converter",
+          "uploadXlsxFile": "Upload XLSX File",
+          "generatedSqlStatements": "Generated SQL Statements",
+          "copyToClipboard": "Copy to Clipboard"
+        }
+      },
+      "csvSorter": {
+        "title": "CSV Sorter",
+        "description": "Sort CSV data by columns",
+        "page": {
+          "title": "Advanced CSV Sorter",
+          "labels": {
+            "sortColumn": "Sort Column",
+            "columnPosition": "Column Position",
+            "secondaryColumns": "Secondary Sort Columns",
+            "sortOrder": "Sort Order",
+            "sortMethod": "Sort Method",
+            "caseSensitiveSort": "Case-sensitive Sort",
+            "handleMissing": "Handle Missing Values",
+            "customMissingValue": "Custom Missing Value",
+            "deleteComments": "Delete Comments",
+            "commentSymbol": "Comment Symbol",
+            "deleteEmptyLines": "Delete Empty Lines"
+          },
+          "placeholders": {
+            "selectColumn": "Select column",
+            "secondaryColumns": "e.g. column1, column2",
+            "selectOrder": "Select order",
+            "selectMethod": "Select method",
+            "selectMethodForMissing": "Select method"
+          },
+          "sortOrderOptions": {
+            "asc": "Ascending",
+            "desc": "Descending"
+          },
+          "sortMethodOptions": {
+            "alphabetical": "Alphabetical",
+            "numeric": "Numeric"
+          },
+          "missingValueOptions": {
+            "unchanged": "Unchanged",
+            "blank": "Blank",
+            "custom": "Custom"
+          },
+          "downloadButton": "Download Sorted CSV",
+          "messages": {
+            "showingPrefix": "Showing first 10 rows of",
+            "showingSuffix": "total rows"
+          }
+        }
+      },
+      "gifCrop": {
+        "title": "GIF Crop",
+        "description": "Crop GIF to selected region",
+        "page": {
+          "loadingFfmpeg": "Loading FFmpeg...",
+          "processing": "Processing...",
+          "done": "Done!",
+          "error": "Error occurred",
+          "upload": "Upload GIF",
+          "selected": "Selected file",
+          "originalPreview": "Original Preview",
+          "previewAlt": "GIF preview",
+          "run": "Run Crop",
+          "dragHint": "Drag to move, drag edges to resize",
+          "outputSize": "Output Size",
+          "croppedPreview": "Cropped Preview",
+          "download": "Download",
+          "cropLeft": "Crop from left",
+          "cropRight": "Crop from right",
+          "cropTop": "Crop from top",
+          "cropBottom": "Crop from bottom",
+          "outputDimensions": "Output dimensions"
+        }
+      },
+      "gifCutter": {
+        "title": "GIF Cutter",
+        "description": "Cut GIF to selected region",
+        "page": {
+          "loadingFfmpeg": "Loading FFmpeg...",
+          "processing": "Processing...",
+          "done": "Done!",
+          "error": "Error occurred",
+          "upload": "Upload GIF",
+          "selected": "Selected file",
+          "frames": "frames",
+          "selectedDuration": "Selected Duration",
+          "estimatedFrames": "Estimated Frames",
+          "run": "Run Cut",
+          "preview": "Preview",
+          "previewAlt": "GIF preview",
+          "download": "Download",
+          "startTime": "Start time",
+          "endTime": "End time",
+          "outputSize": "Output size"
+        }
+      },
+      "gifSpeedChanger": {
+        "title": "GIF Speed Changer",
+        "description": "Change speed of GIF",
+        "page": {
+          "loadingFfmpeg": "Loading FFmpeg...",
+          "processing": "Processing...",
+          "done": "Done!",
+          "error": "Error occurred",
+          "upload": "Upload GIF",
+          "selected": "Selected file",
+          "speed": "Speed",
+          "faster": "faster",
+          "slower": "slower",
+          "originalDuration": "Original Duration",
+          "estimatedDuration": "Estimated Duration",
+          "run": "Run Speed Change",
+          "preview": "Preview",
+          "previewAlt": "GIF preview",
+          "download": "Download",
+          "normal": "Normal",
+          "outputSize": "Output size"
+        }
+      },
+      "mp4ToGif": {
+        "title": "MP4 to GIF",
+        "description": "Convert MP4 to GIF",
+        "page": {
+          "loadingFfmpeg": "Loading FFmpeg...",
+          "processing": "Processing...",
+          "done": "Done!",
+          "error": "Error occurred",
+          "upload": "Upload MP4",
+          "selected": "Selected file",
+          "fps": "FPS",
+          "resolution": "Resolution",
+          "actualSize": "Actual Size",
+          "run": "Run Conversion",
+          "preview": "Preview",
+          "previewAlt": "GIF preview",
+          "download": "Download",
+          "title": "MP4 to GIF Converter",
+          "estimatedSize": "Estimated size",
+          "sizeEstimateUnavailable": "Estimate unavailable (shown after conversion)",
+          "converting": "Converting...",
+          "optimizeButton": "Optimize Size",
+          "sendingButton": "Sending...",
+          "transferError": "Could not open the GIF optimizer"
+        }
+      },
+      "gifOptimizer": {
+        "title": "GIF Optimizer",
+        "description": "Optimize GIF files",
+        "page": {
+          "loadingFfmpeg": "Loading FFmpeg...",
+          "processing": "Processing...",
+          "done": "Done!",
+          "error": "Error occurred",
+          "upload": "Upload GIF",
+          "selected": "Selected file",
+          "run": "Run Optimization",
+          "preview": "Preview",
+          "download": "Download",
+          "description": "Optimize GIF size by adjusting resolution, frame rate, and lossy value.",
+          "gifsicleArgs": "gifsicle wasm args",
+          "resizeWidth": "Resize Width",
+          "frameRate": "Frame Rate",
+          "lossy": "Lossy",
+          "loadingEngine": "Loading optimization engine...",
+          "optimizing": "Optimizing GIF...",
+          "before": "Before",
+          "after": "After",
+          "transferLoaded": "GIF preview loaded from the converter.",
+          "transferNotFound": "Transferred GIF could not be found.",
+          "transferError": "Could not load the transferred GIF"
+        }
+      },
+      "gifToMp4Webp": {
+        "title": "GIF to MP4/WebP",
+        "description": "Convert GIF to MP4 or WebP",
+        "page": {
+          "loadingFfmpeg": "Loading FFmpeg...",
+          "processing": "Processing...",
+          "done": "Done!",
+          "error": "Error occurred",
+          "upload": "Upload GIF",
+          "selected": "Selected file",
+          "run": "Run Conversion",
+          "preview": "Preview",
+          "download": "Download",
+          "title": "GIF to MP4 / WEBP Converter",
+          "description": "Upload a GIF, choose the output format, and convert it in the browser.",
+          "outputFormat": "Output format",
+          "mp4Label": "MP4 video",
+          "webpLabel": "WEBP image",
+          "converting": "Converting...",
+          "previewAlt": "Converted output preview",
+          "source": "Source GIF",
+          "result": "Converted result"
+        }
+      },
+      "imageToBase64": {
+        "title": "Image to Base64",
+        "description": "Convert image to Base64",
+        "page": {
+          "uploadImage": "Upload Image",
+          "base64Output": "Base64 Output",
+          "copyBase64": "Copy Base64",
+          "copyImgSrc": "Copy Img Src",
+          "copyCssUrl": "Copy CSS URL",
+          "converterTitle": "Image to Base64 Converter"
+        }
+      },
+      "kakaotalkChatAnalyzer": {
+        "title": "KakaoTalk Chat Analyzer",
+        "description": "Analyze KakaoTalk chat messages",
+        "page": {
+          "chatFileLabel": "Upload chat log file",
+          "pasteLabel": "Or paste chat text directly",
+          "rawTextPlaceholder": "[Nick] [09:12] Message",
+          "parsingText": "Parsing...",
+          "analyzeButton": "Start Analysis",
+          "sampleFormat": "Sample format: [Name] [10:12 AM] Message",
+          "parsedMessagesCount": "Parsed message count:",
+          "targetMessagesCount": "Current target message count:",
+          "preset": {
+            "all": "All",
+            "last7": "Last 7 days",
+            "last30": "Last 30 days",
+            "thisYear": "This year"
+          },
+          "startDateLabel": "Start date",
+          "endDateLabel": "End date",
+          "openPicker": "Open",
+          "datePickerMin": "Min",
+          "datePickerMax": "Max",
+          "datePickerClose": "Close",
+          "userHourlySection": "Hourly activity by user",
+          "nicknameLabel": "Select user",
+          "nicknameSearchPlaceholder": "Search user (partial match)",
+          "searchingNickname": "Searching...",
+          "noNickname": "Not selected",
+          "totalUniqueUsers": "Total unique users",
+          "people": "people",
+          "noSearchResult": "No results found.",
+          "selectedUserHourlyTitle": "hourly activity (message count)",
+          "selectedUserTopMessagesTitle": "Most frequent message types",
+          "noMessageData": "No message data.",
+          "table": {
+            "head": {
+              "rank": "Rank",
+              "message": "Message",
+              "count": "Count",
+              "nickname": "Nickname",
+              "messageCount": "Message Count",
+              "occurrences": "Occurrences"
+            }
+          },
+          "hourlyActiveUsers": "Hourly active users (unique users)",
+          "hourlyMessageActivity": "Hourly messages count",
+          "userActivityRankingTitle": "User activity ranking (message count)",
+          "topMessagesTitle": "Most frequent messages ranking",
+          "topMessagesDescription": "Ranking table + donut chart",
+          "donutChartAriaLabel": "Message frequency donut chart"
+        }
+      },
+      "kakaomapCoordOpener": {
+        "title": "KakaoMap Coordinate Opener",
+        "description": "Open coordinates on KakaoMap",
+        "page": {
+          "latitudeLabel": "Latitude",
+          "longitudeLabel": "Longitude",
+          "openButton": "Open Map",
+          "description": "Enter latitude/longitude and open the coordinate directly in KakaoMap."
+        }
+      },
+      "opticalPuyoReader": {
+        "title": "Optical Puyo Reader",
+        "description": "Read optical Puyo data",
+        "page": {
+          "uploadPngImageAriaLabel": "Upload PNG Image",
+          "uploadedImageAlt": "Uploaded image",
+          "originalColors": "Original Colors",
+          "column": "Column",
+          "row": "Row",
+          "categorizedColors": "Categorized Colors",
+          "empty": "Empty",
+          "colorSnapSensitivity": "Color Snap Sensitivity",
+          "chainSimulatorLink": "Chain Simulator Link",
+          "openInChainSimulator": "Open in Chain Simulator"
+        },
+        "uploadTip": "Upload a screenshot of the Puyo board. A 6x12 board will be recognized automatically.",
+        "uploadPngImageAriaLabel": "Upload PNG image",
+        "uploadedImageAlt": "Uploaded board image",
+        "originalColors": "Original Colors",
+        "categorizedColors": "Categorized Colors",
+        "row": "Row",
+        "column": "Column",
+        "empty": "Empty",
+        "colorSnapSensitivity": "Color snap sensitivity",
+        "chainSimulatorLink": "Chain Simulator",
+        "openInChainSimulator": "Open in Chain Simulator"
+      },
+      "svgPreview": {
+        "title": "SVG Preview",
+        "description": "Preview SVG files",
+        "page": {
+          "invalidFile": "Invalid file type",
+          "notSvgFile": "Not an SVG file",
+          "tabFile": "File",
+          "tabText": "Text",
+          "fileTitle": "File Title",
+          "pasteHint": "Paste hint",
+          "dragDropHint": "Drag and drop hint",
+          "uploadFile": "Upload File",
+          "textTitle": "Text Title",
+          "placeholder": "Placeholder",
+          "resultTitle": "Result Title",
+          "renderError": "Render Error",
+          "copied": "Copied",
+          "copySvg": "Copy SVG",
+          "downloadSvg": "Download SVG",
+          "clear": "Clear"
+        },
+        "tabFile": "File Upload",
+        "tabText": "Text Input",
+        "fileTitle": "Upload SVG File",
+        "textTitle": "Enter SVG Code",
+        "placeholder": "Enter SVG code to preview",
+        "pasteHint": "Press Ctrl+V to paste an SVG from clipboard",
+        "dragDropHint": "or drag & drop an SVG file here",
+        "uploadFile": "Upload SVG File",
+        "copySvg": "Copy SVG Code",
+        "copied": "Copied!",
+        "downloadSvg": "Download SVG",
+        "clear": "Clear",
+        "resultTitle": "Result",
+        "renderError": "Unable to render SVG",
+        "invalidFile": "Invalid SVG file",
+        "notSvgFile": "File is not a valid SVG"
+      },
+      "qrCode": {
+        "title": "QR Code Generator",
+        "description": "Generate QR codes",
+        "page": {
+          "noQrFound": "No QR code found",
+          "tabGenerate": "Generate",
+          "tabRead": "Read",
+          "generateTitle": "Generate Title",
+          "placeholder": "Placeholder",
+          "downloadQr": "Download QR",
+          "readTitle": "Read Title",
+          "pasteHint": "Paste hint",
+          "dragDropHint": "Drag and drop hint",
+          "uploadFile": "Upload File",
+          "previewAlt": "Preview alt",
+          "decodedResult": "Decoded Result",
+          "copied": "Copied",
+          "copyResult": "Copy Result"
+        },
+        "placeholder": "Enter text to generate QR code",
+        "tabGenerate": "Generate",
+        "tabRead": "Read",
+        "generateTitle": "Generate QR Code",
+        "readTitle": "Read QR Code",
+        "pasteFromClipboard": "Paste from clipboard (Ctrl+V)",
+        "orUploadFile": "Or upload a QR code image",
+        "uploadFile": "Upload Image",
+        "decodedResult": "Decoded Result",
+        "copyResult": "Copy",
+        "copied": "Copied!",
+        "noQrFound": "No QR code found in the image.",
+        "pasteHint": "Press Ctrl+V to paste a QR code image from clipboard",
+        "dragDropHint": "or drag & drop an image here",
+        "downloadQr": "Download QR Code",
+        "previewAlt": "Generated QR code preview"
+      },
+      "discordColorMessageGenerator": {
+        "title": "Discord Color Message Generator",
+        "description": "Generate colored messages for Discord",
+        "page": {
+          "message": "Message",
+          "inputPlaceholder": "Input placeholder",
+          "selectedRangeApply": "Selected Range Apply",
+          "textColor": "Text Color",
+          "styleLabel": "Style Label",
+          "bgColor": "Background Color",
+          "charStylePicker": "Character Style Picker",
+          "charTextColorTitle": "Character Text Color Title",
+          "noTextColor": "No Text Color",
+          "charTextStyleTitle": "Character Text Style Title",
+          "bold": "Bold",
+          "underline": "Underline",
+          "none": "None",
+          "charBgColorTitle": "Character Background Color Title",
+          "noBgColor": "No Background Color",
+          "generateAndCopy": "Generate and Copy",
+          "preview": "Preview",
+          "howToTitle": "How to Use",
+          "step1": "Step 1",
+          "step2": "Step 2",
+          "step3": "Step 3",
+          "step4": "Step 4",
+          "step5": "Step 5",
+          "step6": "Step 6",
+          "note": "Note",
+          "cancel": "Cancel"
+        },
+        "message": "Message",
+        "textColor": "Text Color",
+        "textStyle": "Text Style",
+        "bgColor": "Background Color",
+        "default": "Default",
+        "black": "Black",
+        "red": "Red",
+        "green": "Green",
+        "yellow": "Yellow",
+        "blue": "Blue",
+        "purple": "Purple",
+        "cyan": "Cyan",
+        "white": "White",
+        "none": "None",
+        "bold": "Bold",
+        "underline": "Underline",
+        "apply": "Apply",
+        "generate": "Generate",
+        "copy": "Copy",
+        "copied": "Copied!",
+        "selectedRange": "Selected text range",
+        "applyTo": "apply to",
+        "clear": "Clear"
+      },
+      "ntripScanner": {
+        "title": "NTRIP Scanner",
+        "description": "Scan NTRIP connections",
+        "page": {
+          "unknownError": "Unknown error",
+          "connectionFailed": "Connection failed",
+          "casterIp": "Caster IP",
+          "hostPlaceholder": "Host placeholder",
+          "port": "Port",
+          "portPlaceholder": "Port placeholder",
+          "id": "ID",
+          "password": "Password",
+          "scanning": "Scanning...",
+          "scanStart": "Scan Start",
+          "mountPointList": "Mount Point List",
+          "title": "NTRIP Scanner"
+        }
+      },
+      "videoCutterEncoder": {
+        "title": "Video Cutter Encoder",
+        "description": "Cut and encode video files",
+        "page": {
+          "ffmpegNotLoaded": "FFmpeg not loaded",
+          "loadingFFmpeg": "Loading FFmpeg...",
+          "ffmpegLoaded": "FFmpeg loaded",
+          "writingFile": "Writing file...",
+          "largeFileWarning": "Large file warning",
+          "processing": "Processing",
+          "trimmingFast": "Trimming (fast)...",
+          "invalidSizeLimit": "Invalid size limit",
+          "targetSizeSmaller": "Target size smaller",
+          "targetSizeTooSmall": "Target size too small",
+          "targetSizeLarger": "Target size larger",
+          "trimmingLowQuality": "Trimming (low quality)...",
+          "trimmingPrecise": "Trimming (precise)...",
+          "readingResult": "Reading result...",
+          "done": "Done!",
+          "memoryError": "Memory error",
+          "errorOccurred": "Error occurred",
+          "selectVideo": "Select Video",
+          "selectedFile": "Selected file",
+          "chooseVideoFile": "Choose video file",
+          "originalVideo": "Original Video",
+          "trimRange": "Trim Range",
+          "start": "Start",
+          "current": "Current",
+          "end": "End",
+          "limitOutputFileSize": "Limit output file size",
+          "selectSizeLimit": "Select size limit",
+          "custom": "Custom",
+          "mbPlaceholder": "MB placeholder",
+          "formatRequiresReencoding": "Format requires re-encoding",
+          "process": "Process",
+          "sizeLimitRequiresReencoding": "Size limit requires re-encoding",
+          "processFastTrim": "Process fast trim",
+          "formatRequiresReencodingLonger": "Format requires longer re-encoding",
+          "trimmedVideo": "Trimmed Video",
+          "downloadTrimmedVideo": "Download trimmed video",
+          "fixHighQuality": "Fix high quality",
+          "fixLowQuality": "Fix low quality",
+          "selected": "Selected",
+          "enableSizeLimit": "Enable size limit",
+          "fixVideoReEncode": "Fix Video (Re-encode)",
+          "lowQualitySmallSize": "Low Quality (Small Size)",
+          "fileTooBig": "File is too big to process in browser. Maximum size is 2GB.",
+          "errorProcessing": "Error processing video"
+        }
+      },
+      "boothAlgorithmMultiplier": {
+        "title": "Booth Algorithm Multiplier",
+        "description": "Binary multiplication using Booth's algorithm",
+        "page": {
+          "title": "Booth Algorithm Multiplier",
+          "labels": {
+            "multiplicand": "Multiplicand M (-8 ~ 7):",
+            "multiplier": "Multiplier Q (-8 ~ 7):"
+          },
+          "calculate": "Calculate",
+          "resultsTitle": "Results",
+          "finalTitle": "Calculation Result",
+          "productLabel": "Product: ",
+          "headers": {
+            "step": "Step",
+            "operation": "Operation",
+            "q": "q0"
+          },
+          "rangeError": "Input values must be between -8 and 7."
+        }
+      },
+      "llmVramCalculator": {
+        "title": "LLM VRAM Calculator",
+        "description": "Calculate VRAM requirements for LLMs",
+        "errors": {
+          "enterModelId": "Please enter a model ID.",
+          "unauthorized": "Unauthorized. Check your token permissions.",
+          "forbidden": "Forbidden. You do not have access to this model.",
+          "modelConfigNotFound": "Model config was not found.",
+          "fetchConfigFailed": "Failed to fetch model config:",
+          "incompleteConfig": "Model config is incomplete.",
+          "fetchModelSizeManual": "Could not fetch model size automatically. Please enter it manually.",
+          "fetchModelSizeError": "Failed to fetch model size from API.",
+          "unknownFetchError": "Unknown error while fetching model information.",
+          "invalidModelSize": "Invalid model size.",
+          "invalidGGUFQuant": "Invalid weight quantization value.",
+          "invalidContextLength": "Invalid context length.",
+          "invalidKVQuant": "Invalid KV cache quantization value.",
+          "invalidOverhead": "Invalid overhead value.",
+          "invalidHeadDimension": "Invalid head dimension from model config."
+        },
+        "page": {
+          "title": "LLM VRAM Calculator (GGUF Estimate)",
+          "description": "Estimate VRAM usage including model weights, KV cache, buffers, and overhead.",
+          "alertTitleError": "Error",
+          "loading": "Loading...",
+          "loadModelInfo": "Load Model Info",
+          "labels": {
+            "modelId": "Model ID (Hugging Face)",
+            "hfToken": "HF Token (optional)",
+            "modelSize": "Model size (B params)",
+            "batchSize": "Batch size",
+            "contextLength": "Context length",
+            "quantWeight": "Weight quantization (GGUF)",
+            "quantKV": "KV cache quantization",
+            "overhead": "Extra overhead (GB)"
+          },
+          "placeholders": {
+            "modelId": "e.g. Qwen/Qwen3-0.6B",
+            "hfToken": "hf_xxx (optional)",
+            "modelSize": "e.g. 0.6",
+            "batchSize": "e.g. 512",
+            "quantWeight": "Select GGUF quantization",
+            "quantKV": "Select KV cache quantization",
+            "overhead": "e.g. 0.5"
+          },
+          "descriptions": {
+            "hfTokenHelp": "Use token only for gated/private models.",
+            "modelSize": "Use billions of parameters (B).",
+            "modelSizeFailed": " Auto-fetch failed, please input manually.",
+            "batchSize": "Used for input/compute buffer estimation.",
+            "contextLength": "Used for KV cache size estimation.",
+            "quantWeight": "Bits-per-weight used for model weight memory.",
+            "quantKV": "Bit-width used for KV cache memory.",
+            "overhead": "Additional runtime/system overhead in GB."
+          },
+          "status": {
+            "fetched": "Auto-fetched",
+            "fetchFailed": "Auto-fetch failed",
+            "fetching": "Fetching...",
+            "loadOrEnter": "Load or enter manually"
+          },
+          "results": {
+            "title": "Estimated VRAM Breakdown",
+            "modelWeights": "Model Weights:",
+            "kvCache": "KV Cache:",
+            "inputBuffer": "Input Buffer:",
+            "computeBuffer": "Compute Buffer:",
+            "overhead": "Overhead:",
+            "total": "Estimated Total:"
+          },
+          "messages": {
+            "loadingData": "Loading model data...",
+            "calculationFailedPrefix": "Calculation unavailable: ",
+            "startPrompt": "Load model info to start estimation.",
+            "validModelSizePrompt": "Enter a valid model size to continue.",
+            "calculating": "Calculating..."
+          }
+        }
+      },
+      "tetrioReplayEditor": {
+        "title": "Tetrio Replay Editor",
+        "description": "Edit Tetrio replay files",
+        "page": {
+          "invalidJson": "Invalid JSON format.",
+          "save": "Save",
+          "cancel": "Cancel",
+          "edit": "Edit",
+          "invalidFile": "Invalid file type. Please upload .ttrm, .ttr, or .json file.",
+          "download": "Download",
+          "currentFile": "Current file:"
+        }
+      }
+    }
+  },
+  "errors": {
+    "common": {
+      "invalidFile": "Invalid file type.",
+      "invalidJson": "Invalid JSON.",
+      "unknownError": "Unknown error occurred."
+    }
+  }
+}

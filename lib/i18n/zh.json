@@ -1,0 +1,656 @@
+{
+  "common": {
+    "title": "网络工具",
+    "subtitle": "实用工具的集合。",
+    "backToCategories": "返回类别",
+    "uploadZone": {
+      "pasteHint": "从剪贴板按 Ctrl+V 粘贴",
+      "dragDropHint": "或将文件拖放至此"
+    },
+    "header": {
+      "themeToggleAriaLabel": "切换主题",
+      "languages": {
+        "en": "英语",
+        "ko": "한국어",
+        "ja": "日本語",
+        "zh": "中文"
+      }
+    },
+    "categories": {
+      "database": {
+        "title": "数据库",
+        "description": "用于 JSON、CSV 和 SQL 数据库的工具。"
+      },
+      "game": {
+        "title": "游戏",
+        "description": "适用于各种游戏的实用工具。"
+      },
+      "imageVideo": {
+        "title": "图像 & 视频",
+        "description": "视频和图像处理工具。"
+      },
+      "gif": {
+        "title": "GIF",
+        "description": "GIF 创建和转换工具。"
+      },
+      "llm": {
+        "title": "LLM",
+        "description": "大语言模型工具。"
+      },
+      "geolocation": {
+        "title": "地理位置",
+        "description": "处理地理数据的工具。"
+      },
+      "etc": {
+        "title": "其他",
+        "description": "其他各种实用工具。"
+      }
+    },
+    "tools": {
+      "escapedStringDecoder": {
+        "title": "Escaped String Decoder",
+        "description": "解码转义字符串。",
+        "page": {
+          "inputLabel": "Escaped String",
+          "inputPlaceholder": "输入转义文本 (例如：\\uAD00)",
+          "convert": "转换",
+          "outputLabel": "转换后的文本",
+          "errorPrefix": "错误"
+        }
+      },
+      "xlsxToSql": {
+        "title": "XLSX to SQL",
+        "description": "将 Excel 文件转换为 SQL 语句。",
+        "page": {
+          "converterTitle": "XLSX to SQL 转换器",
+          "uploadXlsxFile": "上传 XLSX 文件",
+          "generatedSqlStatements": "生成的 SQL 语句",
+          "copyToClipboard": "复制到剪贴板"
+        }
+      },
+      "imageToBase64": {
+        "title": "Image to Base64",
+        "description": "将图像转换为 Base64",
+        "page": {
+          "uploadImage": "上传图片",
+          "base64Output": "Base64 输出",
+          "copyBase64": "复制 Base64",
+          "copyImgSrc": "复制 Img Src",
+          "copyCssUrl": "复制 CSS URL",
+          "converterTitle": "图片转 Base64 转换器"
+        }
+      },
+      "svgPreview": {
+        "title": "SVG 预览",
+        "description": "预览 SVG 文件",
+        "page": {
+          "invalidFile": "无效的文件类型",
+          "notSvgFile": "不是 SVG 文件",
+          "tabFile": "文件",
+          "tabText": "文本",
+          "fileTitle": "文件标题",
+          "pasteHint": "粘贴提示",
+          "dragDropHint": "拖放提示",
+          "uploadFile": "上传文件",
+          "textTitle": "文本标题",
+          "placeholder": "占位符",
+          "resultTitle": "结果标题",
+          "renderError": "渲染错误",
+          "copied": "已复制",
+          "copySvg": "复制 SVG",
+          "downloadSvg": "下载 SVG",
+          "clear": "清除"
+        },
+        "tabFile": "文件上传",
+        "tabText": "文本输入",
+        "fileTitle": "上传 SVG 文件",
+        "textTitle": "输入 SVG 代码",
+        "placeholder": "输入要预览的 SVG 代码",
+        "pasteHint": "按 Ctrl+V 粘贴剪贴板中的 SVG",
+        "dragDropHint": "或将 SVG 文件拖放到此处",
+        "uploadFile": "上传 SVG 文件",
+        "copySvg": "复制 SVG 代码",
+        "copied": "已复制!",
+        "downloadSvg": "下载 SVG",
+        "clear": "清除",
+        "resultTitle": "结果",
+        "renderError": "无法渲染 SVG",
+        "invalidFile": "无效的 SVG 文件",
+        "notSvgFile": "文件不是有效的 SVG"
+      },
+      "qrCode": {
+        "title": "QR 码生成器",
+        "description": "生成二维码",
+        "page": {
+          "noQrFound": "未找到 QR 码",
+          "tabGenerate": "生成",
+          "tabRead": "读取",
+          "generateTitle": "生成标题",
+          "placeholder": "占位符",
+          "downloadQr": "下载 QR",
+          "readTitle": "读取标题",
+          "pasteHint": "粘贴提示",
+          "dragDropHint": "拖放提示",
+          "uploadFile": "上传文件",
+          "previewAlt": "预览 alt",
+          "decodedResult": "解码结果",
+          "copied": "已复制",
+          "copyResult": "复制结果"
+        },
+        "placeholder": "输入文本以生成二维码",
+        "tabGenerate": "生成",
+        "tabRead": "读取",
+        "generateTitle": "生成二维码",
+        "readTitle": "读取二维码",
+        "pasteFromClipboard": "从剪贴板粘贴 (Ctrl+V)",
+        "orUploadFile": "或上传二维码图片",
+        "uploadFile": "上传图片",
+        "decodedResult": "识别结果",
+        "copyResult": "复制",
+        "copied": "已复制！",
+        "noQrFound": "在图片中未找到二维码。",
+        "pasteHint": "按Ctrl+V粘贴剪贴板中的二维码图片",
+        "dragDropHint": "或将图片拖放到此处",
+        "downloadQr": "下载二维码",
+        "previewAlt": "生成的二维码预览"
+      },
+      "discordColorMessageGenerator": {
+        "title": "Discord 彩色消息生成器",
+        "description": "为 Discord 生成彩色消息",
+        "page": {
+          "message": "消息",
+          "inputPlaceholder": "输入占位符",
+          "selectedRangeApply": "应用选定范围",
+          "textColor": "文本颜色",
+          "styleLabel": "样式标签",
+          "bgColor": "背景颜色",
+          "charStylePicker": "角色样式选择器",
+          "charTextColorTitle": "角色文本颜色标题",
+          "noTextColor": "无文本颜色",
+          "charTextStyleTitle": "角色文本样式标题",
+          "bold": "粗体",
+          "underline": "下划线",
+          "none": "无",
+          "charBgColorTitle": "角色背景颜色标题",
+          "noBgColor": "无背景颜色",
+          "generateAndCopy": "生成并复制",
+          "preview": "预览",
+          "howToTitle": "如何使用",
+          "step1": "步骤 1",
+          "step2": "步骤 2",
+          "step3": "步骤 3",
+          "step4": "步骤 4",
+          "step5": "步骤 5",
+          "step6": "步骤 6",
+          "note": "注意",
+          "cancel": "取消"
+        },
+        "message": "消息",
+        "textColor": "文本颜色",
+        "textStyle": "文本样式",
+        "bgColor": "背景颜色",
+        "default": "默认",
+        "black": "黑色",
+        "red": "红色",
+        "green": "绿色",
+        "yellow": "黄色",
+        "blue": "蓝色",
+        "purple": "紫色",
+        "cyan": "青色",
+        "white": "白色",
+        "none": "无",
+        "bold": "粗体",
+        "underline": "下划线",
+        "apply": "应用",
+        "generate": "生成",
+        "copy": "复制",
+        "copied": "已复制！",
+        "selectedRange": "选定的文本范围",
+        "applyTo": "应用到",
+        "clear": "清除"
+      },
+      "ntripScanner": {
+        "title": "NTRIP 扫描器",
+        "description": "扫描 NTRIP 连接",
+        "page": {
+          "unknownError": "未知错误",
+          "connectionFailed": "连接失败",
+          "casterIp": "主播 IP",
+          "hostPlaceholder": "主机占位符",
+          "port": "端口",
+          "portPlaceholder": "端口占位符",
+          "id": "ID",
+          "password": "密码",
+          "scanning": "扫描中...",
+          "scanStart": "扫描开始",
+          "mountPointList": "挂载点列表",
+          "title": "NTRIP扫描器"
+        }
+      },
+      "videoCutterEncoder": {
+        "title": "视频切割编码器",
+        "description": "切割和编码视频文件",
+        "page": {
+          "ffmpegNotLoaded": "FFmpeg 未加载",
+          "loadingFFmpeg": "正在加载 FFmpeg...",
+          "ffmpegLoaded": "FFmpeg 已加载",
+          "writingFile": "正在写入文件...",
+          "largeFileWarning": "大文件警告",
+          "processing": "处理中",
+          "trimmingFast": "裁剪 (快速)...",
+          "invalidSizeLimit": "无效的大小限制",
+          "targetSizeSmaller": "目标大小较小",
+          "targetSizeTooSmall": "目标大小太小",
+          "targetSizeLarger": "目标大小较大",
+          "trimmingLowQuality": "裁剪 (低质量)...",
+          "trimmingPrecise": "裁剪 (精确)...",
+          "readingResult": "正在读取结果...",
+          "done": "完成!",
+          "memoryError": "内存错误",
+          "errorOccurred": "发生错误",
+          "selectVideo": "选择视频",
+          "selectedFile": "已选文件",
+          "chooseVideoFile": "选择视频文件",
+          "originalVideo": "原始视频",
+          "trimRange": "裁剪范围",
+          "start": "开始",
+          "current": "当前",
+          "end": "结束",
+          "limitOutputFileSize": "限制输出文件大小",
+          "selectSizeLimit": "选择大小限制",
+          "custom": "自定义",
+          "mbPlaceholder": "MB 占位符",
+          "formatRequiresReencoding": "格式需要重新编码",
+          "process": "处理",
+          "sizeLimitRequiresReencoding": "大小限制需要重新编码",
+          "processFastTrim": "快速裁剪处理",
+          "formatRequiresReencodingLonger": "格式需要更长的重新编码",
+          "trimmedVideo": "裁剪后的视频",
+          "downloadTrimmedVideo": "下载裁剪后的视频",
+          "fixHighQuality": "修复高质量",
+          "fixLowQuality": "修复低质量",
+          "selected": "已选择",
+          "enableSizeLimit": "启用大小限制",
+          "fixVideoReEncode": "修复视频（重新编码）",
+          "lowQualitySmallSize": "低质量（小尺寸）",
+          "fileTooBig": "文件太大，无法在浏览器中处理。最大大小为2GB。",
+          "errorProcessing": "视频处理错误"
+        }
+      },
+      "csvSorter": {
+        "title": "CSV 排序器",
+        "description": "按列对 CSV 数据进行排序。",
+        "page": {
+          "title": "高级 CSV 排序器",
+          "labels": {
+            "sortColumn": "排序列",
+            "columnPosition": "列位置",
+            "secondaryColumns": "次要排序列",
+            "sortOrder": "排序顺序",
+            "sortMethod": "排序方法",
+            "caseSensitiveSort": "大小写敏感排序",
+            "handleMissing": "处理缺失值",
+            "customMissingValue": "自定义缺失值",
+            "deleteComments": "删除注释",
+            "commentSymbol": "注释符号",
+            "deleteEmptyLines": "删除空行"
+          },
+          "placeholders": {
+            "selectColumn": "选择列",
+            "secondaryColumns": "例如：column1, column2",
+            "selectOrder": "选择顺序",
+            "selectMethod": "选择方法",
+            "selectMethodForMissing": "选择方法"
+          },
+          "sortOrderOptions": {
+            "asc": "升序",
+            "desc": "降序"
+          },
+          "sortMethodOptions": {
+            "alphabetical": "字母顺序",
+            "numeric": "数字"
+          },
+          "missingValueOptions": {
+            "unchanged": "不变",
+            "blank": "空值",
+            "custom": "自定义"
+          },
+          "downloadButton": "下载排序后的 CSV",
+          "messages": {
+            "showingPrefix": "显示前 10 行，共",
+            "showingSuffix": "行"
+          }
+        }
+      },
+      "boothAlgorithmMultiplier": {
+        "title": "Booth算法乘法器",
+        "description": "使用Booth算法进行二进制乘法",
+        "page": {
+          "title": "Booth算法乘法器",
+          "labels": {
+            "multiplicand": "被乘数 M (-8 ~ 7):",
+            "multiplier": "乘数 Q (-8 ~ 7):"
+          },
+          "calculate": "计算",
+          "resultsTitle": "结果",
+          "finalTitle": "计算结果",
+          "productLabel": "乘积: ",
+          "headers": {
+            "step": "步骤",
+            "operation": "运算",
+            "q": "q0"
+          },
+          "rangeError": "输入值必须在 -8 到 7 之间。"
+        }
+      },
+      "kakaotalkChatAnalyzer": {
+        "title": "KakaoTalk聊天分析器",
+        "description": "从KakaoTalk日志分析排名与分时活跃度",
+        "page": {
+          "chatFileLabel": "上传聊天日志文件",
+          "pasteLabel": "或直接粘贴聊天文本",
+          "rawTextPlaceholder": "[昵称] [09:12] 消息",
+          "parsingText": "解析中...",
+          "analyzeButton": "开始分析",
+          "sampleFormat": "示例格式: [姓名] [10:12 AM] 消息",
+          "parsedMessagesCount": "已解析消息数:",
+          "targetMessagesCount": "当前目标消息数:",
+          "preset": {
+            "all": "全部",
+            "last7": "最近7天",
+            "last30": "最近30天",
+            "thisYear": "今年"
+          },
+          "startDateLabel": "开始日期",
+          "endDateLabel": "结束日期",
+          "openPicker": "打开",
+          "datePickerMin": "最小",
+          "datePickerMax": "最大",
+          "datePickerClose": "关闭",
+          "userHourlySection": "按用户分时活跃度",
+          "nicknameLabel": "选择用户",
+          "nicknameSearchPlaceholder": "搜索用户（部分匹配）",
+          "searchingNickname": "搜索中...",
+          "noNickname": "未选择",
+          "totalUniqueUsers": "唯一用户总数",
+          "people": "人",
+          "noSearchResult": "未找到结果。",
+          "selectedUserHourlyTitle": "分时活跃度（消息数）",
+          "selectedUserTopMessagesTitle": "高频消息类型",
+          "noMessageData": "暂无消息数据。",
+          "table": {
+            "head": {
+              "rank": "排名",
+              "message": "消息",
+              "count": "次数",
+              "nickname": "昵称",
+              "messageCount": "消息数",
+              "occurrences": "出现次数"
+            }
+          },
+          "hourlyActiveUsers": "分时活跃用户数（唯一用户）",
+          "hourlyMessageActivity": "分时消息数",
+          "userActivityRankingTitle": "用户活跃排名（消息数）",
+          "topMessagesTitle": "高频消息排名",
+          "topMessagesDescription": "排名表 + 环形图",
+          "donutChartAriaLabel": "消息频率环形图"
+        }
+      },
+      "mp4ToGif": {
+        "title": "MP4 转 GIF",
+        "description": "将 MP4 视频转换为 GIF 动图",
+        "page": {
+          "title": "MP4 转 GIF 转换器",
+          "upload": "上传 MP4 文件",
+          "selected": "已选择",
+          "fps": "每秒帧数",
+          "resolution": "分辨率比例",
+          "estimatedSize": "预计大小",
+          "actualSize": "实际输出大小",
+          "sizeEstimateUnavailable": "无法预估（转换后显示）",
+          "run": "开始转换",
+          "converting": "转换中...",
+          "preview": "预览",
+          "previewAlt": "转换后 GIF 预览",
+          "download": "下载 GIF",
+          "loadingFfmpeg": "正在加载 FFmpeg 内核...",
+          "done": "转换完成。",
+          "error": "转换失败，请尝试其他文件或降低设置。",
+          "optimizeButton": "优化体积",
+          "sendingButton": "传输中...",
+          "transferError": "无法打开 GIF 优化页面"
+        }
+      },
+      "gifToMp4Webp": {
+        "title": "GIF 转 MP4 / WEBP",
+        "description": "将动态 GIF 转换为 MP4 视频或 WEBP",
+        "page": {
+          "title": "GIF 转 MP4 / WEBP 转换器",
+          "description": "上传 GIF，选择输出格式，并在浏览器中完成转换。",
+          "upload": "上传 GIF 文件",
+          "selected": "已选择",
+          "outputFormat": "输出格式",
+          "mp4Label": "MP4 视频",
+          "webpLabel": "WEBP 图片",
+          "run": "开始转换",
+          "converting": "转换中...",
+          "preview": "预览",
+          "previewAlt": "转换结果预览",
+          "download": "下载结果",
+          "loadingFfmpeg": "正在加载 FFmpeg 内核...",
+          "done": "转换完成。",
+          "error": "转换失败，请尝试其他文件。",
+          "source": "原始 GIF",
+          "result": "转换结果"
+        }
+      },
+      "gifOptimizer": {
+        "title": "GIF 优化",
+        "description": "调整分辨率和帧率来优化 GIF",
+        "page": {
+          "description": "通过调整分辨率、帧率和 lossy 值来减小 GIF 体积。",
+          "upload": "上传 GIF",
+          "gifsicleArgs": "gifsicle wasm 参数",
+          "resizeWidth": "宽度调整",
+          "frameRate": "帧率",
+          "lossy": "Lossy",
+          "run": "开始优化",
+          "loadingEngine": "正在加载优化引擎...",
+          "optimizing": "正在优化 GIF...",
+          "done": "优化完成。",
+          "error": "错误",
+          "before": "优化前",
+          "after": "优化后",
+          "download": "下载 GIF",
+          "transferLoaded": "已加载来自转换器的 GIF 预览。",
+          "transferNotFound": "未找到传输的 GIF。",
+          "transferError": "无法加载传输的 GIF"
+        }
+      },
+      "kakaomapCoordOpener": {
+        "title": "KakaoMap坐标打开器",
+        "description": "在KakaoMap中打开坐标",
+        "page": {
+          "description": "输入经纬度并在KakaoMap中直接打开该坐标。",
+          "latitudeLabel": "纬度",
+          "longitudeLabel": "经度",
+          "openButton": "在KakaoMap中打开"
+        }
+      },
+      "llmVramCalculator": {
+        "title": "LLM VRAM计算器",
+        "description": "计算LLM的VRAM需求",
+        "errors": {
+          "enterModelId": "请输入模型ID。",
+          "unauthorized": "认证失败，请检查令牌权限。",
+          "forbidden": "无权访问该模型。",
+          "modelConfigNotFound": "未找到模型配置文件。",
+          "fetchConfigFailed": "获取模型配置失败:",
+          "incompleteConfig": "模型配置信息不完整。",
+          "fetchModelSizeManual": "无法自动获取模型大小，请手动输入。",
+          "fetchModelSizeError": "从API获取模型大小失败。",
+          "unknownFetchError": "获取模型信息时发生未知错误。",
+          "invalidModelSize": "模型大小无效。",
+          "invalidGGUFQuant": "权重量化值无效。",
+          "invalidContextLength": "上下文长度无效。",
+          "invalidKVQuant": "KV缓存量化值无效。",
+          "invalidOverhead": "额外开销值无效。",
+          "invalidHeadDimension": "模型配置中的头维度无效。"
+        },
+        "page": {
+          "title": "LLM VRAM计算器（GGUF估算）",
+          "description": "估算包含模型权重、KV缓存、缓冲区和开销在内的VRAM占用。",
+          "alertTitleError": "错误",
+          "loading": "加载中...",
+          "loadModelInfo": "加载模型信息",
+          "labels": {
+            "modelId": "模型ID（Hugging Face）",
+            "hfToken": "HF令牌（可选）",
+            "modelSize": "模型大小（B参数）",
+            "batchSize": "批大小",
+            "contextLength": "上下文长度",
+            "quantWeight": "权重量化（GGUF）",
+            "quantKV": "KV缓存量化",
+            "overhead": "额外开销（GB）"
+          },
+          "placeholders": {
+            "modelId": "例如：Qwen/Qwen3-0.6B",
+            "hfToken": "hf_xxx（可选）",
+            "modelSize": "例如：0.6",
+            "batchSize": "例如：512",
+            "quantWeight": "选择GGUF量化",
+            "quantKV": "选择KV缓存量化",
+            "overhead": "例如：0.5"
+          },
+          "descriptions": {
+            "hfTokenHelp": "仅在受限/私有模型时需要令牌。",
+            "modelSize": "单位为B（十亿参数）。",
+            "modelSizeFailed": " 自动获取失败，请手动输入。",
+            "batchSize": "用于估算输入/计算缓冲区。",
+            "contextLength": "用于估算KV缓存大小。",
+            "quantWeight": "用于计算模型权重内存的每权重比特数。",
+            "quantKV": "用于计算KV缓存内存的比特宽度。",
+            "overhead": "运行时/系统额外开销（GB）。"
+          },
+          "status": {
+            "fetched": "自动获取成功",
+            "fetchFailed": "自动获取失败",
+            "fetching": "获取中...",
+            "loadOrEnter": "加载或手动输入"
+          },
+          "results": {
+            "title": "预计VRAM明细",
+            "modelWeights": "模型权重:",
+            "kvCache": "KV缓存:",
+            "inputBuffer": "输入缓冲区:",
+            "computeBuffer": "计算缓冲区:",
+            "overhead": "额外开销:",
+            "total": "预计总计:"
+          },
+          "messages": {
+            "loadingData": "正在加载模型数据...",
+            "calculationFailedPrefix": "无法计算: ",
+            "startPrompt": "加载模型信息后开始估算。",
+            "validModelSizePrompt": "请输入有效的模型大小。",
+            "calculating": "计算中..."
+          }
+        }
+      },
+      "opticalPuyoReader": {
+        "title": "光学Puyo读取器",
+        "description": "从图像中读取Puyo游戏板",
+        "uploadPngImageAriaLabel": "上传 PNG 图片",
+        "uploadedImageAlt": "已上传的棋盘图片",
+        "uploadTip": "上传Puyo棋盘截图。系统会自动识别6x12棋盘。",
+        "originalColors": "原始颜色",
+        "categorizedColors": "分类后颜色",
+        "row": "行",
+        "column": "列",
+        "empty": "空",
+        "colorSnapSensitivity": "颜色吸附灵敏度",
+        "chainSimulatorLink": "连锁模拟器",
+        "openInChainSimulator": "在连锁模拟器中打开"
+      },
+      "tetrioReplayEditor": {
+        "title": "Tetrio回放编辑器",
+        "description": "编辑Tetrio回放文件"
+      },
+      "gifSpeedChanger": {
+        "title": "GIF 速度调节器",
+        "description": "更改 GIF 播放速度",
+        "page": {
+          "upload": "上传 GIF",
+          "selected": "已选择",
+          "speed": "速度",
+          "faster": "更快",
+          "slower": "更慢",
+          "normal": "正常",
+          "originalDuration": "原始时长",
+          "estimatedDuration": "预计时长",
+          "processing": "处理中...",
+          "run": "更改速度",
+          "done": "完成！",
+          "error": "处理失败",
+          "loadingFfmpeg": "正在加载 FFmpeg...",
+          "outputSize": "输出大小",
+          "preview": "预览",
+          "previewAlt": "转换后的 GIF 预览",
+          "download": "下载 GIF"
+        }
+      },
+      "gifCrop": {
+        "title": "GIF 裁剪",
+        "description": "将 GIF 裁剪到选定区域",
+        "page": {
+          "upload": "上传 GIF",
+          "selected": "已选择",
+          "cropLeft": "从左裁剪",
+          "cropRight": "从右裁剪",
+          "cropTop": "从上裁剪",
+          "cropBottom": "从下裁剪",
+          "outputDimensions": "输出尺寸",
+          "processing": "处理中...",
+          "run": "裁剪 GIF",
+          "done": "完成！",
+          "error": "处理失败",
+          "loadingFfmpeg": "正在加载 FFmpeg...",
+          "outputSize": "输出大小",
+          "originalPreview": "原图（显示裁剪区域）",
+          "croppedPreview": "裁剪结果",
+          "previewAlt": "GIF 预览",
+          "dragHint": "拖动可移动，拖动边框可调整大小",
+          "download": "下载 GIF"
+        }
+      },
+      "gifCutter": {
+        "title": "GIF 剪辑器",
+        "description": "按开始和结束时间剪辑 GIF",
+        "page": {
+          "upload": "上传 GIF",
+          "selected": "已选择",
+          "frames": "帧",
+          "startTime": "开始时间",
+          "endTime": "结束时间",
+          "selectedDuration": "选定时长",
+          "estimatedFrames": "预计帧数",
+          "processing": "处理中...",
+          "run": "剪辑 GIF",
+          "done": "完成！",
+          "error": "处理失败",
+          "loadingFfmpeg": "正在加载 FFmpeg...",
+          "outputSize": "输出大小",
+          "preview": "预览",
+          "previewAlt": "剪辑后的 GIF 预览",
+          "download": "下载 GIF"
+        }
+      }
+    }
+  },
+  "errors": {
+    "common": {
+      "invalidFile": "无效的文件类型。",
+      "invalidJson": "无效的 JSON。",
+      "unknownError": "发生未知错误。"
+    }
+  }
+}
