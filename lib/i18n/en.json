@@ -670,6 +670,20 @@
           "download": "Download",
           "currentFile": "Current file:"
         }
+      },
+      "videoRecorder": {
+        "title": "Video Recorder",
+        "description": "Record, stop, pause, and save your screen",
+        "page": {
+          "recordingSetup": "Recording Setup",
+          "preview": "Preview",
+          "durationLabel": "Duration:",
+          "start": "Start Recording",
+          "pause": "Pause",
+          "stop": "Stop",
+          "resume": "Resume",
+          "download": "Download"
+        }
       }
     }
   },

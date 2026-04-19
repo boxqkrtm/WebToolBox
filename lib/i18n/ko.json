@@ -648,6 +648,20 @@
       "tetrioReplayEditor": {
         "title": "테트리오 리플레이 편집기",
         "description": "테트리오 리플레이 파일 편집"
+      },
+      "videoRecorder": {
+        "title": "비디오 레코더",
+        "description": "화면 녹화 및 저장",
+        "page": {
+          "recordingSetup": "녹화 설정",
+          "preview": "미리보기",
+          "durationLabel": "시간:",
+          "start": "녹화 시작",
+          "pause": "일시정지",
+          "stop": "정지",
+          "resume": "재개",
+          "download": "다운로드"
+        }
       }
     }
   },

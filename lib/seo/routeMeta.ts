@@ -139,6 +139,36 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Multiply binary values using Booth's algorithm.",
     section: "Etc",
   },
+  "/utils/video-recorder": {
+    slug: "video-recorder",
+    title: "Video Recorder",
+    description: "Record, stop, pause, and save your screen.",
+    section: "Image & Video",
+  },
+  "/utils/gif-crop": {
+    slug: "gif-crop",
+    title: "GIF Crop",
+    description: "Crop GIF to selected region.",
+    section: "Image & Video",
+  },
+  "/utils/gif-cutter": {
+    slug: "gif-cutter",
+    title: "GIF Cutter",
+    description: "Cut GIF to selected region.",
+    section: "Image & Video",
+  },
+  "/utils/gif-speed-changer": {
+    slug: "gif-speed-changer",
+    title: "GIF Speed Changer",
+    description: "Change speed of GIF.",
+    section: "Image & Video",
+  },
+  "/utils/gif-to-mp4-webp": {
+    slug: "gif-to-mp4-webp",
+    title: "GIF to MP4/WebP",
+    description: "Convert GIF to MP4 or WebP.",
+    section: "Image & Video",
+  },
 };
 
 export function normalizePathname(input: string): string {

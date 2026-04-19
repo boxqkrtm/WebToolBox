@@ -643,6 +643,20 @@
           "previewAlt": "剪辑后的 GIF 预览",
           "download": "下载 GIF"
         }
+      },
+      "videoRecorder": {
+        "title": "视频录制",
+        "description": "录制、停止、暂停和保存屏幕",
+        "page": {
+          "recordingSetup": "录制设置",
+          "preview": "预览",
+          "durationLabel": "时长：",
+          "start": "开始录制",
+          "pause": "暂停",
+          "stop": "停止",
+          "resume": "继续",
+          "download": "下载"
+        }
       }
     }
   },

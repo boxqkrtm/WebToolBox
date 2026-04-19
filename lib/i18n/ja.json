@@ -643,6 +643,20 @@
           "previewAlt": "切り取ったGIFプレビュー",
           "download": "GIFをダウンロード"
         }
+      },
+      "videoRecorder": {
+        "title": "ビデオレコーダー",
+        "description": "録画、停止、一時停止、保存",
+        "page": {
+          "recordingSetup": "録画設定",
+          "preview": "プレビュー",
+          "durationLabel": "経過時間:",
+          "start": "録画開始",
+          "pause": "一時停止",
+          "stop": "停止",
+          "resume": "再開",
+          "download": "ダウンロード"
+        }
       }
     }
   },
