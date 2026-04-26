@@ -14,8 +14,8 @@ export function PageContainer({
   contentClassName,
 }: PageContainerProps) {
   return (
-    <div className={joinClasses("px-4 py-6 sm:px-6 sm:py-8", className)}>
-      <div className={joinClasses("mx-auto w-full max-w-screen-2xl", contentClassName)}>
+    <div className={joinClasses("px-4 py-8 sm:px-6 sm:py-10 lg:px-8", className)}>
+      <div className={joinClasses("mx-auto w-full max-w-6xl", contentClassName)}>
         {children}
       </div>
     </div>
