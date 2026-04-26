@@ -3,6 +3,16 @@
     "title": "网络工具",
     "subtitle": "实用工具的集合。",
     "backToCategories": "返回类别",
+    "home": {
+      "eyebrow": "快速访问工具",
+      "overviewTitle": "平台概览",
+      "stats": {
+        "categories": "便于快速浏览的核心分类",
+        "tools": "覆盖媒体、数据与工作流程的实用工具",
+        "languages": "支持的语言数量",
+        "browser": "无需安装，直接在浏览器中使用"
+      }
+    },
     "uploadZone": {
       "pasteHint": "从剪贴板按 Ctrl+V 粘贴",
       "dragDropHint": "或将文件拖放至此"

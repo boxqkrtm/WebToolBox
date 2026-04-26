@@ -3,6 +3,16 @@
     "title": "Web Utils",
     "subtitle": "A collection of useful tools and utilities.",
     "backToCategories": "Back to Categories",
+    "home": {
+      "eyebrow": "Fast utility access",
+      "overviewTitle": "Platform overview",
+      "stats": {
+        "categories": "Core categories for quick browsing",
+        "tools": "Utilities across media, data, and workflow",
+        "languages": "Supported languages",
+        "browser": "Browser-based use without installation"
+      }
+    },
     "uploadZone": {
       "pasteHint": "Press Ctrl+V to paste from clipboard",
       "dragDropHint": "or drag & drop a file here"

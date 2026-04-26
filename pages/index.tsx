@@ -59,27 +59,27 @@ export default function Home() {
         <PageIntro
           title={t('common.title')}
           description={t('common.subtitle')}
-          eyebrow="Fast utility access"
+          eyebrow={t('common.home.eyebrow')}
         />
 
         <div className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-7">
-          <p className="text-sm font-semibold text-muted-foreground">Platform overview</p>
+          <p className="text-sm font-semibold text-muted-foreground">{t('common.home.overviewTitle')}</p>
           <div className="mt-5 grid grid-cols-2 gap-3">
             <div className="rounded-2xl border bg-muted/50 p-4">
               <p className="text-3xl font-semibold text-foreground">6</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Core categories for quick browsing</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t('common.home.stats.categories')}</p>
             </div>
             <div className="rounded-2xl border bg-muted/50 p-4">
               <p className="text-3xl font-semibold text-foreground">20+</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Utilities across media, data, and workflow</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t('common.home.stats.tools')}</p>
             </div>
             <div className="rounded-2xl border bg-muted/50 p-4">
               <p className="text-3xl font-semibold text-foreground">4</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Supported languages</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t('common.home.stats.languages')}</p>
             </div>
             <div className="rounded-2xl border bg-muted/50 p-4">
               <p className="text-3xl font-semibold text-foreground">∞</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Browser-based use without installation</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{t('common.home.stats.browser')}</p>
             </div>
           </div>
         </div>

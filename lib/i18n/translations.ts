@@ -5,6 +5,16 @@ export interface Translation {
     title: string;
     subtitle: string;
     backToCategories: string;
+    home: {
+      eyebrow: string;
+      overviewTitle: string;
+      stats: {
+        categories: string;
+        tools: string;
+        languages: string;
+        browser: string;
+      };
+    };
     uploadZone: {
       pasteHint: string;
       dragDropHint: string;
