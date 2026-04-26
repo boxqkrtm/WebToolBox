@@ -2,28 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap');
+
 @layer base {
   :root {
-    --background: 40 20% 97%;
-    --foreground: 222 20% 12%;
+    --background: 36 33% 97%;
+    --foreground: 222 24% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 222 20% 12%;
+    --card-foreground: 222 24% 12%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 20% 12%;
-    --primary: 222 22% 14%;
-    --primary-foreground: 40 20% 97%;
-    --secondary: 36 24% 93%;
-    --secondary-foreground: 222 20% 12%;
-    --muted: 36 24% 94%;
-    --muted-foreground: 220 10% 40%;
-    --accent: 36 24% 92%;
-    --accent-foreground: 222 20% 12%;
+    --popover-foreground: 222 24% 12%;
+    --primary: 222 20% 14%;
+    --primary-foreground: 36 33% 97%;
+    --secondary: 32 32% 94%;
+    --secondary-foreground: 222 24% 12%;
+    --muted: 30 26% 95%;
+    --muted-foreground: 220 10% 41%;
+    --accent: 24 42% 91%;
+    --accent-foreground: 222 24% 12%;
     --destructive: 0 70% 52%;
     --destructive-foreground: 0 0% 100%;
-    --border: 30 14% 86%;
-    --input: 30 14% 86%;
-    --ring: 222 22% 18%;
-    --radius: 1rem;
+    --border: 28 18% 86%;
+    --input: 28 18% 86%;
+    --ring: 18 48% 42%;
+    --radius: 1.25rem;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -42,6 +44,19 @@
   body {
     @apply min-h-screen bg-background text-foreground antialiased;
     text-rendering: optimizeLegibility;
+    background-image: radial-gradient(circle at top, rgba(182, 129, 74, 0.08), transparent 34%);
+    font-feature-settings: "liga" 1, "kern" 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: "Newsreader", Georgia, serif;
+    letter-spacing: -0.03em;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   ::selection {
@@ -50,28 +65,32 @@
 }
 
 .dark {
-  --background: 222 18% 9%;
-  --foreground: 35 20% 94%;
-  --card: 222 16% 11%;
-  --card-foreground: 35 20% 94%;
-  --popover: 222 16% 11%;
-  --popover-foreground: 35 20% 94%;
-  --primary: 35 20% 94%;
-  --primary-foreground: 222 18% 9%;
-  --secondary: 220 14% 15%;
-  --secondary-foreground: 35 20% 94%;
-  --muted: 220 14% 15%;
-  --muted-foreground: 220 8% 65%;
-  --accent: 220 14% 16%;
-  --accent-foreground: 35 20% 94%;
+  --background: 222 16% 10%;
+  --foreground: 35 24% 94%;
+  --card: 222 14% 12%;
+  --card-foreground: 35 24% 94%;
+  --popover: 222 14% 12%;
+  --popover-foreground: 35 24% 94%;
+  --primary: 35 24% 94%;
+  --primary-foreground: 222 16% 10%;
+  --secondary: 220 12% 16%;
+  --secondary-foreground: 35 24% 94%;
+  --muted: 220 12% 15%;
+  --muted-foreground: 220 8% 67%;
+  --accent: 24 24% 18%;
+  --accent-foreground: 35 24% 94%;
   --destructive: 0 62% 42%;
-  --destructive-foreground: 35 20% 94%;
-  --border: 220 10% 20%;
-  --input: 220 10% 20%;
-  --ring: 35 20% 94%;
+  --destructive-foreground: 35 24% 94%;
+  --border: 220 10% 21%;
+  --input: 220 10% 21%;
+  --ring: 30 42% 68%;
   --chart-1: 220 70% 50%;
   --chart-2: 160 60% 45%;
   --chart-3: 30 80% 55%;
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
+}
+
+.dark body {
+  background-image: radial-gradient(circle at top, rgba(197, 151, 104, 0.08), transparent 30%);
 }

@@ -54,13 +54,30 @@ export default function Home() {
   ];
 
   return (
-    <PageContainer contentClassName="space-y-10 sm:space-y-12">
-      <PageIntro
-        title={t('common.title')}
-        description={t('common.subtitle')}
-        align="center"
-        eyebrow="Utility library"
-      />
+    <PageContainer contentClassName="space-y-12 sm:space-y-16">
+      <section className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-end">
+        <PageIntro
+          title={t('common.title')}
+          description={t('common.subtitle')}
+          eyebrow="Curated utility library"
+        />
+
+        <div className="rounded-[32px] border border-border/80 bg-card/70 p-6 sm:p-8">
+          <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            Overview
+          </p>
+          <div className="mt-6 grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-3xl font-medium text-foreground">6</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Core categories arranged for browsing and quick access.</p>
+            </div>
+            <div>
+              <p className="text-3xl font-medium text-foreground">20+</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Focused utilities for media, data, games, and everyday tasks.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {categories.map((category) => (
