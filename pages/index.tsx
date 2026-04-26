@@ -54,26 +54,32 @@ export default function Home() {
   ];
 
   return (
-    <PageContainer contentClassName="space-y-12 sm:space-y-16">
-      <section className="grid gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:items-end">
+    <PageContainer contentClassName="space-y-12 sm:space-y-14">
+      <section className="grid gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-start">
         <PageIntro
           title={t('common.title')}
           description={t('common.subtitle')}
-          eyebrow="Curated utility library"
+          eyebrow="Fast utility access"
         />
 
-        <div className="rounded-[32px] border border-border/80 bg-card/70 p-6 sm:p-8">
-          <p className="text-sm font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            Overview
-          </p>
-          <div className="mt-6 grid grid-cols-2 gap-6">
-            <div>
-              <p className="text-3xl font-medium text-foreground">6</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Core categories arranged for browsing and quick access.</p>
+        <div className="rounded-3xl border border-border bg-card p-6 shadow-sm sm:p-7">
+          <p className="text-sm font-semibold text-muted-foreground">Platform overview</p>
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl border bg-muted/50 p-4">
+              <p className="text-3xl font-semibold text-foreground">6</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Core categories for quick browsing</p>
             </div>
-            <div>
-              <p className="text-3xl font-medium text-foreground">20+</p>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">Focused utilities for media, data, games, and everyday tasks.</p>
+            <div className="rounded-2xl border bg-muted/50 p-4">
+              <p className="text-3xl font-semibold text-foreground">20+</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Utilities across media, data, and workflow</p>
+            </div>
+            <div className="rounded-2xl border bg-muted/50 p-4">
+              <p className="text-3xl font-semibold text-foreground">4</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Supported languages</p>
+            </div>
+            <div className="rounded-2xl border bg-muted/50 p-4">
+              <p className="text-3xl font-semibold text-foreground">∞</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">Browser-based use without installation</p>
             </div>
           </div>
         </div>

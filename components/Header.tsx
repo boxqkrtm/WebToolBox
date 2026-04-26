@@ -37,7 +37,7 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-background/88 backdrop-blur-xl supports-[backdrop-filter]:bg-background/72">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-xl supports-[backdrop-filter]:bg-background/80">
       <PageContainer className="py-3" contentClassName="flex items-center justify-between gap-4">
         <div className="flex min-w-0 items-center gap-3">
           {router.pathname !== '/' && (
@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
             </Button>
           )}
           <Link href="/" className="min-w-0">
-            <p className="truncate text-sm font-medium tracking-[0.18em] text-foreground/70 uppercase">
+            <p className="truncate text-sm font-semibold tracking-tight text-foreground/90">
               WebToolBox
             </p>
           </Link>
@@ -55,7 +55,7 @@ export const Header: React.FC = () => {
 
         <div className="flex items-center gap-2 sm:gap-3">
           <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
-            <SelectTrigger className="h-10 w-[120px] rounded-full border-border/80 bg-card/80 sm:w-[140px]" data-testid="language-selector">
+            <SelectTrigger className="h-10 w-[120px] rounded-xl border-border bg-card sm:w-[140px]" data-testid="language-selector">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -69,7 +69,7 @@ export const Header: React.FC = () => {
 
           <button
             onClick={toggleTheme}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-input bg-card/80 transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-input bg-card transition-colors duration-100 hover:bg-accent hover:text-accent-foreground"
             aria-label={t('common.header.themeToggleAriaLabel')}
             data-testid="theme-toggle"
           >
