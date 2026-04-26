@@ -3,6 +3,16 @@
     "title": "ウェブユーティリティ",
     "subtitle": "便利なツールのコレクションです。",
     "backToCategories": "カテゴリに戻る",
+    "home": {
+      "eyebrow": "すばやく使えるユーティリティ",
+      "overviewTitle": "プラットフォーム概要",
+      "stats": {
+        "categories": "すばやく探せる主要カテゴリ",
+        "tools": "メディア、データ、作業フロー向けのユーティリティ",
+        "languages": "対応言語数",
+        "browser": "インストール不要でブラウザから利用可能"
+      }
+    },
     "uploadZone": {
       "pasteHint": "クリップボードから Ctrl+V を押して貼り付けます",
       "dragDropHint": "またはファイルをドラッグ & ドロップ"
