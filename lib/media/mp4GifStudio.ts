@@ -218,7 +218,7 @@ export function parseStudioProbe(raw: string): StudioMediaMetadata {
   };
 }
 
-export function buildGifPreviewCommand(
+export function buildStudioPreviewCommand(
   metadata: StudioMediaMetadata,
   input: string,
   output: string

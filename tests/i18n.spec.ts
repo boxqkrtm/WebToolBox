@@ -74,7 +74,7 @@ test.describe('Language Detection Tests', () => {
 
     await expect(page.locator('h1')).toHaveText('MP4, GIF Studio');
     await expect(
-      page.getByRole('button', { name: 'MP4 또는 GIF 업로드', exact: true })
+      page.getByRole('button', { name: '비디오 또는 GIF 업로드', exact: true })
     ).toBeVisible();
     await expect(
       page.getByText('파일은 브라우저 안에서만 처리되며 서버에 업로드되지 않습니다.', {

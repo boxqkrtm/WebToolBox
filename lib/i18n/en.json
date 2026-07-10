@@ -360,10 +360,10 @@
       },
       "mp4GifStudio": {
         "title": "MP4, GIF Studio",
-        "description": "Edit MP4 and GIF files, then export as MP4, GIF, or animated WebP.",
+        "description": "Edit video and GIF files, then export as MP4, GIF, or animated WebP.",
         "page": {
-          "upload": "Upload MP4 or GIF",
-          "supportedFormats": "Supported formats: MP4 and GIF",
+          "upload": "Upload video or GIF",
+          "supportedFormats": "Supported formats: MP4, WebM, MOV, MKV, AVI, M4V, and GIF",
           "privacy": "Your files stay in your browser and are never uploaded.",
           "replace": "Replace file",
           "startOver": "Start over",
@@ -376,9 +376,9 @@
             "exportComplete": "Export complete"
           },
           "errors": {
-            "invalidFile": "Choose a valid MP4 or GIF file.",
+            "invalidFile": "Choose a supported video or GIF file.",
             "fileTooLarge": "This file is too large. Choose a file smaller than {size}.",
-            "analysisFailed": "Could not analyze this file. Try another MP4 or GIF.",
+            "analysisFailed": "Could not analyze this file. Try another video or GIF.",
             "exportFailed": "Could not export the file. Try different export settings."
           },
           "source": {

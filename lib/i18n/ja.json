@@ -225,10 +225,10 @@
       },
       "mp4GifStudio": {
         "title": "MP4, GIF Studio",
-        "description": "MP4とGIFを編集し、MP4、GIF、またはアニメーションWebPとして書き出します。",
+        "description": "動画とGIFを編集し、MP4、GIF、またはアニメーションWebPとして書き出します。",
         "page": {
-          "upload": "MP4またはGIFをアップロード",
-          "supportedFormats": "対応形式: MP4、GIF",
+          "upload": "動画またはGIFをアップロード",
+          "supportedFormats": "対応形式: MP4、WebM、MOV、MKV、AVI、M4V、GIF",
           "privacy": "ファイルはブラウザ内だけで処理され、サーバーにはアップロードされません。",
           "replace": "ファイルを変更",
           "startOver": "最初からやり直す",
@@ -241,9 +241,9 @@
             "exportComplete": "書き出し完了"
           },
           "errors": {
-            "invalidFile": "有効なMP4またはGIFファイルを選択してください。",
+            "invalidFile": "対応している動画またはGIFファイルを選択してください。",
             "fileTooLarge": "ファイルが大きすぎます。{size}未満のファイルを選択してください。",
-            "analysisFailed": "ファイルを解析できませんでした。別のMP4またはGIFをお試しください。",
+            "analysisFailed": "ファイルを解析できませんでした。別の動画またはGIFをお試しください。",
             "exportFailed": "ファイルを書き出せませんでした。別の書き出し設定をお試しください。"
           },
           "source": {

@@ -58,7 +58,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
   "/utils/mp4-gif-studio": {
     slug: "mp4-gif-studio",
     title: "MP4/GIF Studio",
-    description: "Trim, crop, and export MP4, GIF, or animated WebP media in your browser.",
+    description: "Trim, crop, and export video or GIF sources as MP4, GIF, or animated WebP.",
     section: "Image & Video",
   },
   "/utils/tetrio-replay-editor": {

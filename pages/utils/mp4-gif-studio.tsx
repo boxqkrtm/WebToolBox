@@ -57,7 +57,7 @@ import { useI18n } from '@/lib/i18n/i18nContext'
 import {
   FFMPEG_CORE_BASE_URL,
   MAX_SOURCE_BYTES,
-  buildGifPreviewCommand,
+  buildStudioPreviewCommand,
   buildStudioExportPlan,
   buildStudioProbeCommand,
   estimateMp4Bytes,
@@ -114,15 +114,41 @@ async function safeDelete(ffmpeg: FFmpeg, path: string) {
   }
 }
 
-function getSourceKind(file: File): 'mp4' | 'gif' | null {
+type StudioSource = {
+  kind: 'mp4' | 'gif' | 'video'
+  extension: 'mp4' | 'gif' | 'webm' | 'mov' | 'mkv' | 'avi' | 'm4v' | 'video'
+}
+
+const VIDEO_EXTENSION_PATTERN = /\.(mp4|webm|mov|mkv|avi|m4v)$/i
+
+function getStudioSource(file: File): StudioSource | null {
   const lowerName = file.name.toLowerCase()
-  if (file.type === 'video/mp4' || lowerName.endsWith('.mp4')) return 'mp4'
-  if (file.type === 'image/gif' || lowerName.endsWith('.gif')) return 'gif'
+  if (file.type === 'image/gif' || lowerName.endsWith('.gif')) {
+    return { kind: 'gif', extension: 'gif' }
+  }
+  if (file.type === 'video/mp4' || lowerName.endsWith('.mp4')) {
+    return { kind: 'mp4', extension: 'mp4' }
+  }
+
+  const extension = lowerName.match(VIDEO_EXTENSION_PATTERN)?.[1]
+  if (file.type.startsWith('video/') || extension) {
+    return {
+      kind: 'video',
+      extension:
+        extension === 'webm' ||
+        extension === 'mov' ||
+        extension === 'mkv' ||
+        extension === 'avi' ||
+        extension === 'm4v'
+          ? extension
+          : 'video',
+    }
+  }
   return null
 }
 
 function getBaseName(fileName: string) {
-  const withoutExtension = fileName.replace(/\.(?:mp4|gif)$/i, '')
+  const withoutExtension = fileName.replace(/\.(?:mp4|gif|webm|mov|mkv|avi|m4v)$/i, '')
   return withoutExtension || 'media'
 }
 
@@ -385,8 +411,8 @@ export default function Mp4GifStudioPage() {
     async (selected: File | null) => {
       if (!selected) return
 
-      const sourceKind = getSourceKind(selected)
-      if (!sourceKind) {
+      const source = getStudioSource(selected)
+      if (!source) {
         setErrorMessage(t('common.tools.mp4GifStudio.page.errors.invalidFile'))
         return
       }
@@ -415,9 +441,9 @@ export default function Mp4GifStudioPage() {
 
       const immediatePreviewUrl = URL.createObjectURL(selected)
       setPreviewUrl(immediatePreviewUrl)
-      setPreviewKind(sourceKind === 'mp4' ? 'video' : 'image')
+      setPreviewKind(source.kind === 'gif' ? 'image' : 'video')
 
-      const inputName = `studio-source-${jobId}.${sourceKind}`
+      const inputName = `studio-source-${jobId}.${source.extension}`
       const probeName = `studio-probe-${jobId}.json`
       let ffmpeg: FFmpeg | null = null
 
@@ -461,13 +487,16 @@ export default function Mp4GifStudioPage() {
         setMetadata(nextMetadata)
         setTrimRange([0, nextMetadata.duration])
 
-        if (sourceKind === 'gif') {
+        if (source.kind !== 'mp4') {
           setPhase('preparingPreview')
           const proxyName = `studio-preview-${jobId}.mp4`
           try {
             const proxyExitCode = await ffmpeg.exec(
-              buildGifPreviewCommand(nextMetadata, inputName, proxyName)
+              buildStudioPreviewCommand(nextMetadata, inputName, proxyName)
             )
+            if (proxyExitCode !== 0 && source.kind === 'video') {
+              throw new Error(`Preview generation exited with code ${proxyExitCode}`)
+            }
             if (proxyExitCode === 0 && jobId === jobIdRef.current) {
               const proxyData = await ffmpeg.readFile(proxyName)
               if (typeof proxyData !== 'string') {
@@ -675,7 +704,7 @@ export default function Mp4GifStudioPage() {
             <FileUploadButton
               key={uploadKey}
               id={UPLOAD_ID}
-              accept=".mp4,.gif,video/mp4,image/gif"
+              accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.m4v,.gif,image/gif"
               onFileSelect={(file) => void handleSourceFile(file)}
               label={t('common.tools.mp4GifStudio.page.upload')}
               disabled={isBusy}
