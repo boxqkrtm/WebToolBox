@@ -114,38 +114,24 @@ async function safeDelete(ffmpeg: FFmpeg, path: string) {
   }
 }
 
-function canUseNativeVideoPreview(url: string): Promise<boolean> {
-  const { promise, resolve } = Promise.withResolvers<boolean>()
+async function canUseNativeVideoPreview(url: string): Promise<boolean> {
   const video = document.createElement('video')
-  let settled = false
-  let timeoutId: number | null = null
-
-  function finish(isUsable: boolean) {
-    if (settled) return
-    settled = true
-    if (timeoutId !== null) window.clearTimeout(timeoutId)
-    video.removeEventListener('loadeddata', handleLoadedData)
-    video.removeEventListener('error', handleError)
-    video.removeAttribute('src')
-    video.load()
-    resolve(isUsable)
-  }
-  function handleLoadedData() {
-    finish(video.videoWidth > 0 && video.videoHeight > 0)
-  }
-  function handleError() {
-    finish(false)
-  }
-
   video.preload = 'auto'
   video.muted = true
-  video.addEventListener('loadeddata', handleLoadedData)
-  video.addEventListener('error', handleError)
-  timeoutId = window.setTimeout(() => finish(false), 5000)
+  video.playsInline = true
   video.src = url
   video.load()
 
-  return promise
+  try {
+    await video.play()
+    return video.videoWidth > 0 && video.videoHeight > 0
+  } catch {
+    return false
+  } finally {
+    video.pause()
+    video.removeAttribute('src')
+    video.load()
+  }
 }
 
 type StudioSource = {
