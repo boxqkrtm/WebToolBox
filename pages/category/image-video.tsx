@@ -23,13 +23,13 @@ export default function ImageVideoCategoryPage() {
             </CardContent>
           </Card>
         </Link>
-        <Link href="/utils/video-cutter-encoder" passHref>
+        <Link href="/utils/mp4-gif-studio" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>
-              <CardTitle>{t('common.tools.videoCutterEncoder.title')}</CardTitle>
+              <CardTitle>{t('common.tools.mp4GifStudio.title')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.videoCutterEncoder.description')}</p>
+              <p className="text-muted-foreground">{t('common.tools.mp4GifStudio.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -60,66 +60,6 @@ export default function ImageVideoCategoryPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">{t('common.tools.videoRecorder.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/gif-crop" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.gifCrop.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.gifCrop.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/gif-cutter" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.gifCutter.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.gifCutter.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/gif-speed-changer" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.gifSpeedChanger.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.gifSpeedChanger.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/gif-to-mp4-webp" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.gifToMp4Webp.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.gifToMp4Webp.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/gif-optimizer" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.gifOptimizer.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.gifOptimizer.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/mp4-to-gif" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.mp4ToGif.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.mp4ToGif.description')}</p>
             </CardContent>
           </Card>
         </Link>

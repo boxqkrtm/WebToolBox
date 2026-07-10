@@ -29,10 +29,6 @@
         "title": "画像 & ビデオ",
         "description": "ビデオおよび画像操作ツール。"
       },
-      "gif": {
-        "title": "GIF",
-        "description": "GIF 作成および変換ツール。"
-      },
       "llm": {
         "title": "LLM",
         "description": "大規模言語モデル用ツール。"
@@ -227,54 +223,107 @@
           "title": "NTRIPスキャナー"
         }
       },
-      "videoCutterEncoder": {
-        "title": "動画の切り取り・圧縮",
-        "description": "動画を必要な範囲だけ切り取り、ファイルサイズも小さくできます。",
+      "mp4GifStudio": {
+        "title": "MP4, GIF Studio",
+        "description": "MP4とGIFを編集し、MP4、GIF、またはアニメーションWebPとして書き出します。",
         "page": {
-          "ffmpegNotLoaded": "FFmpeg はまだ読み込まれていません。",
-          "loadingFFmpeg": "FFmpeg を読み込み中...",
-          "ffmpegLoaded": "FFmpeg を読み込みました。",
-          "writingFile": "ファイルを準備中...",
-          "largeFileWarning": "ファイルサイズが大きいため、処理に時間がかかる場合があります。",
-          "processing": "処理中...",
-          "trimmingFast": "高速で切り取り中...",
-          "invalidSizeLimit": "ファイルサイズ制限の値が正しくありません。",
-          "targetSizeSmaller": "目標サイズに合わせるため再エンコードしています。",
-          "targetSizeTooSmall": "指定したファイルサイズが小さすぎて処理できません。",
-          "targetSizeLarger": "目標サイズが想定出力より大きいため、標準品質で再エンコードします。",
-          "trimmingLowQuality": "ファイルサイズを小さくするため再エンコード中...",
-          "trimmingPrecise": "正確に切り取り中...",
-          "readingResult": "結果ファイルを読み込み中...",
-          "done": "完了しました！",
-          "memoryError": "メモリが不足しています。より短い範囲または小さいファイルでお試しください。",
-          "errorOccurred": "エラーが発生しました",
-          "selectVideo": "動画ファイル",
-          "selectedFile": "選択したファイル: {name}",
-          "chooseVideoFile": "動画ファイルを選択",
-          "originalVideo": "元の動画",
-          "trimRange": "切り取る範囲",
-          "start": "開始",
-          "current": "現在",
-          "end": "終了",
-          "limitOutputFileSize": "出力ファイルサイズを制限する",
-          "selectSizeLimit": "目標サイズを選択",
-          "custom": "手動入力",
-          "mbPlaceholder": "MB単位で入力",
-          "formatRequiresReencoding": "この形式は高速切り取りに対応していないため、再エンコードが必要です。",
-          "process": "処理を開始",
-          "sizeLimitRequiresReencoding": "ファイルサイズ制限を使う場合は再エンコードが必要で、処理に時間がかかることがあります。",
-          "processFastTrim": "この形式は高速切り取りに対応しています。",
-          "formatRequiresReencodingLonger": "この形式は再エンコードが必要なため、処理に時間がかかることがあります。",
-          "trimmedVideo": "処理後の動画",
-          "downloadTrimmedVideo": "結果動画をダウンロード",
-          "fixHighQuality": "高画質で再エンコード",
-          "fixLowQuality": "小さいサイズで再エンコード",
-          "selected": "選択済み",
-          "enableSizeLimit": "サイズ制限を有効にする",
-          "fixVideoReEncode": "動画を再エンコード",
-          "lowQualitySmallSize": "低画質 / 小さいサイズ",
-          "fileTooBig": "ファイルが大きすぎてブラウザで処理できません。最大サイズは2GBです。",
-          "errorProcessing": "動画の処理中にエラーが発生しました。"
+          "upload": "MP4またはGIFをアップロード",
+          "supportedFormats": "対応形式: MP4、GIF",
+          "privacy": "ファイルはブラウザ内だけで処理され、サーバーにはアップロードされません。",
+          "replace": "ファイルを変更",
+          "startOver": "最初からやり直す",
+          "status": {
+            "loadingEngine": "編集エンジンを読み込み中...",
+            "analyzing": "メディアを解析中...",
+            "preparingPreview": "プレビューを準備中...",
+            "ready": "編集の準備ができました",
+            "exporting": "書き出し中...",
+            "exportComplete": "書き出し完了"
+          },
+          "errors": {
+            "invalidFile": "有効なMP4またはGIFファイルを選択してください。",
+            "fileTooLarge": "ファイルが大きすぎます。{size}未満のファイルを選択してください。",
+            "analysisFailed": "ファイルを解析できませんでした。別のMP4またはGIFをお試しください。",
+            "exportFailed": "ファイルを書き出せませんでした。別の書き出し設定をお試しください。"
+          },
+          "source": {
+            "title": "元のファイル",
+            "fileSize": "ファイルサイズ",
+            "resolution": "解像度",
+            "duration": "再生時間",
+            "frameRate": "フレームレート",
+            "audio": "音声",
+            "yes": "あり",
+            "no": "なし"
+          },
+          "editor": {
+            "title": "編集",
+            "preview": "プレビュー",
+            "play": "再生",
+            "pause": "一時停止",
+            "timeline": "タイムライン",
+            "startTime": "開始時間",
+            "endTime": "終了時間",
+            "selectedDuration": "選択した長さ",
+            "speed": "速度",
+            "outputScale": "出力倍率",
+            "outputDimensions": "出力サイズ"
+          },
+          "crop": {
+            "title": "クロップ",
+            "hint": "クロップ範囲をドラッグして移動し、ハンドルをドラッグしてサイズを変更します。",
+            "x": "X位置",
+            "y": "Y位置",
+            "width": "幅",
+            "height": "高さ",
+            "reset": "リセット",
+            "selection": "クロップ範囲",
+            "move": "クロップ範囲を移動",
+            "handles": {
+              "topLeft": "左上のサイズ変更ハンドル",
+              "top": "上のサイズ変更ハンドル",
+              "topRight": "右上のサイズ変更ハンドル",
+              "right": "右のサイズ変更ハンドル",
+              "bottomRight": "右下のサイズ変更ハンドル",
+              "bottom": "下のサイズ変更ハンドル",
+              "bottomLeft": "左下のサイズ変更ハンドル",
+              "left": "左のサイズ変更ハンドル"
+            }
+          },
+          "export": {
+            "title": "書き出し",
+            "outputFormat": "出力形式",
+            "mp4Description": "音声を含められる動画再生向けの形式です。",
+            "gifDescription": "音声なしで幅広く対応しているアニメーション形式です。",
+            "webpDescription": "音声なしで容量を抑えられるアニメーション画像形式です。",
+            "videoBitrate": "動画ビットレート",
+            "estimatedSize": "推定ファイルサイズ",
+            "frameRate": "フレームレート",
+            "sourceFrameRate": "元のフレームレート",
+            "encodingPreset": "エンコードプリセット",
+            "presetUltrafast": "超高速",
+            "presetVeryfast": "非常に高速",
+            "presetMedium": "標準",
+            "includeAudio": "音声を含める",
+            "audioBitrate": "音声ビットレート",
+            "colorCount": "色数",
+            "dithering": "ディザリング",
+            "ditherNone": "なし",
+            "ditherBayer": "Bayer",
+            "ditherFloydSteinberg": "Floyd–Steinberg",
+            "ditherSierra2_4a": "Sierra2-4A",
+            "loopForever": "無限ループ",
+            "webpQuality": "WebP品質",
+            "compressionLevel": "圧縮レベル",
+            "lossless": "ロスレス",
+            "exportButton": "ファイルを書き出す"
+          },
+          "result": {
+            "title": "書き出し完了",
+            "outputSize": "出力ファイルサイズ",
+            "download": "ダウンロード",
+            "previewAlt": "書き出したメディアのプレビュー"
+          }
         }
       },
       "csvSorter": {
@@ -396,77 +445,6 @@
           "donutChartAriaLabel": "メッセージ頻度ドーナツチャート"
         }
       },
-      "mp4ToGif": {
-        "title": "MP4からGIF",
-        "description": "MP4動画をGIFアニメーションに変換",
-        "page": {
-          "title": "MP4からGIF変換",
-          "upload": "MP4ファイルをアップロード",
-          "selected": "選択済み",
-          "fps": "フレーム毎秒",
-          "resolution": "解像度倍率",
-          "estimatedSize": "推定サイズ",
-          "actualSize": "実際の出力サイズ",
-          "sizeEstimateUnavailable": "推定不可（変換後に表示）",
-          "run": "変換",
-          "converting": "変換中...",
-          "preview": "プレビュー",
-          "previewAlt": "変換後のGIFプレビュー",
-          "download": "GIFをダウンロード",
-          "loadingFfmpeg": "FFmpegコアをロード中...",
-          "done": "変換が完了しました。",
-          "error": "変換に失敗しました。別のファイルを使うか設定を下げてください。",
-          "optimizeButton": "容量を最適化",
-          "sendingButton": "転送中...",
-          "transferError": "GIF最適化ページを開けませんでした"
-        }
-      },
-      "gifToMp4Webp": {
-        "title": "GIFからMP4 / WEBP",
-        "description": "アニメーションGIFをMP4動画またはWEBPに変換",
-        "page": {
-          "title": "GIFからMP4 / WEBP変換",
-          "description": "GIFをアップロードし、出力形式を選んでブラウザ内で変換します。",
-          "upload": "GIFファイルをアップロード",
-          "selected": "選択済み",
-          "outputFormat": "出力形式",
-          "mp4Label": "MP4動画",
-          "webpLabel": "WEBP画像",
-          "run": "変換",
-          "converting": "変換中...",
-          "preview": "プレビュー",
-          "previewAlt": "変換結果のプレビュー",
-          "download": "結果をダウンロード",
-          "loadingFfmpeg": "FFmpegコアをロード中...",
-          "done": "変換が完了しました。",
-          "error": "変換に失敗しました。別のファイルで再試行してください。",
-          "source": "元のGIF",
-          "result": "変換結果"
-        }
-      },
-      "gifOptimizer": {
-        "title": "GIF最適化",
-        "description": "GIFのサイズを調整して最適化",
-        "page": {
-          "description": "解像度、フレームレート、lossy値を調整してGIF容量を削減します。",
-          "upload": "GIFをアップロード",
-          "gifsicleArgs": "gifsicle wasm 引数",
-          "resizeWidth": "幅の調整",
-          "frameRate": "フレームレート",
-          "lossy": "Lossy",
-          "run": "最適化を実行",
-          "loadingEngine": "最適化エンジンをロード中...",
-          "optimizing": "GIFを最適化中...",
-          "done": "最適化が完了しました。",
-          "error": "エラー",
-          "before": "最適化前",
-          "after": "最適化後",
-          "download": "GIFをダウンロード",
-          "transferLoaded": "コンバーターからGIFプレビューを読み込みました。",
-          "transferNotFound": "転送されたGIFが見つかりませんでした。",
-          "transferError": "転送されたGIFを読み込めませんでした"
-        }
-      },
       "kakaomapCoordOpener": {
         "title": "カカオマップ座標オープナー",
         "description": "カカオマップで座標を開く",
@@ -575,75 +553,6 @@
         "title": "テトリオリプレイエディター",
         "description": "テトリオリプレイファイルを編集"
       },
-      "gifSpeedChanger": {
-        "title": "GIF 速度変更",
-        "description": "GIFの再生速度を変更します",
-        "page": {
-          "upload": "GIFをアップロード",
-          "selected": "選択済み",
-          "speed": "速度",
-          "faster": "速く",
-          "slower": "遅く",
-          "normal": "通常",
-          "originalDuration": "元の長さ",
-          "estimatedDuration": "推定長さ",
-          "processing": "処理中...",
-          "run": "速度を変更",
-          "done": "完了！",
-          "error": "処理に失敗しました",
-          "loadingFfmpeg": "FFmpegを読み込み中...",
-          "outputSize": "出力サイズ",
-          "preview": "プレビュー",
-          "previewAlt": "変換後のGIFプレビュー",
-          "download": "GIFをダウンロード"
-        }
-      },
-      "gifCrop": {
-        "title": "GIF クロップ",
-        "description": "GIFを選択した領域にクロップします",
-        "page": {
-          "upload": "GIFをアップロード",
-          "selected": "選択済み",
-          "cropLeft": "左から切り取り",
-          "cropRight": "右から切り取り",
-          "cropTop": "上から切り取り",
-          "cropBottom": "下から切り取り",
-          "outputDimensions": "出力サイズ",
-          "processing": "処理中...",
-          "run": "クロップ実行",
-          "done": "完了！",
-          "error": "処理に失敗しました",
-          "loadingFfmpeg": "FFmpegを読み込み中...",
-          "outputSize": "出力サイズ",
-          "originalPreview": "元画像（クロップ範囲を表示）",
-          "croppedPreview": "クロップ結果",
-          "previewAlt": "GIFプレビュー",
-          "dragHint": "ドラッグで移動、枠線ドラッグでサイズ変更",
-          "download": "GIFをダウンロード"
-        }
-      },
-      "gifCutter": {
-        "title": "GIF カッター",
-        "description": "開始時間と終了時間でGIFを切り取ります",
-        "page": {
-          "upload": "GIFをアップロード",
-          "selected": "選択済み",
-          "frames": "フレーム",
-          "startTime": "開始時間",
-          "endTime": "終了時間",
-          "selectedDuration": "選択した長さ",
-          "estimatedFrames": "推定フレーム数",
-          "processing": "処理中...",
-          "run": "GIFを切り取る",
-          "done": "完了！",
-          "error": "処理に失敗しました",
-          "loadingFfmpeg": "FFmpegを読み込み中...",
-          "outputSize": "出力サイズ",
-          "preview": "プレビュー",
-          "previewAlt": "切り取ったGIFプレビュー",
-          "download": "GIFをダウンロード"
-        }
-      },
       "videoRecorder": {
         "title": "ビデオレコーダー",
         "description": "録画、停止、一時停止、保存",
@@ -656,6 +565,9 @@
           "stop": "停止",
           "resume": "再開",
           "download": "ダウンロード"
+        },
+        "aria": {
+          "duration": "録画時間"
         }
       }
     }

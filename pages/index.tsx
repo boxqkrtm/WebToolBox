@@ -8,7 +8,6 @@ import {
   HiVideoCamera,
   HiLocationMarker,
   HiCollection,
-  HiPhotograph,
 } from 'react-icons/hi';
 import { useI18n } from '@/lib/i18n/i18nContext';
 
@@ -55,18 +54,6 @@ export default function Home() {
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/gif" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiPhotograph className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.gif.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.gif.description')}</p>
             </CardContent>
           </Card>
         </Link>
