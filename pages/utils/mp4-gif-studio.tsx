@@ -114,6 +114,40 @@ async function safeDelete(ffmpeg: FFmpeg, path: string) {
   }
 }
 
+function canUseNativeVideoPreview(url: string): Promise<boolean> {
+  const { promise, resolve } = Promise.withResolvers<boolean>()
+  const video = document.createElement('video')
+  let settled = false
+  let timeoutId: number | null = null
+
+  function finish(isUsable: boolean) {
+    if (settled) return
+    settled = true
+    if (timeoutId !== null) window.clearTimeout(timeoutId)
+    video.removeEventListener('loadeddata', handleLoadedData)
+    video.removeEventListener('error', handleError)
+    video.removeAttribute('src')
+    video.load()
+    resolve(isUsable)
+  }
+  function handleLoadedData() {
+    finish(video.videoWidth > 0 && video.videoHeight > 0)
+  }
+  function handleError() {
+    finish(false)
+  }
+
+  video.preload = 'auto'
+  video.muted = true
+  video.addEventListener('loadeddata', handleLoadedData)
+  video.addEventListener('error', handleError)
+  timeoutId = window.setTimeout(() => finish(false), 5000)
+  video.src = url
+  video.load()
+
+  return promise
+}
+
 type StudioSource = {
   kind: 'mp4' | 'gif' | 'video'
   extension: 'mp4' | 'gif' | 'webm' | 'mov' | 'mkv' | 'avi' | 'm4v' | 'video'
@@ -450,6 +484,10 @@ export default function Mp4GifStudioPage() {
       const immediatePreviewUrl = URL.createObjectURL(selected)
       setPreviewUrl(immediatePreviewUrl)
       setPreviewKind(source.kind === 'gif' ? 'image' : 'video')
+      const nativePreviewPromise =
+        source.kind === 'gif'
+          ? Promise.resolve(false)
+          : canUseNativeVideoPreview(immediatePreviewUrl)
 
       const inputName = `studio-source-${jobId}.${source.extension}`
       const probeName = `studio-probe-${jobId}.json`
@@ -495,14 +533,17 @@ export default function Mp4GifStudioPage() {
         setMetadata(nextMetadata)
         setTrimRange([0, nextMetadata.duration])
 
-        if (source.kind !== 'mp4') {
+        const needsProxy = source.kind === 'gif' || !(await nativePreviewPromise)
+        if (jobId !== jobIdRef.current) return
+
+        if (needsProxy) {
           setPhase('preparingPreview')
           const proxyName = `studio-preview-${jobId}.mp4`
           try {
             const proxyExitCode = await ffmpeg.exec(
               buildStudioPreviewCommand(nextMetadata, inputName, proxyName)
             )
-            if (proxyExitCode !== 0 && source.kind === 'video') {
+            if (proxyExitCode !== 0 && source.kind !== 'gif') {
               throw new Error(`Preview generation exited with code ${proxyExitCode}`)
             }
             if (proxyExitCode === 0 && jobId === jobIdRef.current) {
