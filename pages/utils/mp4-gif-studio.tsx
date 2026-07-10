@@ -407,6 +407,14 @@ export default function Mp4GifStudioPage() {
     }
   }, [resetOptionState])
 
+  const handleReplaceSource = () => {
+    const fileInput = document.getElementById(UPLOAD_ID)
+    if (!(fileInput instanceof HTMLInputElement)) return
+
+    fileInput.value = ''
+    fileInput.click()
+  }
+
   const handleSourceFile = useCallback(
     async (selected: File | null) => {
       if (!selected) return
@@ -736,7 +744,7 @@ export default function Mp4GifStudioPage() {
                     type="button"
                     variant="outline"
                     disabled={isBusy}
-                    onClick={() => document.getElementById(UPLOAD_ID)?.click()}
+                    onClick={handleReplaceSource}
                   >
                     {t('common.tools.mp4GifStudio.page.replace')}
                   </Button>

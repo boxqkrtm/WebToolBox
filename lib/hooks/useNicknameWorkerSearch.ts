@@ -4,6 +4,12 @@ type NicknameWorkerResponse =
   | { type: 'ready' }
   | { type: 'results'; requestId: number; results: string[] };
 
+type NicknameSearchState = {
+  nicknames: string[];
+  results: string[];
+  isSearching: boolean;
+};
+
 const SEARCH_DEBOUNCE_MS = 1000;
 
 type UseNicknameWorkerSearchResult = {
@@ -15,23 +21,18 @@ type UseNicknameWorkerSearchResult = {
 };
 
 export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerSearchResult {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<string[]>(nicknames);
-  const [isSearching, setIsSearching] = useState(false);
+  const [query, setQueryState] = useState('');
+  const [searchState, setSearchState] = useState<NicknameSearchState>(() => ({
+    nicknames,
+    results: nicknames,
+    isSearching: false,
+  }));
   const nicknameWorkerRef = useRef<Worker | null>(null);
   const nicknameSearchRequestIdRef = useRef(0);
   const nicknameSearchTimerRef = useRef<number | null>(null);
   const nicknameSearchWatchdogRef = useRef<number | null>(null);
   const nicknamesRef = useRef<string[]>(nicknames);
   const queryRef = useRef<string>('');
-
-  useEffect(() => {
-    nicknamesRef.current = nicknames;
-  }, [nicknames]);
-
-  useEffect(() => {
-    queryRef.current = query;
-  }, [query]);
 
   useEffect(() => {
     return () => {
@@ -66,8 +67,11 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
       }
 
       if (data.type === 'results' && data.requestId === nicknameSearchRequestIdRef.current) {
-        setResults(data.results);
-        setIsSearching(false);
+        setSearchState({
+          nicknames: nicknamesRef.current,
+          results: data.results,
+          isSearching: false,
+        });
         if (nicknameSearchWatchdogRef.current !== null) {
           window.clearTimeout(nicknameSearchWatchdogRef.current);
           nicknameSearchWatchdogRef.current = null;
@@ -82,11 +86,15 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
       }
 
       const fallbackQuery = queryRef.current.trim().toLowerCase();
+      const currentNicknames = nicknamesRef.current;
       const fallback = fallbackQuery
-        ? nicknamesRef.current.filter((nickname) => nickname.toLowerCase().includes(fallbackQuery))
-        : nicknamesRef.current;
-      setResults(fallback);
-      setIsSearching(false);
+        ? currentNicknames.filter((nickname) => nickname.toLowerCase().includes(fallbackQuery))
+        : currentNicknames;
+      setSearchState({
+        nicknames: currentNicknames,
+        results: fallback,
+        isSearching: false,
+      });
     };
 
     worker.postMessage({ type: 'setData', nicknames: nicknamesRef.current });
@@ -94,13 +102,12 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
   };
 
   useEffect(() => {
+    nicknamesRef.current = nicknames;
     const worker = ensureNicknameWorker();
     if (worker) {
       worker.postMessage({ type: 'setData', nicknames });
     }
 
-    setResults(nicknames);
-    setIsSearching(false);
     nicknameSearchRequestIdRef.current += 1;
   }, [nicknames]);
 
@@ -119,8 +126,6 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
 
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) {
-      setResults(nicknames);
-      setIsSearching(false);
       return;
     }
 
@@ -129,12 +134,19 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
         return;
       }
 
-      setIsSearching(true);
+      setSearchState((current) => ({
+        nicknames,
+        results: current.nicknames === nicknames ? current.results : nicknames,
+        isSearching: true,
+      }));
 
       if (!worker) {
         const fallback = nicknames.filter((nickname) => nickname.toLowerCase().includes(normalizedQuery));
-        setResults(fallback);
-        setIsSearching(false);
+        setSearchState({
+          nicknames,
+          results: fallback,
+          isSearching: false,
+        });
         return;
       }
 
@@ -146,8 +158,11 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
         }
 
         const fallback = nicknames.filter((nickname) => nickname.toLowerCase().includes(normalizedQuery));
-        setResults(fallback);
-        setIsSearching(false);
+        setSearchState({
+          nicknames,
+          results: fallback,
+          isSearching: false,
+        });
       }, 1200);
     }, SEARCH_DEBOUNCE_MS);
 
@@ -163,9 +178,31 @@ export function useNicknameWorkerSearch(nicknames: string[]): UseNicknameWorkerS
     };
   }, [query, nicknames]);
 
+  const setQuery = useCallback((value: string) => {
+    if (value === queryRef.current) {
+      return;
+    }
+
+    queryRef.current = value;
+    setQueryState(value);
+    if (!value.trim()) {
+      const currentNicknames = nicknamesRef.current;
+      setSearchState({
+        nicknames: currentNicknames,
+        results: currentNicknames,
+        isSearching: false,
+      });
+    }
+  }, []);
+
   const resetQuery = useCallback(() => {
     setQuery('');
-  }, []);
+  }, [setQuery]);
+
+  const normalizedQuery = query.trim().toLowerCase();
+  const hasCurrentSearchState = searchState.nicknames === nicknames;
+  const results = normalizedQuery && hasCurrentSearchState ? searchState.results : nicknames;
+  const isSearching = Boolean(normalizedQuery && hasCurrentSearchState && searchState.isSearching);
 
   return {
     query,

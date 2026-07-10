@@ -1,4 +1,4 @@
-import { type ChangeEvent, useEffect, useRef, useState } from 'react'
+import { type ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/lib/i18n/i18nContext'
@@ -31,28 +31,34 @@ export function FileUploadButton({
     fileInputRef.current.click()
   }
 
-  const matchesAccept = (file: File) => {
-    if (!accept.trim()) return true
+  const matchesAccept = useCallback(
+    (file: File) => {
+      if (!accept.trim()) return true
 
-    return accept
-      .split(',')
-      .map((entry) => entry.trim())
-      .some((rule) => {
-        if (!rule) return false
-        if (rule.startsWith('.')) {
-          return file.name.toLowerCase().endsWith(rule.toLowerCase())
-        }
-        if (rule.endsWith('/*')) {
-          return file.type.startsWith(rule.slice(0, -1))
-        }
-        return file.type === rule
-      })
-  }
+      return accept
+        .split(',')
+        .map((entry) => entry.trim())
+        .some((rule) => {
+          if (!rule) return false
+          if (rule.startsWith('.')) {
+            return file.name.toLowerCase().endsWith(rule.toLowerCase())
+          }
+          if (rule.endsWith('/*')) {
+            return file.type.startsWith(rule.slice(0, -1))
+          }
+          return file.type === rule
+        })
+    },
+    [accept]
+  )
 
-  const processFile = (file: File | null) => {
-    if (!file || disabled || !matchesAccept(file)) return
-    onFileSelect(file)
-  }
+  const processFile = useCallback(
+    (file: File | null) => {
+      if (!file || disabled || !matchesAccept(file)) return
+      onFileSelect(file)
+    },
+    [disabled, matchesAccept, onFileSelect]
+  )
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     processFile(event.target.files?.[0] ?? null)
@@ -77,7 +83,7 @@ export function FileUploadButton({
 
     document.addEventListener('paste', handlePaste)
     return () => document.removeEventListener('paste', handlePaste)
-  }, [disabled])
+  }, [disabled, matchesAccept, processFile])
 
   return (
     <div className={cn("mt-2", className)}>

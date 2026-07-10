@@ -416,7 +416,6 @@ export default function DiscordColorMessageGenerator() {
             </div>
           </div>
           
-          {/* eslint-disable-next-line react/no-unescaped-entities */}
           <Button onClick={generateColoredMessage} className="w-full mt-4">
             {t('common.tools.discordColorMessageGenerator.page.generateAndCopy')}
           </Button>

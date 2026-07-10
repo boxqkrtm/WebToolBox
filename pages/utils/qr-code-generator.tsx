@@ -11,7 +11,6 @@ const QRCode = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeCanv
 
 function decodeQrFromImageData(imageData: ImageData): string | null {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const jsQR = require('jsqr');
     const code = jsQR(imageData.data, imageData.width, imageData.height);
     return code ? code.data : null;

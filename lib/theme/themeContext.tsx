@@ -14,12 +14,13 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const systemPrefersDark = useMediaQuery('(prefers-color-scheme: dark)');
-  const [theme, setTheme] = useLocalStorage<Theme>('theme', systemPrefersDark ? 'dark' : 'light');
+  const [storedTheme, setStoredTheme] = useLocalStorage<Theme | null>('theme', null);
+  const theme: Theme = storedTheme ?? (systemPrefersDark ? 'dark' : 'light');
 
   useDocumentClass('dark', theme === 'dark');
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setStoredTheme(theme === 'light' ? 'dark' : 'light');
   };
 
   return (

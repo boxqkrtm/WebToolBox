@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { FileUploadButton } from '@/components/ui/file-upload-button'
 import UtilsLayout from '@/components/layout/UtilsLayout';
 import { useI18n } from '@/lib/i18n/i18nContext';
@@ -55,6 +55,7 @@ export default function KakaotalkChatAnalyzer() {
   const [isStartDatePopoverOpen, setIsStartDatePopoverOpen] = useState(false);
   const [isEndDatePopoverOpen, setIsEndDatePopoverOpen] = useState(false);
   const [userListScrollTop, setUserListScrollTop] = useState(0);
+  const userListRef = useRef<HTMLDivElement>(null);
 
   const {
     entries,
@@ -81,6 +82,10 @@ export default function KakaotalkChatAnalyzer() {
   const nicknames = useMemo(() => {
     return Array.from(new Set(filteredEntries.map((entry) => entry.nickname))).sort((a, b) => a.localeCompare(b, 'ko'));
   }, [filteredEntries]);
+  const activeSelectedNickname = useMemo(
+    () => selectedNickname && nicknames.includes(selectedNickname) ? selectedNickname : '',
+    [nicknames, selectedNickname],
+  );
 
   const {
     query: nicknameQuery,
@@ -89,6 +94,33 @@ export default function KakaotalkChatAnalyzer() {
     isSearching: isSearchingNickname,
     resetQuery,
   } = useNicknameWorkerSearch(nicknames);
+  const nicknameQueryRef = useRef(nicknameQuery);
+
+  const resetUserListScroll = () => {
+    setUserListScrollTop(0);
+    if (userListRef.current) {
+      userListRef.current.scrollTop = 0;
+    }
+  };
+
+  const handleNicknameQueryChange = (value: string) => {
+    if (value === nicknameQueryRef.current) {
+      return;
+    }
+
+    nicknameQueryRef.current = value;
+    setNicknameQuery(value);
+    resetUserListScroll();
+  };
+
+  const resetNicknameSearch = () => {
+    const queryChanged = nicknameQueryRef.current !== '';
+    nicknameQueryRef.current = '';
+    resetQuery();
+    if (queryChanged) {
+      resetUserListScroll();
+    }
+  };
 
   const visibleUserRange = useMemo(() => {
     const total = filteredNicknames.length;
@@ -107,16 +139,6 @@ export default function KakaotalkChatAnalyzer() {
     return filteredNicknames.slice(visibleUserRange.start, visibleUserRange.end);
   }, [filteredNicknames, visibleUserRange]);
 
-  useEffect(() => {
-    if (selectedNickname && !nicknames.includes(selectedNickname)) {
-      setSelectedNickname('');
-      resetQuery();
-    }
-  }, [nicknames, selectedNickname, resetQuery]);
-
-  useEffect(() => {
-    setUserListScrollTop(0);
-  }, [nicknameQuery]);
 
   const ranking = useMemo<RankingItem[]>(() => {
     const counts = new Map<string, number>();
@@ -163,21 +185,21 @@ export default function KakaotalkChatAnalyzer() {
   const selectedUserHourlyActivity = useMemo(() => {
     const counts = Array(24).fill(0) as number[];
     for (const entry of filteredEntries) {
-      if (selectedNickname && entry.nickname === selectedNickname) {
+      if (activeSelectedNickname && entry.nickname === activeSelectedNickname) {
         counts[entry.hour] += 1;
       }
     }
     return counts.map((value, hour) => ({ label: `${String(hour).padStart(2, '0')}`, value }));
-  }, [filteredEntries, selectedNickname]);
+  }, [filteredEntries, activeSelectedNickname]);
 
   const selectedUserTopMessages = useMemo(() => {
-    if (!selectedNickname) {
+    if (!activeSelectedNickname) {
       return [] as MessageRankingItem[];
     }
 
     const counts = new Map<string, number>();
     for (const entry of filteredEntries) {
-      if (entry.nickname !== selectedNickname) {
+      if (entry.nickname !== activeSelectedNickname) {
         continue;
       }
 
@@ -192,7 +214,7 @@ export default function KakaotalkChatAnalyzer() {
       .map(([message, count]) => ({ message, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
-  }, [filteredEntries, selectedNickname]);
+  }, [filteredEntries, activeSelectedNickname]);
 
   const donutData = useMemo(() => {
     const top = messageRanking.slice(0, 8);
@@ -225,7 +247,7 @@ export default function KakaotalkChatAnalyzer() {
       return;
     }
     setSelectedNickname('');
-    resetQuery();
+    resetNicknameSearch();
   };
 
   const handleFileUpload = async (file: File | null) => {
@@ -240,7 +262,7 @@ export default function KakaotalkChatAnalyzer() {
       return
     }
     setSelectedNickname('')
-    resetQuery()
+    resetNicknameSearch()
   }
 
   const applyPresetAndClose = (preset: 'all' | 'last7' | 'last30' | 'thisYear') => {
@@ -355,14 +377,14 @@ export default function KakaotalkChatAnalyzer() {
               <CardContent className="space-y-3">
                 <Label htmlFor="nickname-select">유저 선택</Label>
                 <div className="space-y-2 sm:w-80">
-                  <Input id="nickname-select" value={nicknameQuery} onChange={(event) => setNicknameQuery(event.target.value)} placeholder="유저 검색 (중간 검색 지원)" />
+                  <Input id="nickname-select" value={nicknameQuery} onChange={(event) => handleNicknameQueryChange(event.target.value)} placeholder="유저 검색 (중간 검색 지원)" />
                   {isSearchingNickname && <p className="text-xs text-muted-foreground">검색 중...</p>}
                   <div className="rounded-md border bg-background">
                     <button
                       type="button"
                       onClick={() => {
                         setSelectedNickname('');
-                        resetQuery();
+                        resetNicknameSearch();
                       }}
                       className="w-full border-b px-3 py-2 text-left text-sm hover:bg-muted"
                     >
@@ -372,6 +394,7 @@ export default function KakaotalkChatAnalyzer() {
                       <div className="px-3 py-2 text-sm text-muted-foreground">검색 결과가 없습니다.</div>
                     ) : (
                       <div
+                        ref={userListRef}
                         className="overflow-y-auto"
                         style={{ maxHeight: `${USER_LIST_HEIGHT}px` }}
                         onScroll={(event) => setUserListScrollTop(event.currentTarget.scrollTop)}
@@ -405,12 +428,12 @@ export default function KakaotalkChatAnalyzer() {
               </CardContent>
             </Card>
 
-            {selectedNickname && (
+            {activeSelectedNickname && (
               <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                <BarChart title={`${selectedNickname} 시간별 활동 량 (메시지 수)`} items={selectedUserHourlyActivity} color="#0ea5e9" />
+                <BarChart title={`${activeSelectedNickname} 시간별 활동 량 (메시지 수)`} items={selectedUserHourlyActivity} color="#0ea5e9" />
                 <Card>
                   <CardHeader>
-                    <CardTitle className="text-lg">{selectedNickname} 많이 보낸 메시지 종류</CardTitle>
+                    <CardTitle className="text-lg">{activeSelectedNickname} 많이 보낸 메시지 종류</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Table>

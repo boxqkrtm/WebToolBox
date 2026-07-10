@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useMemo } from 'react'
 import { FileUploadButton } from '@/components/ui/file-upload-button'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,7 +12,6 @@ import UtilsLayout from '@/components/layout/UtilsLayout'
 
 export default function Component() {
     const [csvData, setCsvData] = useState<string[][]>([])
-    const [sortedData, setSortedData] = useState<string[][]>([])
     const [headers, setHeaders] = useState<string[]>([])
     const [sortColumn, setSortColumn] = useState<string>('')
     const [sortColumnIndex, setSortColumnIndex] = useState<number>(1)
@@ -67,13 +66,12 @@ export default function Component() {
             const rows = parseCSV(text)
             setCsvData(rows)
             setHeaders(rows[0])
-            setSortedData(rows.slice(1))
         }
         reader.readAsText(file)
     }
 
-    const sortData = useCallback(() => {
-        const dataToSort = [...sortedData]
+    const sortedData = useMemo(() => {
+        const dataToSort = csvData.slice(1)
         const columnIndex = sortColumn ? headers.indexOf(sortColumn) : sortColumnIndex - 1
         const secondaryIndices = secondarySortColumns.split(',').map(col => headers.indexOf(col.trim()))
 
@@ -93,7 +91,7 @@ export default function Component() {
 
             let comparison = compareValues(a[columnIndex], b[columnIndex])
             if (comparison === 0) {
-                for (let secondaryIndex of secondaryIndices) {
+                for (const secondaryIndex of secondaryIndices) {
                     if (secondaryIndex !== -1) {
                         comparison = compareValues(a[secondaryIndex], b[secondaryIndex])
                         if (comparison !== 0) break
@@ -103,15 +101,8 @@ export default function Component() {
             return sortOrder === 'asc' ? comparison : -comparison
         }
 
-        dataToSort.sort(compareFunction)
-        setSortedData(dataToSort)
-    }, [caseSensitive, customMissingValue, handleMissingValues, headers, secondarySortColumns, sortColumn, sortColumnIndex, sortMethod, sortOrder, sortedData])
-
-    useEffect(() => {
-        if (csvData.length > 0) {
-            sortData()
-        }
-    }, [csvData.length, sortData])
+        return dataToSort.sort(compareFunction)
+    }, [caseSensitive, csvData, customMissingValue, handleMissingValues, headers, secondarySortColumns, sortColumn, sortColumnIndex, sortMethod, sortOrder])
 
     const convertToCSV = (data: string[][]): string => {
         return data.map(row =>
