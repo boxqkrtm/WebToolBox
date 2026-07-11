@@ -11,6 +11,17 @@ import { useI18n } from '@/lib/i18n/i18nContext';
 
 type ColorCategory = 'R' | 'G' | 'B' | 'Y' | 'P' | 'O' | '';
 
+const getAverageColor = (data: Uint8ClampedArray): string => {
+  let r = 0, g = 0, b = 0;
+  for (let i = 0; i < data.length; i += 4) {
+    r += data[i];
+    g += data[i + 1];
+    b += data[i + 2];
+  }
+  const count = data.length / 4;
+  return `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`;
+};
+
 export default function Component() {
   const { t } = useI18n();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -154,16 +165,6 @@ export default function Component() {
     }
   }, [imageUrl, analyzeImage]);
 
-  const getAverageColor = (data: Uint8ClampedArray): string => {
-    let r = 0, g = 0, b = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      r += data[i];
-      g += data[i + 1];
-      b += data[i + 2];
-    }
-    const count = data.length / 4;
-    return `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`;
-  };
 
   const getCategoryColor = (category: ColorCategory): string => {
     switch (category) {

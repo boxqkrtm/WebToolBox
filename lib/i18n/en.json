@@ -29,10 +29,6 @@
         "title": "Image & Video",
         "description": "Tools for video and image manipulation."
       },
-      "gif": {
-        "title": "GIF",
-        "description": "Tools for GIF creation and conversion."
-      },
       "llm": {
         "title": "LLM",
         "description": "Tools for Large Language Models."
@@ -111,152 +107,6 @@
             "showingPrefix": "Showing first 10 rows of",
             "showingSuffix": "total rows"
           }
-        }
-      },
-      "gifCrop": {
-        "title": "GIF Crop",
-        "description": "Crop GIF to selected region",
-        "page": {
-          "loadingFfmpeg": "Loading FFmpeg...",
-          "processing": "Processing...",
-          "done": "Done!",
-          "error": "Error occurred",
-          "upload": "Upload GIF",
-          "selected": "Selected file",
-          "originalPreview": "Original Preview",
-          "previewAlt": "GIF preview",
-          "run": "Run Crop",
-          "dragHint": "Drag to move, drag edges to resize",
-          "outputSize": "Output Size",
-          "croppedPreview": "Cropped Preview",
-          "download": "Download",
-          "cropLeft": "Crop from left",
-          "cropRight": "Crop from right",
-          "cropTop": "Crop from top",
-          "cropBottom": "Crop from bottom",
-          "outputDimensions": "Output dimensions"
-        }
-      },
-      "gifCutter": {
-        "title": "GIF Cutter",
-        "description": "Cut GIF to selected region",
-        "page": {
-          "loadingFfmpeg": "Loading FFmpeg...",
-          "processing": "Processing...",
-          "done": "Done!",
-          "error": "Error occurred",
-          "upload": "Upload GIF",
-          "selected": "Selected file",
-          "frames": "frames",
-          "selectedDuration": "Selected Duration",
-          "estimatedFrames": "Estimated Frames",
-          "run": "Run Cut",
-          "preview": "Preview",
-          "previewAlt": "GIF preview",
-          "download": "Download",
-          "startTime": "Start time",
-          "endTime": "End time",
-          "outputSize": "Output size"
-        }
-      },
-      "gifSpeedChanger": {
-        "title": "GIF Speed Changer",
-        "description": "Change speed of GIF",
-        "page": {
-          "loadingFfmpeg": "Loading FFmpeg...",
-          "processing": "Processing...",
-          "done": "Done!",
-          "error": "Error occurred",
-          "upload": "Upload GIF",
-          "selected": "Selected file",
-          "speed": "Speed",
-          "faster": "faster",
-          "slower": "slower",
-          "originalDuration": "Original Duration",
-          "estimatedDuration": "Estimated Duration",
-          "run": "Run Speed Change",
-          "preview": "Preview",
-          "previewAlt": "GIF preview",
-          "download": "Download",
-          "normal": "Normal",
-          "outputSize": "Output size"
-        }
-      },
-      "mp4ToGif": {
-        "title": "MP4 to GIF",
-        "description": "Convert MP4 to GIF",
-        "page": {
-          "loadingFfmpeg": "Loading FFmpeg...",
-          "processing": "Processing...",
-          "done": "Done!",
-          "error": "Error occurred",
-          "upload": "Upload MP4",
-          "selected": "Selected file",
-          "fps": "FPS",
-          "resolution": "Resolution",
-          "actualSize": "Actual Size",
-          "run": "Run Conversion",
-          "preview": "Preview",
-          "previewAlt": "GIF preview",
-          "download": "Download",
-          "title": "MP4 to GIF Converter",
-          "estimatedSize": "Estimated size",
-          "sizeEstimateUnavailable": "Estimate unavailable (shown after conversion)",
-          "converting": "Converting...",
-          "optimizeButton": "Optimize Size",
-          "sendingButton": "Sending...",
-          "transferError": "Could not open the GIF optimizer"
-        }
-      },
-      "gifOptimizer": {
-        "title": "GIF Optimizer",
-        "description": "Optimize GIF files",
-        "page": {
-          "loadingFfmpeg": "Loading FFmpeg...",
-          "processing": "Processing...",
-          "done": "Done!",
-          "error": "Error occurred",
-          "upload": "Upload GIF",
-          "selected": "Selected file",
-          "run": "Run Optimization",
-          "preview": "Preview",
-          "download": "Download",
-          "description": "Optimize GIF size by adjusting resolution, frame rate, and lossy value.",
-          "gifsicleArgs": "gifsicle wasm args",
-          "resizeWidth": "Resize Width",
-          "frameRate": "Frame Rate",
-          "lossy": "Lossy",
-          "loadingEngine": "Loading optimization engine...",
-          "optimizing": "Optimizing GIF...",
-          "before": "Before",
-          "after": "After",
-          "transferLoaded": "GIF preview loaded from the converter.",
-          "transferNotFound": "Transferred GIF could not be found.",
-          "transferError": "Could not load the transferred GIF"
-        }
-      },
-      "gifToMp4Webp": {
-        "title": "GIF to MP4/WebP",
-        "description": "Convert GIF to MP4 or WebP",
-        "page": {
-          "loadingFfmpeg": "Loading FFmpeg...",
-          "processing": "Processing...",
-          "done": "Done!",
-          "error": "Error occurred",
-          "upload": "Upload GIF",
-          "selected": "Selected file",
-          "run": "Run Conversion",
-          "preview": "Preview",
-          "download": "Download",
-          "title": "GIF to MP4 / WEBP Converter",
-          "description": "Upload a GIF, choose the output format, and convert it in the browser.",
-          "outputFormat": "Output format",
-          "mp4Label": "MP4 video",
-          "webpLabel": "WEBP image",
-          "converting": "Converting...",
-          "previewAlt": "Converted output preview",
-          "source": "Source GIF",
-          "result": "Converted result"
         }
       },
       "imageToBase64": {
@@ -508,54 +358,107 @@
           "title": "NTRIP Scanner"
         }
       },
-      "videoCutterEncoder": {
-        "title": "Video Trimmer & Compressor",
-        "description": "Trim a video to the section you want and reduce its file size.",
+      "mp4GifStudio": {
+        "title": "MP4, GIF Studio",
+        "description": "Edit video and GIF files, then export as MP4, GIF, or animated WebP.",
         "page": {
-          "ffmpegNotLoaded": "FFmpeg is not loaded yet.",
-          "loadingFFmpeg": "Loading FFmpeg...",
-          "ffmpegLoaded": "FFmpeg loaded.",
-          "writingFile": "Preparing file...",
-          "largeFileWarning": "This file is large and may take some time to process.",
-          "processing": "Processing...",
-          "trimmingFast": "Trimming quickly...",
-          "invalidSizeLimit": "The file size limit is invalid.",
-          "targetSizeSmaller": "Re-encoding to fit the target file size.",
-          "targetSizeTooSmall": "The target file size is too small to process.",
-          "targetSizeLarger": "The target file size is larger than the estimated output, so standard quality re-encoding will be used.",
-          "trimmingLowQuality": "Re-encoding for a smaller file size...",
-          "trimmingPrecise": "Trimming precisely...",
-          "readingResult": "Loading result file...",
-          "done": "Done!",
-          "memoryError": "Not enough memory. Try a shorter clip or a smaller file.",
-          "errorOccurred": "An error occurred",
-          "selectVideo": "Video file",
-          "selectedFile": "Selected file: {name}",
-          "chooseVideoFile": "Choose video file",
-          "originalVideo": "Original video",
-          "trimRange": "Trim range",
-          "start": "Start",
-          "current": "Current",
-          "end": "End",
-          "limitOutputFileSize": "Limit output file size",
-          "selectSizeLimit": "Select target size",
-          "custom": "Custom",
-          "mbPlaceholder": "Enter size in MB",
-          "formatRequiresReencoding": "This format does not support fast trim, so re-encoding is required.",
-          "process": "Start processing",
-          "sizeLimitRequiresReencoding": "Using a file size limit requires re-encoding and may take longer.",
-          "processFastTrim": "This format supports fast trim.",
-          "formatRequiresReencodingLonger": "This format requires re-encoding, so processing may take longer.",
-          "trimmedVideo": "Processed video",
-          "downloadTrimmedVideo": "Download result video",
-          "fixHighQuality": "Re-encode in higher quality",
-          "fixLowQuality": "Re-encode for smaller size",
-          "selected": "Selected",
-          "enableSizeLimit": "Enable file size limit",
-          "fixVideoReEncode": "Re-encode video",
-          "lowQualitySmallSize": "Lower quality / smaller file",
-          "fileTooBig": "File is too big to process in the browser. The maximum size is 2GB.",
-          "errorProcessing": "An error occurred while processing the video."
+          "upload": "Upload video or GIF",
+          "supportedFormats": "Supported formats: MP4, WebM, MOV, MKV, AVI, M4V, and GIF",
+          "privacy": "Your files stay in your browser and are never uploaded.",
+          "replace": "Replace file",
+          "startOver": "Start over",
+          "status": {
+            "loadingEngine": "Loading editing engine...",
+            "analyzing": "Analyzing media...",
+            "preparingPreview": "Preparing preview...",
+            "ready": "Ready to edit",
+            "exporting": "Exporting...",
+            "exportComplete": "Export complete"
+          },
+          "errors": {
+            "invalidFile": "Choose a supported video or GIF file.",
+            "fileTooLarge": "This file is too large. Choose a file smaller than {size}.",
+            "analysisFailed": "Could not analyze this file. Try another video or GIF.",
+            "exportFailed": "Could not export the file. Try different export settings."
+          },
+          "source": {
+            "title": "Source",
+            "fileSize": "File size",
+            "resolution": "Resolution",
+            "duration": "Duration",
+            "frameRate": "Frame rate",
+            "audio": "Audio",
+            "yes": "Yes",
+            "no": "No"
+          },
+          "editor": {
+            "title": "Editor",
+            "preview": "Preview",
+            "play": "Play",
+            "pause": "Pause",
+            "timeline": "Timeline",
+            "startTime": "Start time",
+            "endTime": "End time",
+            "selectedDuration": "Selected duration",
+            "speed": "Speed",
+            "outputScale": "Output scale",
+            "outputDimensions": "Output dimensions"
+          },
+          "crop": {
+            "title": "Crop",
+            "hint": "Drag the crop area to move it. Drag a handle to resize it.",
+            "x": "X position",
+            "y": "Y position",
+            "width": "Width",
+            "height": "Height",
+            "reset": "Reset",
+            "selection": "Crop selection",
+            "move": "Move crop selection",
+            "handles": {
+              "topLeft": "Top-left resize handle",
+              "top": "Top resize handle",
+              "topRight": "Top-right resize handle",
+              "right": "Right resize handle",
+              "bottomRight": "Bottom-right resize handle",
+              "bottom": "Bottom resize handle",
+              "bottomLeft": "Bottom-left resize handle",
+              "left": "Left resize handle"
+            }
+          },
+          "export": {
+            "title": "Export",
+            "outputFormat": "Output format",
+            "mp4Description": "Best for video playback with optional audio.",
+            "gifDescription": "Widely supported animation without audio.",
+            "webpDescription": "Compact animated image without audio.",
+            "videoBitrate": "Video bitrate",
+            "estimatedSize": "Estimated size",
+            "frameRate": "Frame rate",
+            "sourceFrameRate": "Source frame rate",
+            "encodingPreset": "Encoding preset",
+            "presetUltrafast": "Ultrafast",
+            "presetVeryfast": "Very fast",
+            "presetMedium": "Medium",
+            "includeAudio": "Include audio",
+            "audioBitrate": "Audio bitrate",
+            "colorCount": "Color count",
+            "dithering": "Dithering",
+            "ditherNone": "None",
+            "ditherBayer": "Bayer",
+            "ditherFloydSteinberg": "Floyd–Steinberg",
+            "ditherSierra2_4a": "Sierra2-4A",
+            "loopForever": "Loop forever",
+            "webpQuality": "WebP quality",
+            "compressionLevel": "Compression level",
+            "lossless": "Lossless",
+            "exportButton": "Export file"
+          },
+          "result": {
+            "title": "Export complete",
+            "outputSize": "Output size",
+            "download": "Download",
+            "previewAlt": "Exported media preview"
+          }
         }
       },
       "boothAlgorithmMultiplier": {
@@ -683,6 +586,9 @@
           "stop": "Stop",
           "resume": "Resume",
           "download": "Download"
+        },
+        "aria": {
+          "duration": "Recording duration"
         }
       }
     }

@@ -55,22 +55,10 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Convert Excel files to SQL statements quickly.",
     section: "Database",
   },
-  "/utils/video-cutter-encoder": {
-    slug: "video-cutter-encoder",
-    title: "Video Cutter Encoder",
-    description: "Cut and encode video segments in your browser.",
-    section: "Image & Video",
-  },
-  "/utils/mp4-to-gif": {
-    slug: "mp4-to-gif",
-    title: "MP4 to GIF",
-    description: "Convert short video clips into GIF previews in your browser.",
-    section: "Image & Video",
-  },
-  "/utils/gif-optimizer": {
-    slug: "gif-optimizer",
-    title: "GIF Optimizer",
-    description: "Reduce GIF size by resizing and lowering frame rate in your browser.",
+  "/utils/mp4-gif-studio": {
+    slug: "mp4-gif-studio",
+    title: "MP4/GIF Studio",
+    description: "Trim, crop, and export video or GIF sources as MP4, GIF, or animated WebP.",
     section: "Image & Video",
   },
   "/utils/tetrio-replay-editor": {
@@ -143,30 +131,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "video-recorder",
     title: "Video Recorder",
     description: "Record, stop, pause, and save your screen.",
-    section: "Image & Video",
-  },
-  "/utils/gif-crop": {
-    slug: "gif-crop",
-    title: "GIF Crop",
-    description: "Crop GIF to selected region.",
-    section: "Image & Video",
-  },
-  "/utils/gif-cutter": {
-    slug: "gif-cutter",
-    title: "GIF Cutter",
-    description: "Cut GIF to selected region.",
-    section: "Image & Video",
-  },
-  "/utils/gif-speed-changer": {
-    slug: "gif-speed-changer",
-    title: "GIF Speed Changer",
-    description: "Change speed of GIF.",
-    section: "Image & Video",
-  },
-  "/utils/gif-to-mp4-webp": {
-    slug: "gif-to-mp4-webp",
-    title: "GIF to MP4/WebP",
-    description: "Convert GIF to MP4 or WebP.",
     section: "Image & Video",
   },
 };

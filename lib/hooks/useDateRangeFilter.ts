@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { ChatEntry } from '@/lib/kakaotalk/types';
 
 type DatePreset = 'all' | 'last7' | 'last30' | 'thisYear';
@@ -25,26 +25,6 @@ function getCurrentYearRange(): { start: string; end: string } {
   };
 }
 
-function getDateBoundsFromEntries(entries: ChatEntry[]): { min: string; max: string } {
-  let min = '';
-  let max = '';
-
-  for (const entry of entries) {
-    if (!entry.dateKey) {
-      continue;
-    }
-
-    if (!min || entry.dateKey < min) {
-      min = entry.dateKey;
-    }
-    if (!max || entry.dateKey > max) {
-      max = entry.dateKey;
-    }
-  }
-
-  return { min, max };
-}
-
 type UseDateRangeFilterResult = {
   startDateKey: string;
   endDateKey: string;
@@ -60,9 +40,6 @@ type UseDateRangeFilterResult = {
 };
 
 export function useDateRangeFilter(entries: ChatEntry[]): UseDateRangeFilterResult {
-  const [startDateKey, setStartDateKey] = useState('');
-  const [endDateKey, setEndDateKey] = useState('');
-
   const dateOptions = useMemo(() => {
     const dateMap = new Map<string, string>();
     for (const entry of entries) {
@@ -78,12 +55,34 @@ export function useDateRangeFilter(entries: ChatEntry[]): UseDateRangeFilterResu
 
   const minDateKey = dateOptions.length > 0 ? dateOptions[0].key : '';
   const maxDateKey = dateOptions.length > 0 ? dateOptions[dateOptions.length - 1].key : '';
+  const [dateRange, setDateRange] = useState(() => ({
+    minDateKey,
+    maxDateKey,
+    startDateKey: minDateKey,
+    endDateKey: maxDateKey,
+  }));
+  const hasCurrentBounds =
+    dateRange.minDateKey === minDateKey && dateRange.maxDateKey === maxDateKey;
+  const currentDateRange = hasCurrentBounds
+    ? dateRange
+    : {
+        minDateKey,
+        maxDateKey,
+        startDateKey: minDateKey,
+        endDateKey: maxDateKey,
+      };
 
-  useEffect(() => {
-    const bounds = getDateBoundsFromEntries(entries);
-    setStartDateKey(bounds.min);
-    setEndDateKey(bounds.max);
-  }, [entries]);
+  if (!hasCurrentBounds) {
+    setDateRange(currentDateRange);
+  }
+
+  const { startDateKey, endDateKey } = currentDateRange;
+  const setStartDateKey = useCallback((value: string) => {
+    setDateRange((current) => ({ ...current, startDateKey: value }));
+  }, []);
+  const setEndDateKey = useCallback((value: string) => {
+    setDateRange((current) => ({ ...current, endDateKey: value }));
+  }, []);
 
   const filteredEntries = useMemo(() => {
     if (!startDateKey && !endDateKey) {

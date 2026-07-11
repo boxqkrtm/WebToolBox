@@ -30,6 +30,28 @@ const VideoRecorder: React.FC = () => {
     }
   }, [])
 
+  const finishRecording = useCallback((chunks?: Blob[]) => {
+    const blob = new Blob(chunks || [], { type: 'video/webm' })
+    const url = URL.createObjectURL(blob)
+    playbackUrlRef.current = url
+
+    // Update the video element src for playback
+    if (videoRef.current) {
+      videoRef.current.src = url
+      videoRef.current.load()
+    }
+
+    setRecordedChunks([blob])
+
+    // Auto-download
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `recording_${new Date().toISOString().replace(/[:.]/g, '-')}.webm`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }, [])
+
   const startRecording = useCallback(async () => {
     try {
       setError(null)
@@ -70,7 +92,7 @@ const VideoRecorder: React.FC = () => {
     } catch (err) {
       setError(err instanceof Error ? err.message : '녹화 시작 실패')
     }
-  }, [])
+  }, [finishRecording])
 
   const pauseRecording = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
@@ -126,35 +148,14 @@ const VideoRecorder: React.FC = () => {
     if (videoRef.current) {
       videoRef.current.srcObject = null
     }
-  }, [])
+  }, [finishRecording])
 
-  const finishRecording = useCallback((chunks?: Blob[]) => {
-    const blob = new Blob(chunks || [], { type: 'video/webm' })
-    const url = URL.createObjectURL(blob)
-    playbackUrlRef.current = url
-
-    // Update the video element src for playback
-    if (videoRef.current) {
-      videoRef.current.src = url
-      videoRef.current.load()
-    }
-
-    setRecordedChunks([blob])
-
-    // Auto-download
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `recording_${new Date().toISOString().replace(/[:.]/g, '-')}.webm`
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-  }, [])
 
   useEffect(() => {
     return () => {
       cleanupPlaybackUrl()
     }
-  }, [])
+  }, [cleanupPlaybackUrl])
 
   const formatDuration = (seconds: number): string => {
     const h = Math.floor(seconds / 3600)

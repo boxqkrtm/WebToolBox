@@ -29,10 +29,6 @@
         "title": "图像 & 视频",
         "description": "视频和图像处理工具。"
       },
-      "gif": {
-        "title": "GIF",
-        "description": "GIF 创建和转换工具。"
-      },
       "llm": {
         "title": "LLM",
         "description": "大语言模型工具。"
@@ -227,54 +223,107 @@
           "title": "NTRIP扫描器"
         }
       },
-      "videoCutterEncoder": {
-        "title": "视频裁剪与压缩",
-        "description": "将视频裁剪到需要的片段，并可进一步减小文件体积。",
+      "mp4GifStudio": {
+        "title": "MP4, GIF Studio",
+        "description": "编辑视频和 GIF，并导出为 MP4、GIF 或动态 WebP。",
         "page": {
-          "ffmpegNotLoaded": "FFmpeg 尚未加载。",
-          "loadingFFmpeg": "正在加载 FFmpeg...",
-          "ffmpegLoaded": "FFmpeg 已加载完成。",
-          "writingFile": "正在准备文件...",
-          "largeFileWarning": "文件较大，处理可能需要一些时间。",
-          "processing": "处理中...",
-          "trimmingFast": "正在快速裁剪...",
-          "invalidSizeLimit": "文件大小限制无效。",
-          "targetSizeSmaller": "正在重新编码以满足目标文件大小。",
-          "targetSizeTooSmall": "目标文件大小过小，无法处理。",
-          "targetSizeLarger": "目标文件大小大于预估输出，因此将使用标准画质重新编码。",
-          "trimmingLowQuality": "正在重新编码以减小文件体积...",
-          "trimmingPrecise": "正在精确裁剪...",
-          "readingResult": "正在加载结果文件...",
-          "done": "完成！",
-          "memoryError": "内存不足。请尝试更短的片段或更小的文件。",
-          "errorOccurred": "发生错误",
-          "selectVideo": "视频文件",
-          "selectedFile": "已选择文件：{name}",
-          "chooseVideoFile": "选择视频文件",
-          "originalVideo": "原始视频",
-          "trimRange": "裁剪范围",
-          "start": "开始",
-          "current": "当前",
-          "end": "结束",
-          "limitOutputFileSize": "限制输出文件大小",
-          "selectSizeLimit": "选择目标大小",
-          "custom": "自定义",
-          "mbPlaceholder": "请输入 MB 大小",
-          "formatRequiresReencoding": "此格式不支持快速裁剪，因此需要重新编码。",
-          "process": "开始处理",
-          "sizeLimitRequiresReencoding": "启用文件大小限制后需要重新编码，处理时间可能会更长。",
-          "processFastTrim": "此格式支持快速裁剪。",
-          "formatRequiresReencodingLonger": "此格式需要重新编码，因此处理时间可能会更长。",
-          "trimmedVideo": "处理后的视频",
-          "downloadTrimmedVideo": "下载结果视频",
-          "fixHighQuality": "以更高画质重新编码",
-          "fixLowQuality": "以更小体积重新编码",
-          "selected": "已选择",
-          "enableSizeLimit": "启用大小限制",
-          "fixVideoReEncode": "重新编码视频",
-          "lowQualitySmallSize": "较低画质 / 更小体积",
-          "fileTooBig": "文件过大，无法在浏览器中处理。最大大小为 2GB。",
-          "errorProcessing": "处理视频时发生错误。"
+          "upload": "上传视频或 GIF",
+          "supportedFormats": "支持的格式：MP4、WebM、MOV、MKV、AVI、M4V、GIF",
+          "privacy": "文件仅在浏览器中处理，不会上传到服务器。",
+          "replace": "更换文件",
+          "startOver": "重新开始",
+          "status": {
+            "loadingEngine": "正在加载编辑引擎...",
+            "analyzing": "正在分析媒体...",
+            "preparingPreview": "正在准备预览...",
+            "ready": "已可编辑",
+            "exporting": "正在导出...",
+            "exportComplete": "导出完成"
+          },
+          "errors": {
+            "invalidFile": "请选择支持的视频或 GIF 文件。",
+            "fileTooLarge": "文件过大。请选择小于 {size} 的文件。",
+            "analysisFailed": "无法分析此文件。请尝试其他视频或 GIF 文件。",
+            "exportFailed": "无法导出文件。请尝试其他导出设置。"
+          },
+          "source": {
+            "title": "源文件",
+            "fileSize": "文件大小",
+            "resolution": "分辨率",
+            "duration": "时长",
+            "frameRate": "帧率",
+            "audio": "音频",
+            "yes": "是",
+            "no": "否"
+          },
+          "editor": {
+            "title": "编辑器",
+            "preview": "预览",
+            "play": "播放",
+            "pause": "暂停",
+            "timeline": "时间轴",
+            "startTime": "开始时间",
+            "endTime": "结束时间",
+            "selectedDuration": "已选时长",
+            "speed": "速度",
+            "outputScale": "输出缩放比例",
+            "outputDimensions": "输出尺寸"
+          },
+          "crop": {
+            "title": "裁剪",
+            "hint": "拖动裁剪区域可移动，拖动控制点可调整大小。",
+            "x": "X 位置",
+            "y": "Y 位置",
+            "width": "宽度",
+            "height": "高度",
+            "reset": "重置",
+            "selection": "裁剪选区",
+            "move": "移动裁剪选区",
+            "handles": {
+              "topLeft": "左上调整大小控制点",
+              "top": "顶部调整大小控制点",
+              "topRight": "右上调整大小控制点",
+              "right": "右侧调整大小控制点",
+              "bottomRight": "右下调整大小控制点",
+              "bottom": "底部调整大小控制点",
+              "bottomLeft": "左下调整大小控制点",
+              "left": "左侧调整大小控制点"
+            }
+          },
+          "export": {
+            "title": "导出",
+            "outputFormat": "输出格式",
+            "mp4Description": "适合视频播放，并可包含音频。",
+            "gifDescription": "兼容性广泛的无音频动画格式。",
+            "webpDescription": "体积较小的无音频动态图片格式。",
+            "videoBitrate": "视频比特率",
+            "estimatedSize": "预计文件大小",
+            "frameRate": "帧率",
+            "sourceFrameRate": "源文件帧率",
+            "encodingPreset": "编码预设",
+            "presetUltrafast": "极速",
+            "presetVeryfast": "高速",
+            "presetMedium": "均衡",
+            "includeAudio": "包含音频",
+            "audioBitrate": "音频比特率",
+            "colorCount": "颜色数量",
+            "dithering": "抖动",
+            "ditherNone": "无",
+            "ditherBayer": "Bayer",
+            "ditherFloydSteinberg": "Floyd–Steinberg",
+            "ditherSierra2_4a": "Sierra2-4A",
+            "loopForever": "无限循环",
+            "webpQuality": "WebP 质量",
+            "compressionLevel": "压缩级别",
+            "lossless": "无损",
+            "exportButton": "导出文件"
+          },
+          "result": {
+            "title": "导出完成",
+            "outputSize": "输出文件大小",
+            "download": "下载",
+            "previewAlt": "已导出媒体预览"
+          }
         }
       },
       "csvSorter": {
@@ -396,77 +445,6 @@
           "donutChartAriaLabel": "消息频率环形图"
         }
       },
-      "mp4ToGif": {
-        "title": "MP4 转 GIF",
-        "description": "将 MP4 视频转换为 GIF 动图",
-        "page": {
-          "title": "MP4 转 GIF 转换器",
-          "upload": "上传 MP4 文件",
-          "selected": "已选择",
-          "fps": "每秒帧数",
-          "resolution": "分辨率比例",
-          "estimatedSize": "预计大小",
-          "actualSize": "实际输出大小",
-          "sizeEstimateUnavailable": "无法预估（转换后显示）",
-          "run": "开始转换",
-          "converting": "转换中...",
-          "preview": "预览",
-          "previewAlt": "转换后 GIF 预览",
-          "download": "下载 GIF",
-          "loadingFfmpeg": "正在加载 FFmpeg 内核...",
-          "done": "转换完成。",
-          "error": "转换失败，请尝试其他文件或降低设置。",
-          "optimizeButton": "优化体积",
-          "sendingButton": "传输中...",
-          "transferError": "无法打开 GIF 优化页面"
-        }
-      },
-      "gifToMp4Webp": {
-        "title": "GIF 转 MP4 / WEBP",
-        "description": "将动态 GIF 转换为 MP4 视频或 WEBP",
-        "page": {
-          "title": "GIF 转 MP4 / WEBP 转换器",
-          "description": "上传 GIF，选择输出格式，并在浏览器中完成转换。",
-          "upload": "上传 GIF 文件",
-          "selected": "已选择",
-          "outputFormat": "输出格式",
-          "mp4Label": "MP4 视频",
-          "webpLabel": "WEBP 图片",
-          "run": "开始转换",
-          "converting": "转换中...",
-          "preview": "预览",
-          "previewAlt": "转换结果预览",
-          "download": "下载结果",
-          "loadingFfmpeg": "正在加载 FFmpeg 内核...",
-          "done": "转换完成。",
-          "error": "转换失败，请尝试其他文件。",
-          "source": "原始 GIF",
-          "result": "转换结果"
-        }
-      },
-      "gifOptimizer": {
-        "title": "GIF 优化",
-        "description": "调整分辨率和帧率来优化 GIF",
-        "page": {
-          "description": "通过调整分辨率、帧率和 lossy 值来减小 GIF 体积。",
-          "upload": "上传 GIF",
-          "gifsicleArgs": "gifsicle wasm 参数",
-          "resizeWidth": "宽度调整",
-          "frameRate": "帧率",
-          "lossy": "Lossy",
-          "run": "开始优化",
-          "loadingEngine": "正在加载优化引擎...",
-          "optimizing": "正在优化 GIF...",
-          "done": "优化完成。",
-          "error": "错误",
-          "before": "优化前",
-          "after": "优化后",
-          "download": "下载 GIF",
-          "transferLoaded": "已加载来自转换器的 GIF 预览。",
-          "transferNotFound": "未找到传输的 GIF。",
-          "transferError": "无法加载传输的 GIF"
-        }
-      },
       "kakaomapCoordOpener": {
         "title": "KakaoMap坐标打开器",
         "description": "在KakaoMap中打开坐标",
@@ -575,75 +553,6 @@
         "title": "Tetrio回放编辑器",
         "description": "编辑Tetrio回放文件"
       },
-      "gifSpeedChanger": {
-        "title": "GIF 速度调节器",
-        "description": "更改 GIF 播放速度",
-        "page": {
-          "upload": "上传 GIF",
-          "selected": "已选择",
-          "speed": "速度",
-          "faster": "更快",
-          "slower": "更慢",
-          "normal": "正常",
-          "originalDuration": "原始时长",
-          "estimatedDuration": "预计时长",
-          "processing": "处理中...",
-          "run": "更改速度",
-          "done": "完成！",
-          "error": "处理失败",
-          "loadingFfmpeg": "正在加载 FFmpeg...",
-          "outputSize": "输出大小",
-          "preview": "预览",
-          "previewAlt": "转换后的 GIF 预览",
-          "download": "下载 GIF"
-        }
-      },
-      "gifCrop": {
-        "title": "GIF 裁剪",
-        "description": "将 GIF 裁剪到选定区域",
-        "page": {
-          "upload": "上传 GIF",
-          "selected": "已选择",
-          "cropLeft": "从左裁剪",
-          "cropRight": "从右裁剪",
-          "cropTop": "从上裁剪",
-          "cropBottom": "从下裁剪",
-          "outputDimensions": "输出尺寸",
-          "processing": "处理中...",
-          "run": "裁剪 GIF",
-          "done": "完成！",
-          "error": "处理失败",
-          "loadingFfmpeg": "正在加载 FFmpeg...",
-          "outputSize": "输出大小",
-          "originalPreview": "原图（显示裁剪区域）",
-          "croppedPreview": "裁剪结果",
-          "previewAlt": "GIF 预览",
-          "dragHint": "拖动可移动，拖动边框可调整大小",
-          "download": "下载 GIF"
-        }
-      },
-      "gifCutter": {
-        "title": "GIF 剪辑器",
-        "description": "按开始和结束时间剪辑 GIF",
-        "page": {
-          "upload": "上传 GIF",
-          "selected": "已选择",
-          "frames": "帧",
-          "startTime": "开始时间",
-          "endTime": "结束时间",
-          "selectedDuration": "选定时长",
-          "estimatedFrames": "预计帧数",
-          "processing": "处理中...",
-          "run": "剪辑 GIF",
-          "done": "完成！",
-          "error": "处理失败",
-          "loadingFfmpeg": "正在加载 FFmpeg...",
-          "outputSize": "输出大小",
-          "preview": "预览",
-          "previewAlt": "剪辑后的 GIF 预览",
-          "download": "下载 GIF"
-        }
-      },
       "videoRecorder": {
         "title": "视频录制",
         "description": "录制、停止、暂停和保存屏幕",
@@ -656,6 +565,9 @@
           "stop": "停止",
           "resume": "继续",
           "download": "下载"
+        },
+        "aria": {
+          "duration": "录制时长"
         }
       }
     }

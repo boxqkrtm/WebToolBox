@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export const useMount = (effect: () => void) => {
-  useEffect(effect, []);
+  const effectRef = useRef(effect);
+  useEffect(() => effectRef.current(), []);
 };
