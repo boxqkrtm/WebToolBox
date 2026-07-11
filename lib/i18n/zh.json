@@ -232,6 +232,7 @@
           "privacy": "文件仅在浏览器中处理，不会上传到服务器。",
           "replace": "更换文件",
           "startOver": "重新开始",
+          "reloadStudio": "重新加载 Studio",
           "status": {
             "loadingEngine": "正在加载编辑引擎...",
             "analyzing": "正在分析媒体...",

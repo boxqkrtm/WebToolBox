@@ -232,6 +232,7 @@
           "privacy": "ファイルはブラウザ内だけで処理され、サーバーにはアップロードされません。",
           "replace": "ファイルを変更",
           "startOver": "最初からやり直す",
+          "reloadStudio": "Studioを再読み込み",
           "status": {
             "loadingEngine": "編集エンジンを読み込み中...",
             "analyzing": "メディアを解析中...",

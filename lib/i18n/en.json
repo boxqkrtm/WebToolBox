@@ -367,6 +367,7 @@
           "privacy": "Your files stay in your browser and are never uploaded.",
           "replace": "Replace file",
           "startOver": "Start over",
+          "reloadStudio": "Reload Studio",
           "status": {
             "loadingEngine": "Loading editing engine...",
             "analyzing": "Analyzing media...",

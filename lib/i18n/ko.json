@@ -232,6 +232,7 @@
           "privacy": "파일은 브라우저 안에서만 처리되며 서버에 업로드되지 않습니다.",
           "replace": "파일 바꾸기",
           "startOver": "처음부터 다시 시작",
+          "reloadStudio": "Studio 다시 불러오기",
           "status": {
             "loadingEngine": "편집 엔진을 불러오는 중...",
             "analyzing": "미디어를 분석하는 중...",

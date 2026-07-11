@@ -19,6 +19,7 @@ import {
   LoaderCircle,
   Pause,
   Play,
+  RefreshCcw,
   RotateCcw,
   Scissors,
   Settings2,
@@ -435,6 +436,10 @@ export default function Mp4GifStudioPage() {
     fileInput.click()
   }
 
+  const handleReloadStudio = () => {
+    window.location.reload()
+  }
+
   const handleSourceFile = useCallback(
     async (selected: File | null) => {
       if (!selected) return
@@ -793,7 +798,19 @@ export default function Mp4GifStudioPage() {
         {errorMessage && (
           <Alert variant="destructive">
             <AlertTitle>{t('common.tools.mp4GifStudio.title')}</AlertTitle>
-            <AlertDescription>{errorMessage}</AlertDescription>
+            <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <span>{errorMessage}</span>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="w-fit shrink-0 border-destructive/40 bg-background text-foreground hover:bg-destructive/10"
+                onClick={handleReloadStudio}
+              >
+                <RefreshCcw className="mr-2 h-4 w-4" aria-hidden="true" />
+                {t('common.tools.mp4GifStudio.page.reloadStudio')}
+              </Button>
+            </AlertDescription>
           </Alert>
         )}
 
