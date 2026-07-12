@@ -3,10 +3,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { PageContainer } from '@/components/layout/PageContainer';
 import {
   HiCode,
-  HiDatabase,
   HiPuzzle,
   HiVideoCamera,
-  HiLocationMarker,
   HiCollection,
 } from 'react-icons/hi';
 import { useI18n } from '@/lib/i18n/i18nContext';
@@ -21,18 +19,6 @@ export default function Home() {
         <p className="text-xl text-muted-foreground">{t('common.subtitle')}</p>
       </div>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-
-        <Link href="/category/database" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiDatabase className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.database.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.database.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
 
         <Link href="/category/game" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
@@ -54,18 +40,6 @@ export default function Home() {
             </CardHeader>
             <CardContent className="text-center">
               <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/geolocation" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiLocationMarker className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.geolocation.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.geolocation.description')}</p>
             </CardContent>
           </Card>
         </Link>

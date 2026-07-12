@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "database": {
-        "title": "数据库",
-        "description": "用于 JSON、CSV 和 SQL 数据库的工具。"
-      },
       "game": {
         "title": "游戏",
         "description": "适用于各种游戏的实用工具。"
@@ -32,10 +28,6 @@
       "llm": {
         "title": "LLM",
         "description": "大语言模型工具。"
-      },
-      "geolocation": {
-        "title": "地理位置",
-        "description": "处理地理数据的工具。"
       },
       "etc": {
         "title": "其他",
@@ -52,16 +44,6 @@
           "convert": "转换",
           "outputLabel": "转换后的文本",
           "errorPrefix": "错误"
-        }
-      },
-      "xlsxToSql": {
-        "title": "XLSX to SQL",
-        "description": "将 Excel 文件转换为 SQL 语句。",
-        "page": {
-          "converterTitle": "XLSX to SQL 转换器",
-          "uploadXlsxFile": "上传 XLSX 文件",
-          "generatedSqlStatements": "生成的 SQL 语句",
-          "copyToClipboard": "复制到剪贴板"
         }
       },
       "imageToBase64": {
@@ -206,8 +188,8 @@
         "clear": "清除"
       },
       "ntripScanner": {
-        "title": "NTRIP 扫描器",
-        "description": "扫描 NTRIP 连接",
+        "title": "NTRIP 挂载点扫描器",
+        "description": "扫描NTRIP服务中可用的挂载点。",
         "page": {
           "unknownError": "未知错误",
           "connectionFailed": "连接失败",
@@ -244,7 +226,8 @@
             "invalidFile": "请选择支持的视频或 GIF 文件。",
             "fileTooLarge": "文件过大。请选择小于 {size} 的文件。",
             "analysisFailed": "无法分析此文件。请尝试其他视频或 GIF 文件。",
-            "exportFailed": "无法导出文件。请尝试其他导出设置。"
+            "exportFailed": "无法导出文件。请尝试其他导出设置。",
+            "memoryRisk": "预计峰值内存为 {estimate}，超过 {limit} 的安全上限。请缩短片段，或降低分辨率、帧率或输出比例。"
           },
           "source": {
             "title": "源文件",
@@ -298,6 +281,7 @@
             "webpDescription": "体积较小的无音频动态图片格式。",
             "videoBitrate": "视频比特率",
             "estimatedSize": "预计文件大小",
+            "estimatedMemory": "预计峰值内存",
             "frameRate": "帧率",
             "sourceFrameRate": "源文件帧率",
             "encodingPreset": "编码预设",
@@ -446,8 +430,8 @@
         }
       },
       "kakaomapCoordOpener": {
-        "title": "KakaoMap坐标打开器",
-        "description": "在KakaoMap中打开坐标",
+        "title": "KakaoMap 坐标打开器",
+        "description": "在KakaoMap中打开指定坐标。",
         "page": {
           "description": "输入经纬度并在KakaoMap中直接打开该坐标。",
           "latitudeLabel": "纬度",

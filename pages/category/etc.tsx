@@ -45,6 +45,50 @@ export default function EtcCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+
+        <Link href="/utils/kakaomap-coord-opener" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.kakaomapCoordOpener.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.kakaomapCoordOpener.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/utils/ntrip-scanner" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.ntripScanner.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.ntripScanner.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/utils/escaped-string-decoder" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.escapedStringDecoder.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.escapedStringDecoder.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/utils/csv-sorter" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.csvSorter.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.csvSorter.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </PageContainer>
   );

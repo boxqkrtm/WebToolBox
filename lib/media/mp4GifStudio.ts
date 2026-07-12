@@ -1,7 +1,8 @@
 export const FFMPEG_CORE_BASE_URL =
-  "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
+  "https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd";
 
-export const MAX_SOURCE_BYTES = 200 * 1024 * 1024;
+export const MAX_SOURCE_BYTES = 100 * 1024 * 1024;
+export const MAX_ESTIMATED_MEMORY_BYTES = 1024 * 1024 * 1024;
 
 export type StudioOutputFormat = "mp4" | "gif" | "webp";
 export type StudioMp4FrameRate = "source" | 24 | 30 | 60;
@@ -321,6 +322,44 @@ export function estimateMp4Bytes(
     (transform.snapshot.mp4.videoBitrateKbps + audioBitrate) * 1000;
 
   return Math.ceil((transform.effectiveDuration * totalBitsPerSecond) / 8);
+}
+
+/** Conservative browser peak-memory estimate for the multithread core. */
+export function estimateStudioPeakMemoryBytes(
+  sourceBytes: number,
+  metadata: StudioMediaMetadata,
+  settings: StudioSettings
+): number {
+  const transform = buildStudioTransform(metadata, settings);
+  const pixels = transform.geometry.width * transform.geometry.height;
+  const frameRate =
+    transform.snapshot.format === "gif"
+      ? transform.snapshot.gif.fps
+      : transform.snapshot.format === "webp"
+        ? transform.snapshot.webp.fps
+        : transform.snapshot.mp4.frameRate === "source"
+          ? metadata.fps
+          : transform.snapshot.mp4.frameRate;
+  const frameCount = Math.ceil(transform.effectiveDuration * frameRate);
+  const workingFrames = pixels * 4 * (transform.snapshot.format === "gif" ? 12 : 8);
+
+  let estimatedOutputBytes: number;
+  if (transform.snapshot.format === "mp4") {
+    estimatedOutputBytes = estimateMp4Bytes(metadata, settings);
+  } else {
+    const bytesPerPixel =
+      transform.snapshot.format === "gif"
+        ? 0.2
+        : transform.snapshot.webp.lossless
+          ? 0.5
+          : 0.15;
+    estimatedOutputBytes = pixels * frameCount * bytesPerPixel;
+  }
+
+  const coreAndRuntime = 256 * 1024 * 1024;
+  const inputCopies = Math.max(0, sourceBytes) * 2.2;
+  const outputCopies = estimatedOutputBytes * 2.5;
+  return Math.ceil(coreAndRuntime + inputCopies + workingFrames + outputCopies);
 }
 
 function buildMp4ExportArgs(

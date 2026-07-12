@@ -19,12 +19,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "A collection of useful tools and utilities.",
     section: "Home",
   },
-  "/category/database": {
-    slug: "category-database",
-    title: "Database Tools",
-    description: "Tools for JSON, CSV, and SQL database workflows.",
-    section: "Category",
-  },
   "/category/game": {
     slug: "category-game",
     title: "Game Tools",
@@ -37,23 +31,11 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Tools for image conversion, QR processing, and video editing.",
     section: "Category",
   },
-  "/category/geolocation": {
-    slug: "category-geolocation",
-    title: "Geolocation Tools",
-    description: "Tools for coordinates and GNSS/NTRIP related tasks.",
-    section: "Category",
-  },
   "/category/etc": {
     slug: "category-etc",
     title: "Miscellaneous Tools",
     description: "Other utility tools for text, chat, and numeric workflows.",
     section: "Category",
-  },
-  "/utils/xlsx-to-sql": {
-    slug: "xlsx-to-sql",
-    title: "XLSX to SQL",
-    description: "Convert Excel files to SQL statements quickly.",
-    section: "Database",
   },
   "/utils/mp4-gif-studio": {
     slug: "mp4-gif-studio",
@@ -83,7 +65,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "ntrip-scanner",
     title: "NTRIP Scanner",
     description: "Scan NTRIP casters for available mount points.",
-    section: "Geolocation",
+    section: "Etc",
   },
   "/utils/kakaotalk-chat-analyzer": {
     slug: "kakaotalk-chat-analyzer",
@@ -95,7 +77,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "kakaomap-coord-opener",
     title: "KakaoMap Coord Opener",
     description: "Open latitude and longitude directly in KakaoMap.",
-    section: "Geolocation",
+    section: "Etc",
   },
   "/utils/image-to-base64": {
     slug: "image-to-base64",
@@ -107,7 +89,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "escaped-string-decoder",
     title: "Escaped String Decoder",
     description: "Decode escaped strings into readable text.",
-    section: "Database",
+    section: "Etc",
   },
   "/utils/discord-color-message-generator": {
     slug: "discord-color-message-generator",
@@ -119,7 +101,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "csv-sorter",
     title: "CSV Sorter",
     description: "Sort CSV data with flexible column options.",
-    section: "Database",
+    section: "Etc",
   },
   "/utils/booth-algorithm-multiplier": {
     slug: "booth-algorithm-multiplier",

@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "database": {
-        "title": "データベース",
-        "description": "JSON、CSV、SQL データベース用ツール。"
-      },
       "game": {
         "title": "ゲーム",
         "description": "各種ゲームに役立つユーティリティ。"
@@ -32,10 +28,6 @@
       "llm": {
         "title": "LLM",
         "description": "大規模言語モデル用ツール。"
-      },
-      "geolocation": {
-        "title": "地理位置",
-        "description": "地理データを取り扱うためのツール。"
       },
       "etc": {
         "title": "その他",
@@ -52,16 +44,6 @@
           "convert": "変換",
           "outputLabel": "変換されたテキスト",
           "errorPrefix": "エラー"
-        }
-      },
-      "xlsxToSql": {
-        "title": "XLSX to SQL",
-        "description": "Excel ファイルを SQL 文に変換します。",
-        "page": {
-          "converterTitle": "XLSX to SQL コンバータ",
-          "uploadXlsxFile": "XLSX ファイルのアップロード",
-          "generatedSqlStatements": "生成された SQL 文",
-          "copyToClipboard": "クリップボードにコピー"
         }
       },
       "imageToBase64": {
@@ -206,8 +188,8 @@
         "clear": "クリア"
       },
       "ntripScanner": {
-        "title": "NTRIP スキャナ",
-        "description": "NTRIP 接続スキャン",
+        "title": "NTRIP マウントポイントスキャナー",
+        "description": "NTRIPキャスターで利用可能なマウントポイントを検索します。",
         "page": {
           "unknownError": "不明なエラー",
           "connectionFailed": "接続失敗",
@@ -244,7 +226,8 @@
             "invalidFile": "対応している動画またはGIFファイルを選択してください。",
             "fileTooLarge": "ファイルが大きすぎます。{size}未満のファイルを選択してください。",
             "analysisFailed": "ファイルを解析できませんでした。別の動画またはGIFをお試しください。",
-            "exportFailed": "ファイルを書き出せませんでした。別の書き出し設定をお試しください。"
+            "exportFailed": "ファイルを書き出せませんでした。別の書き出し設定をお試しください。",
+            "memoryRisk": "推定ピークメモリが{estimate}で、安全上限の{limit}を超えています。範囲を短くするか、解像度、フレームレート、出力倍率を下げてください。"
           },
           "source": {
             "title": "元のファイル",
@@ -298,6 +281,7 @@
             "webpDescription": "音声なしで容量を抑えられるアニメーション画像形式です。",
             "videoBitrate": "動画ビットレート",
             "estimatedSize": "推定ファイルサイズ",
+            "estimatedMemory": "推定ピークメモリ",
             "frameRate": "フレームレート",
             "sourceFrameRate": "元のフレームレート",
             "encodingPreset": "エンコードプリセット",
@@ -446,8 +430,8 @@
         }
       },
       "kakaomapCoordOpener": {
-        "title": "カカオマップ座標オープナー",
-        "description": "カカオマップで座標を開く",
+        "title": "KakaoMap 座標オープナー",
+        "description": "指定した座標をKakaoMapで開きます。",
         "page": {
           "description": "緯度・経度を入力してカカオマップで座標を直接開きます。",
           "latitudeLabel": "緯度",

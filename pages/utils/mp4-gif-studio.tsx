@@ -56,11 +56,13 @@ import {
 import { useI18n } from '@/lib/i18n/i18nContext'
 import {
   FFMPEG_CORE_BASE_URL,
+  MAX_ESTIMATED_MEMORY_BYTES,
   MAX_SOURCE_BYTES,
   buildStudioPreviewCommand,
   buildStudioExportPlan,
   buildStudioProbeCommand,
   estimateMp4Bytes,
+  estimateStudioPeakMemoryBytes,
   formatStudioBytes,
   getStudioOutputGeometry,
   parseStudioProbe,
@@ -176,6 +178,16 @@ function getOutputMimeType(format: StudioOutputFormat) {
   if (format === 'mp4') return 'video/mp4'
   if (format === 'gif') return 'image/gif'
   return 'image/webp'
+}
+
+function downloadStudioResult(url: string, fileName: string) {
+  const link = document.createElement('a')
+  link.href = url
+  link.download = fileName
+  link.hidden = true
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
 }
 
 export default function Mp4GifStudioPage() {
@@ -311,6 +323,13 @@ export default function Mp4GifStudioPage() {
     return estimateMp4Bytes(metadata, settings)
   }, [format, metadata, settings])
 
+  const estimatedMemoryBytes = useMemo(() => {
+    if (!metadata || !sourceFile) return 0
+    return estimateStudioPeakMemoryBytes(sourceFile.size, metadata, settings)
+  }, [metadata, settings, sourceFile])
+
+  const exceedsMemoryLimit = estimatedMemoryBytes > MAX_ESTIMATED_MEMORY_BYTES
+
   const phaseText = phase === 'idle' ? '' : t(PHASE_KEYS[phase])
 
   const ensureFfmpeg = useCallback(async () => {
@@ -329,6 +348,10 @@ export default function Mp4GifStudioPage() {
           wasmURL: await toBlobURL(
             `${FFMPEG_CORE_BASE_URL}/ffmpeg-core.wasm`,
             'application/wasm'
+          ),
+          workerURL: await toBlobURL(
+            `${FFMPEG_CORE_BASE_URL}/ffmpeg-core.worker.js`,
+            'text/javascript'
           ),
         })
         ffmpegRef.current = ffmpeg
@@ -652,6 +675,15 @@ export default function Mp4GifStudioPage() {
   const handleExport = useCallback(async () => {
     if (!sourceFile || !metadata || !inputNameRef.current || isExporting) return
 
+    if (exceedsMemoryLimit) {
+      setErrorMessage(
+        t('common.tools.mp4GifStudio.page.errors.memoryRisk')
+          .replace('{estimate}', formatStudioBytes(estimatedMemoryBytes))
+          .replace('{limit}', formatStudioBytes(MAX_ESTIMATED_MEMORY_BYTES))
+      )
+      return
+    }
+
     const outputName = `studio-output-${++jobIdRef.current}.${format}`
     const snapshot = settings
     let ffmpeg: FFmpeg | null = null
@@ -694,10 +726,12 @@ export default function Mp4GifStudioPage() {
         type: getOutputMimeType(format),
       })
       const fileName = `${getBaseName(sourceFile.name)}-edited.${format}`
-      setResultUrl(URL.createObjectURL(outputBlob))
+      const outputUrl = URL.createObjectURL(outputBlob)
+      setResultUrl(outputUrl)
       setResult({ plan, fileName, size: outputBlob.size })
       setProgress(100)
       setPhase('complete')
+      downloadStudioResult(outputUrl, fileName)
     } catch (error) {
       console.error(error)
       setProgress(0)
@@ -711,6 +745,8 @@ export default function Mp4GifStudioPage() {
     }
   }, [
     ensureFfmpeg,
+    estimatedMemoryBytes,
+    exceedsMemoryLimit,
     format,
     isExporting,
     metadata,
@@ -1431,7 +1467,7 @@ export default function Mp4GifStudioPage() {
                     type="button"
                     className="w-full"
                     size="lg"
-                    disabled={isExporting || !outputGeometry}
+                    disabled={isExporting || !outputGeometry || exceedsMemoryLimit}
                     onClick={() => void handleExport()}
                   >
                     {isExporting && (
@@ -1439,6 +1475,19 @@ export default function Mp4GifStudioPage() {
                     )}
                     {t('common.tools.mp4GifStudio.page.export.exportButton')} {format.toUpperCase()}
                   </Button>
+                  {estimatedMemoryBytes > 0 && (
+                    <p
+                      className={
+                        exceedsMemoryLimit
+                          ? 'text-sm text-destructive'
+                          : 'text-sm text-muted-foreground'
+                      }
+                    >
+                      {t('common.tools.mp4GifStudio.page.export.estimatedMemory')}:{' '}
+                      {formatStudioBytes(estimatedMemoryBytes)} /{' '}
+                      {formatStudioBytes(MAX_ESTIMATED_MEMORY_BYTES)}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </aside>

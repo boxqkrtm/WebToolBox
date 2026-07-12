@@ -27,7 +27,7 @@ test.describe('Language Detection Tests', () => {
     expect(selectedLanguage).toBe('"ko"');
     await expect(page.locator('h1')).not.toHaveText('Web Utils');
 
-    await page.goto('/category/database');
+    await page.goto('/category/etc');
     await page.waitForLoadState('networkidle');
 
     await page.goto('/');

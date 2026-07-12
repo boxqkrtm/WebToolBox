@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "database": {
-        "title": "Database",
-        "description": "Tools for JSON, CSV, and SQL database."
-      },
       "game": {
         "title": "Game",
         "description": "Utilities for various games."
@@ -32,10 +28,6 @@
       "llm": {
         "title": "LLM",
         "description": "Tools for Large Language Models."
-      },
-      "geolocation": {
-        "title": "Geolocation",
-        "description": "Tools for working with geographic data."
       },
       "etc": {
         "title": "Etc",
@@ -52,16 +44,6 @@
           "convert": "Convert",
           "outputLabel": "Converted Text",
           "errorPrefix": "Error"
-        }
-      },
-      "xlsxToSql": {
-        "title": "XLSX to SQL",
-        "description": "Convert Excel files to SQL statements",
-        "page": {
-          "converterTitle": "XLSX to SQL Converter",
-          "uploadXlsxFile": "Upload XLSX File",
-          "generatedSqlStatements": "Generated SQL Statements",
-          "copyToClipboard": "Copy to Clipboard"
         }
       },
       "csvSorter": {
@@ -175,8 +157,8 @@
         }
       },
       "kakaomapCoordOpener": {
-        "title": "KakaoMap Coordinate Opener",
-        "description": "Open coordinates on KakaoMap",
+        "title": "KakaoMap Coord Opener",
+        "description": "Open coordinates in KakaoMap.",
         "page": {
           "latitudeLabel": "Latitude",
           "longitudeLabel": "Longitude",
@@ -341,8 +323,8 @@
         "clear": "Clear"
       },
       "ntripScanner": {
-        "title": "NTRIP Scanner",
-        "description": "Scan NTRIP connections",
+        "title": "NTRIP Mount Point Scanner",
+        "description": "Scan for NTRIP mount points.",
         "page": {
           "unknownError": "Unknown error",
           "connectionFailed": "Connection failed",
@@ -379,7 +361,8 @@
             "invalidFile": "Choose a supported video or GIF file.",
             "fileTooLarge": "This file is too large. Choose a file smaller than {size}.",
             "analysisFailed": "Could not analyze this file. Try another video or GIF.",
-            "exportFailed": "Could not export the file. Try different export settings."
+            "exportFailed": "Could not export the file. Try different export settings.",
+            "memoryRisk": "Estimated peak memory is {estimate}, above the safe limit of {limit}. Shorten the clip or reduce the resolution, frame rate, or output scale."
           },
           "source": {
             "title": "Source",
@@ -433,6 +416,7 @@
             "webpDescription": "Compact animated image without audio.",
             "videoBitrate": "Video bitrate",
             "estimatedSize": "Estimated size",
+            "estimatedMemory": "Estimated peak memory",
             "frameRate": "Frame rate",
             "sourceFrameRate": "Source frame rate",
             "encodingPreset": "Encoding preset",
