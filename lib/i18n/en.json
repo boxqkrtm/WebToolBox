@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "game": {
-        "title": "Game",
-        "description": "Utilities for various games."
-      },
       "imageVideo": {
         "title": "Image & Video",
         "description": "Tools for video and image manipulation."

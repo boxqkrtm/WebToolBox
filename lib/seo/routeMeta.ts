@@ -19,12 +19,6 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "A collection of useful tools and utilities.",
     section: "Home",
   },
-  "/category/game": {
-    slug: "category-game",
-    title: "Game Tools",
-    description: "Utilities for replay editing and puzzle game workflows.",
-    section: "Category",
-  },
   "/category/image-video": {
     slug: "category-image-video",
     title: "Image & Video Tools",
@@ -47,7 +41,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "tetrio-replay-editor",
     title: "Tetrio Replay Editor",
     description: "Edit and export Tetrio replay files.",
-    section: "Game",
+    section: "Etc",
   },
   "/utils/qr-code-generator": {
     slug: "qr-code-generator",
@@ -59,7 +53,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "optical-puyo-reader",
     title: "Optical Puyo Reader",
     description: "Read Puyo game boards from screenshots.",
-    section: "Game",
+    section: "Etc",
   },
   "/utils/ntrip-scanner": {
     slug: "ntrip-scanner",

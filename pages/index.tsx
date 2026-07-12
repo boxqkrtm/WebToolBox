@@ -3,7 +3,6 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { PageContainer } from '@/components/layout/PageContainer';
 import {
   HiCode,
-  HiPuzzle,
   HiVideoCamera,
   HiCollection,
 } from 'react-icons/hi';
@@ -19,18 +18,6 @@ export default function Home() {
         <p className="text-xl text-muted-foreground">{t('common.subtitle')}</p>
       </div>
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-
-        <Link href="/category/game" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiPuzzle className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.game.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.game.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
 
         <Link href="/category/image-video" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">

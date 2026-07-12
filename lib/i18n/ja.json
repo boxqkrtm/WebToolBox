@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "game": {
-        "title": "ゲーム",
-        "description": "各種ゲームに役立つユーティリティ。"
-      },
       "imageVideo": {
         "title": "画像 & ビデオ",
         "description": "ビデオおよび画像操作ツール。"

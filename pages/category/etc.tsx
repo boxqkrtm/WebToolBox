@@ -89,6 +89,28 @@ export default function EtcCategoryPage() {
             </CardContent>
           </Card>
         </Link>
+
+        <Link href="/utils/tetrio-replay-editor" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.tetrioReplayEditor.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.tetrioReplayEditor.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/utils/optical-puyo-reader" passHref>
+          <Card className="h-full hover:shadow-lg transition-colors">
+            <CardHeader>
+              <CardTitle>{t('common.tools.opticalPuyoReader.title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">{t('common.tools.opticalPuyoReader.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
     </PageContainer>
   );

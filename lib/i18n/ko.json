@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "game": {
-        "title": "게임",
-        "description": "여러 게임에 유용한 유틸리티."
-      },
       "imageVideo": {
         "title": "이미지 & 비디오",
         "description": "비디오 및 이미지 조작 도구."

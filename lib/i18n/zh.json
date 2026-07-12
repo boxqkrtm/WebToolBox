@@ -17,10 +17,6 @@
       }
     },
     "categories": {
-      "game": {
-        "title": "游戏",
-        "description": "适用于各种游戏的实用工具。"
-      },
       "imageVideo": {
         "title": "图像 & 视频",
         "description": "视频和图像处理工具。"
