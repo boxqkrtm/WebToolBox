@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { Button } from '@/components/ui/button';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { HiSun, HiMoon, HiArrowLeft } from 'react-icons/hi';
+import { FaGithub } from 'react-icons/fa';
 import {
   Select,
   SelectContent,
@@ -58,6 +59,18 @@ export const Header: React.FC = () => {
               ))}
             </SelectContent>
           </Select>
+
+          <Button asChild variant="ghost" size="icon">
+            <a
+              href="https://github.com/boxqkrtm/WebToolBox"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub: boxqkrtm/WebToolBox"
+              title="GitHub: boxqkrtm/WebToolBox"
+            >
+              <FaGithub className="h-5 w-5" aria-hidden="true" />
+            </a>
+          </Button>
 
           <button
             onClick={toggleTheme}
