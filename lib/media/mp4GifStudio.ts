@@ -1,5 +1,5 @@
 export const FFMPEG_CORE_BASE_URL =
-  "https://cdn.jsdelivr.net/npm/@ffmpeg/core-mt@0.12.10/dist/umd";
+  "https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd";
 
 export const MAX_SOURCE_BYTES = 100 * 1024 * 1024;
 export const MAX_ESTIMATED_MEMORY_BYTES = 1024 * 1024 * 1024;
@@ -324,7 +324,7 @@ export function estimateMp4Bytes(
   return Math.ceil((transform.effectiveDuration * totalBitsPerSecond) / 8);
 }
 
-/** Conservative browser peak-memory estimate for the multithread core. */
+/** Conservative browser peak-memory estimate for the FFmpeg WebAssembly core. */
 export function estimateStudioPeakMemoryBytes(
   sourceBytes: number,
   metadata: StudioMediaMetadata,

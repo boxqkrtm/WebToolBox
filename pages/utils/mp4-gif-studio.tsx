@@ -349,10 +349,6 @@ export default function Mp4GifStudioPage() {
             `${FFMPEG_CORE_BASE_URL}/ffmpeg-core.wasm`,
             'application/wasm'
           ),
-          workerURL: await toBlobURL(
-            `${FFMPEG_CORE_BASE_URL}/ffmpeg-core.worker.js`,
-            'text/javascript'
-          ),
         })
         ffmpegRef.current = ffmpeg
         return ffmpeg
