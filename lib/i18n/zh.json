@@ -307,6 +307,13 @@
             "outputSize": "输出文件大小",
             "download": "下载",
             "previewAlt": "已导出媒体预览"
+          },
+          "command": {
+            "title": "FFmpeg 命令",
+            "description": "如需更快处理，可使用原生FFmpeg运行相同的编辑设置。",
+            "copy": "复制FFmpeg命令",
+            "copied": "命令已复制。",
+            "hint": "将源文件放在当前文件夹中，然后把此命令粘贴到终端。"
           }
         }
       },

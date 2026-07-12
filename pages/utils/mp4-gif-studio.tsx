@@ -12,6 +12,8 @@ import { FFmpeg } from '@ffmpeg/ffmpeg'
 import type { LogEventCallback } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import {
+  Check,
+  Copy,
   Crop,
   Download,
   FileVideo2,
@@ -190,6 +192,11 @@ function downloadStudioResult(url: string, fileName: string) {
   link.remove()
 }
 
+function quoteFfmpegArgument(argument: string) {
+  if (/^[a-zA-Z0-9_./:=,+-]+$/.test(argument)) return argument
+  return `"${argument.replace(/"/g, '\\"')}"`
+}
+
 export default function Mp4GifStudioPage() {
   const { t } = useI18n()
   const ffmpegRef = useRef<FFmpeg | null>(null)
@@ -234,6 +241,7 @@ export default function Mp4GifStudioPage() {
 
   const [result, setResult] = useState<ResultState | null>(null)
   const [resultUrl, setResultUrl] = useState('')
+  const [commandCopied, setCommandCopied] = useState(false)
 
   const isBusy =
     phase === 'loadingEngine' ||
@@ -329,6 +337,23 @@ export default function Mp4GifStudioPage() {
   }, [metadata, settings, sourceFile])
 
   const exceedsMemoryLimit = estimatedMemoryBytes > MAX_ESTIMATED_MEMORY_BYTES
+
+  const nativeFfmpegCommand = useMemo(() => {
+    if (!metadata || !sourceFile) return ''
+
+    try {
+      const outputName = `${getBaseName(sourceFile.name)}-edited.${format}`
+      const plan = buildStudioExportPlan(
+        metadata,
+        settings,
+        sourceFile.name,
+        outputName
+      )
+      return ['ffmpeg', ...plan.args.map(quoteFfmpegArgument)].join(' ')
+    } catch {
+      return ''
+    }
+  }, [format, metadata, settings, sourceFile])
 
   const phaseText = phase === 'idle' ? '' : t(PHASE_KEYS[phase])
 
@@ -667,6 +692,18 @@ export default function Mp4GifStudioPage() {
       setFormat(value)
     }
   }, [])
+
+  const handleCopyFfmpegCommand = useCallback(async () => {
+    if (!nativeFfmpegCommand) return
+
+    try {
+      await navigator.clipboard.writeText(nativeFfmpegCommand)
+      setCommandCopied(true)
+      window.setTimeout(() => setCommandCopied(false), 2000)
+    } catch {
+      setCommandCopied(false)
+    }
+  }, [nativeFfmpegCommand])
 
   const handleExport = useCallback(async () => {
     if (!sourceFile || !metadata || !inputNameRef.current || isExporting) return
@@ -1548,6 +1585,46 @@ export default function Mp4GifStudioPage() {
                   </a>
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {nativeFfmpegCommand && (
+          <Card role="region" aria-labelledby="studio-command-heading">
+            <CardHeader>
+              <CardTitle id="studio-command-heading">
+                {t('common.tools.mp4GifStudio.page.command.title')}
+              </CardTitle>
+              <CardDescription>
+                {t('common.tools.mp4GifStudio.page.command.description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="relative rounded-lg border bg-zinc-950 p-4 pr-14 text-zinc-100">
+                <pre className="max-h-72 overflow-auto whitespace-pre-wrap break-all font-mono text-xs leading-6 sm:text-sm">
+                  <code>{nativeFfmpegCommand}</code>
+                </pre>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="icon"
+                  className="absolute right-3 top-3"
+                  aria-label={t('common.tools.mp4GifStudio.page.command.copy')}
+                  title={t('common.tools.mp4GifStudio.page.command.copy')}
+                  onClick={() => void handleCopyFfmpegCommand()}
+                >
+                  {commandCopied ? (
+                    <Check className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Copy className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </Button>
+              </div>
+              <p className="mt-3 text-sm text-muted-foreground">
+                {commandCopied
+                  ? t('common.tools.mp4GifStudio.page.command.copied')
+                  : t('common.tools.mp4GifStudio.page.command.hint')}
+              </p>
             </CardContent>
           </Card>
         )}

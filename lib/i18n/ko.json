@@ -307,6 +307,13 @@
             "outputSize": "출력 파일 크기",
             "download": "다운로드",
             "previewAlt": "내보낸 미디어 미리보기"
+          },
+          "command": {
+            "title": "FFmpeg 명령어",
+            "description": "더 빠른 처리가 필요하면 같은 편집 설정을 네이티브 FFmpeg에서 실행하세요.",
+            "copy": "FFmpeg 명령어 복사",
+            "copied": "명령어를 복사했습니다.",
+            "hint": "원본 파일을 현재 폴더에 놓고 이 명령어를 터미널에 붙여넣으세요."
           }
         }
       },

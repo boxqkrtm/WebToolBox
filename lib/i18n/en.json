@@ -442,6 +442,13 @@
             "outputSize": "Output size",
             "download": "Download",
             "previewAlt": "Exported media preview"
+          },
+          "command": {
+            "title": "FFmpeg command",
+            "description": "Run the same edit with native FFmpeg for faster processing.",
+            "copy": "Copy FFmpeg command",
+            "copied": "Command copied.",
+            "hint": "Place the source file in the current folder, then paste this command into your terminal."
           }
         }
       },
