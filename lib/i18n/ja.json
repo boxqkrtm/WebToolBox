@@ -16,6 +16,17 @@
         "zh": "中文"
       }
     },
+    "footer": {
+      "openSourceLicenses": "オープンソースライセンス"
+    },
+    "licenses": {
+      "title": "オープンソースライセンス",
+      "description": "WebToolBoxは以下のオープンソースソフトウェアを使用しています。",
+      "runtimeNote": "FFmpegとGifsicleは実行時にjsDelivr CDNから取得し、ブラウザ内でWebAssemblyとして動作します。ファイルが端末の外へ送信されることはありません。",
+      "licenseLabel": "ライセンス",
+      "websiteLabel": "ウェブサイト",
+      "sourceLabel": "ソースコード"
+    },
     "categories": {
       "string": {
         "title": "文字列",
@@ -220,6 +231,7 @@
             "preparingPreview": "プレビューを準備中...",
             "ready": "編集の準備ができました",
             "exporting": "書き出し中...",
+            "optimizingGif": "GIFを最適化中...",
             "exportComplete": "書き出し完了"
           },
           "errors": {
@@ -280,6 +292,11 @@
             "gifDescription": "音声なしで幅広く対応しているアニメーション形式です。",
             "webpDescription": "音声なしで容量を抑えられるアニメーション画像形式です。",
             "videoBitrate": "動画ビットレート",
+            "rateControl": "レート制御",
+            "rateControlBitrate": "ビットレート",
+            "rateControlQuality": "品質（CRF）",
+            "qualityCrf": "品質（CRF）",
+            "qualityCrfHint": "値が低いほど高画質になり、ファイルサイズが増えます。推奨: 18～28。",
             "estimatedSize": "推定ファイルサイズ",
             "estimatedMemory": "推定ピークメモリ",
             "frameRate": "フレームレート",
@@ -288,6 +305,9 @@
             "presetUltrafast": "超高速",
             "presetVeryfast": "非常に高速",
             "presetMedium": "標準",
+            "presetSlow": "低速",
+            "presetVeryslow": "非常に低速",
+            "ffmpegCommandRecommended": "FFmpegコマンド推奨",
             "includeAudio": "音声を含める",
             "audioBitrate": "音声ビットレート",
             "colorCount": "色数",
@@ -296,6 +316,14 @@
             "ditherBayer": "Bayer",
             "ditherFloydSteinberg": "Floyd–Steinberg",
             "ditherSierra2_4a": "Sierra2-4A",
+            "gifOptimization": "GIFサイズ最適化",
+            "dropEverySecondFrame": "2フレームごとに1フレーム削除",
+            "removeDuplicateFrames": "重複フレームを削除",
+            "optimizeChangedRegions": "変更領域のみエンコード",
+            "gifsicleLossy": "Gifsicle圧縮（非可逆）",
+            "gifsicleLossyOff": "オフ",
+            "gifsicleLossyHint": "0より大きくすると、書き出し後にGifsicleの後処理を実行します。値が大きいほど容量は減りますが画質が低下します。推奨: 30～80。",
+            "gifOptimizationHint": "容量を削減できますが、動きが滑らかでなくなったり、処理時間が長くなる場合があります。",
             "loopForever": "無限ループ",
             "webpQuality": "WebP品質",
             "compressionLevel": "圧縮レベル",

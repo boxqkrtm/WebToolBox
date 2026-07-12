@@ -57,6 +57,11 @@ import {
 } from '@/components/ui/select'
 import { useI18n } from '@/lib/i18n/i18nContext'
 import {
+  MAX_GIFSICLE_LOSSY,
+  buildGifsicleCommand,
+  optimizeGifWithGifsicle,
+} from '@/lib/media/gifsicle'
+import {
   FFMPEG_CORE_BASE_URL,
   MAX_ESTIMATED_MEMORY_BYTES,
   MAX_SOURCE_BYTES,
@@ -86,6 +91,7 @@ type StudioPhase =
   | 'preparingPreview'
   | 'ready'
   | 'exporting'
+  | 'optimizing'
   | 'complete'
 
 type PreviewKind = 'video' | 'image'
@@ -102,6 +108,7 @@ const PHASE_KEYS: Record<Exclude<StudioPhase, 'idle'>, string> = {
   preparingPreview: 'common.tools.mp4GifStudio.page.status.preparingPreview',
   ready: 'common.tools.mp4GifStudio.page.status.ready',
   exporting: 'common.tools.mp4GifStudio.page.status.exporting',
+  optimizing: 'common.tools.mp4GifStudio.page.status.optimizingGif',
   complete: 'common.tools.mp4GifStudio.page.status.exportComplete',
 }
 
@@ -223,8 +230,10 @@ export default function Mp4GifStudioPage() {
   const [format, setFormat] = useState<StudioOutputFormat>('mp4')
 
   const [videoBitrateKbps, setVideoBitrateKbps] = useState(2500)
+  const [mp4RateControl, setMp4RateControl] = useState<'bitrate' | 'quality'>('bitrate')
+  const [mp4Crf, setMp4Crf] = useState(23)
   const [mp4FrameRate, setMp4FrameRate] = useState<'source' | 24 | 30 | 60>('source')
-  const [mp4Preset, setMp4Preset] = useState<'ultrafast' | 'veryfast' | 'medium'>('veryfast')
+  const [mp4Preset, setMp4Preset] = useState<'ultrafast' | 'veryfast' | 'medium' | 'slow' | 'veryslow'>('veryfast')
   const [includeAudio, setIncludeAudio] = useState(true)
   const [audioBitrateKbps, setAudioBitrateKbps] = useState(128)
 
@@ -232,6 +241,10 @@ export default function Mp4GifStudioPage() {
   const [gifColors, setGifColors] = useState(256)
   const [gifDither, setGifDither] = useState<'none' | 'bayer' | 'floyd_steinberg' | 'sierra2_4a'>('bayer')
   const [gifLoopForever, setGifLoopForever] = useState(true)
+  const [gifDropEverySecondFrame, setGifDropEverySecondFrame] = useState(false)
+  const [gifRemoveDuplicateFrames, setGifRemoveDuplicateFrames] = useState(false)
+  const [gifOptimizeChangedRegions, setGifOptimizeChangedRegions] = useState(false)
+  const [gifGifsicleLossy, setGifGifsicleLossy] = useState(0)
 
   const [webpFps, setWebpFps] = useState(20)
   const [webpQuality, setWebpQuality] = useState(75)
@@ -247,8 +260,9 @@ export default function Mp4GifStudioPage() {
     phase === 'loadingEngine' ||
     phase === 'analyzing' ||
     phase === 'preparingPreview' ||
-    phase === 'exporting'
-  const isExporting = phase === 'exporting'
+    phase === 'exporting' ||
+    phase === 'optimizing'
+  const isExporting = phase === 'exporting' || phase === 'optimizing'
 
   const settings = useMemo<StudioSettings>(
     () => ({
@@ -258,7 +272,9 @@ export default function Mp4GifStudioPage() {
       speed,
       scale,
       mp4: {
+        rateControl: mp4RateControl,
         videoBitrateKbps,
+        crf: mp4Crf,
         frameRate: mp4FrameRate,
         preset: mp4Preset,
         includeAudio,
@@ -269,6 +285,10 @@ export default function Mp4GifStudioPage() {
         colors: gifColors,
         dither: gifDither,
         loopForever: gifLoopForever,
+        dropEverySecondFrame: gifDropEverySecondFrame,
+        removeDuplicateFrames: gifRemoveDuplicateFrames,
+        optimizeChangedRegions: gifOptimizeChangedRegions,
+        gifsicleLossy: gifGifsicleLossy,
       },
       webp: {
         fps: webpFps,
@@ -286,9 +306,15 @@ export default function Mp4GifStudioPage() {
       gifDither,
       gifFps,
       gifLoopForever,
+      gifDropEverySecondFrame,
+      gifRemoveDuplicateFrames,
+      gifOptimizeChangedRegions,
+      gifGifsicleLossy,
       includeAudio,
       mp4FrameRate,
       mp4Preset,
+      mp4RateControl,
+      mp4Crf,
       scale,
       speed,
       trimRange,
@@ -327,9 +353,9 @@ export default function Mp4GifStudioPage() {
   }, [metadata, settings])
 
   const estimatedMp4Size = useMemo(() => {
-    if (!metadata || format !== 'mp4') return 0
+    if (!metadata || format !== 'mp4' || mp4RateControl !== 'bitrate') return 0
     return estimateMp4Bytes(metadata, settings)
-  }, [format, metadata, settings])
+  }, [format, metadata, mp4RateControl, settings])
 
   const estimatedMemoryBytes = useMemo(() => {
     if (!metadata || !sourceFile) return 0
@@ -349,11 +375,20 @@ export default function Mp4GifStudioPage() {
         sourceFile.name,
         outputName
       )
-      return ['ffmpeg', ...plan.args.map(quoteFfmpegArgument)].join(' ')
+      const ffmpegCommand = ['ffmpeg', ...plan.args.map(quoteFfmpegArgument)].join(' ')
+      if (format === 'gif' && gifGifsicleLossy > 0) {
+        const gifsicleCommand = `gifsicle ${buildGifsicleCommand(
+          gifGifsicleLossy,
+          quoteFfmpegArgument(outputName),
+          quoteFfmpegArgument(outputName)
+        )}`
+        return `${ffmpegCommand} && ${gifsicleCommand}`
+      }
+      return ffmpegCommand
     } catch {
       return ''
     }
-  }, [format, metadata, settings, sourceFile])
+  }, [format, gifGifsicleLossy, metadata, settings, sourceFile])
 
   const phaseText = phase === 'idle' ? '' : t(PHASE_KEYS[phase])
 
@@ -433,6 +468,8 @@ export default function Mp4GifStudioPage() {
     setScale(100)
     setFormat('mp4')
     setVideoBitrateKbps(2500)
+    setMp4RateControl('bitrate')
+    setMp4Crf(23)
     setMp4FrameRate('source')
     setMp4Preset('veryfast')
     setIncludeAudio(true)
@@ -441,6 +478,10 @@ export default function Mp4GifStudioPage() {
     setGifColors(256)
     setGifDither('bayer')
     setGifLoopForever(true)
+    setGifDropEverySecondFrame(false)
+    setGifRemoveDuplicateFrames(false)
+    setGifOptimizeChangedRegions(false)
+    setGifGifsicleLossy(0)
     setWebpFps(20)
     setWebpQuality(75)
     setWebpCompressionLevel(4)
@@ -768,9 +809,26 @@ export default function Mp4GifStudioPage() {
         throw new Error('FFmpeg returned an empty output')
       }
 
-      const outputBlob = new Blob([outputData], {
+      let outputBlob: Blob = new Blob([outputData], {
         type: getOutputMimeType(format),
       })
+
+      if (format === 'gif' && snapshot.gif.gifsicleLossy > 0) {
+        setPhase('optimizing')
+        try {
+          const optimized = await optimizeGifWithGifsicle(
+            outputBlob,
+            snapshot.gif.gifsicleLossy
+          )
+          if (optimized.size > 0 && optimized.size < outputBlob.size) {
+            outputBlob = new Blob([optimized], { type: getOutputMimeType(format) })
+          }
+        } catch (optimizeError) {
+          // Keep the un-optimized FFmpeg output when gifsicle fails to load or run.
+          console.error(optimizeError)
+        }
+      }
+
       const fileName = `${getBaseName(sourceFile.name)}-edited.${format}`
       const outputUrl = URL.createObjectURL(outputBlob)
       setResultUrl(outputUrl)
@@ -1233,25 +1291,84 @@ export default function Mp4GifStudioPage() {
 
                   {format === 'mp4' && (
                     <div className="space-y-5 border-t pt-5">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between gap-3">
-                          <Label htmlFor="studio-video-bitrate">
-                            {t('common.tools.mp4GifStudio.page.export.videoBitrate')}
-                          </Label>
-                          <span className="font-mono text-sm tabular-nums">{videoBitrateKbps} kbps</span>
-                        </div>
-                        <input
-                          id="studio-video-bitrate"
-                          type="range"
-                          min={250}
-                          max={12000}
-                          step={250}
-                          value={videoBitrateKbps}
+                      <fieldset className="space-y-3">
+                        <legend className="text-sm font-medium">
+                          {t('common.tools.mp4GifStudio.page.export.rateControl')}
+                        </legend>
+                        <RadioGroup
+                          value={mp4RateControl}
+                          onValueChange={(value) =>
+                            setMp4RateControl(value as 'bitrate' | 'quality')
+                          }
                           disabled={isExporting}
-                          onChange={(event) => setVideoBitrateKbps(event.currentTarget.valueAsNumber)}
-                          className="h-2 w-full cursor-pointer accent-primary disabled:cursor-not-allowed"
-                        />
-                      </div>
+                          className="grid grid-cols-2 gap-2"
+                        >
+                          {(['bitrate', 'quality'] as const).map((option) => (
+                            <Label
+                              key={option}
+                              htmlFor={`studio-rate-control-${option}`}
+                              className={`cursor-pointer rounded-md border px-3 py-2 text-center text-sm transition-colors ${
+                                mp4RateControl === option
+                                  ? 'border-primary bg-primary/10 text-primary'
+                                  : 'hover:bg-muted'
+                              }`}
+                            >
+                              <RadioGroupItem
+                                id={`studio-rate-control-${option}`}
+                                value={option}
+                                className="sr-only"
+                              />
+                              {t(`common.tools.mp4GifStudio.page.export.rateControl${option === 'bitrate' ? 'Bitrate' : 'Quality'}`)}
+                            </Label>
+                          ))}
+                        </RadioGroup>
+                      </fieldset>
+
+                      {mp4RateControl === 'bitrate' ? (
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between gap-3">
+                            <Label htmlFor="studio-video-bitrate">
+                              {t('common.tools.mp4GifStudio.page.export.videoBitrate')}
+                            </Label>
+                            <span className="font-mono text-sm tabular-nums">{videoBitrateKbps} kbps</span>
+                          </div>
+                          <input
+                            id="studio-video-bitrate"
+                            type="range"
+                            min={250}
+                            max={12000}
+                            step={250}
+                            value={videoBitrateKbps}
+                            disabled={isExporting}
+                            onChange={(event) => setVideoBitrateKbps(event.currentTarget.valueAsNumber)}
+                            className="h-2 w-full cursor-pointer accent-primary disabled:cursor-not-allowed"
+                          />
+                        </div>
+                      ) : (
+                        <div className="space-y-1.5">
+                          <Label htmlFor="studio-mp4-crf">
+                            {t('common.tools.mp4GifStudio.page.export.qualityCrf')}
+                          </Label>
+                          <Input
+                            id="studio-mp4-crf"
+                            type="number"
+                            min={0}
+                            max={51}
+                            step={1}
+                            value={mp4Crf}
+                            disabled={isExporting}
+                            onChange={(event) => {
+                              const value = event.currentTarget.valueAsNumber
+                              if (Number.isFinite(value)) {
+                                setMp4Crf(clamp(Math.round(value), 0, 51))
+                              }
+                            }}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            {t('common.tools.mp4GifStudio.page.export.qualityCrfHint')}
+                          </p>
+                        </div>
+                      )}
 
                       <div className="space-y-1.5">
                         <Label htmlFor="studio-mp4-fps">
@@ -1287,7 +1404,9 @@ export default function Mp4GifStudioPage() {
                         <Select
                           value={mp4Preset}
                           onValueChange={(value) =>
-                            setMp4Preset(value as 'ultrafast' | 'veryfast' | 'medium')
+                            setMp4Preset(
+                              value as 'ultrafast' | 'veryfast' | 'medium' | 'slow' | 'veryslow'
+                            )
                           }
                           disabled={isExporting}
                         >
@@ -1303,6 +1422,14 @@ export default function Mp4GifStudioPage() {
                             </SelectItem>
                             <SelectItem value="medium">
                               {t('common.tools.mp4GifStudio.page.export.presetMedium')}
+                            </SelectItem>
+                            <SelectItem value="slow">
+                              {t('common.tools.mp4GifStudio.page.export.presetSlow')}{' '}
+                              ({t('common.tools.mp4GifStudio.page.export.ffmpegCommandRecommended')})
+                            </SelectItem>
+                            <SelectItem value="veryslow">
+                              {t('common.tools.mp4GifStudio.page.export.presetVeryslow')}{' '}
+                              ({t('common.tools.mp4GifStudio.page.export.ffmpegCommandRecommended')})
                             </SelectItem>
                           </SelectContent>
                         </Select>
@@ -1427,6 +1554,82 @@ export default function Mp4GifStudioPage() {
                           </SelectContent>
                         </Select>
                       </div>
+
+                      <fieldset className="space-y-3 border-t pt-5">
+                        <legend className="text-sm font-medium">
+                          {t('common.tools.mp4GifStudio.page.export.gifOptimization')}
+                        </legend>
+                        <div className="flex items-start gap-2">
+                          <Checkbox
+                            id="studio-gif-drop-second"
+                            checked={gifDropEverySecondFrame}
+                            disabled={isExporting}
+                            onCheckedChange={(checked) =>
+                              setGifDropEverySecondFrame(checked === true)
+                            }
+                          />
+                          <Label htmlFor="studio-gif-drop-second" className="cursor-pointer leading-5">
+                            {t('common.tools.mp4GifStudio.page.export.dropEverySecondFrame')}
+                          </Label>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Checkbox
+                            id="studio-gif-remove-duplicates"
+                            checked={gifRemoveDuplicateFrames}
+                            disabled={isExporting}
+                            onCheckedChange={(checked) =>
+                              setGifRemoveDuplicateFrames(checked === true)
+                            }
+                          />
+                          <Label htmlFor="studio-gif-remove-duplicates" className="cursor-pointer leading-5">
+                            {t('common.tools.mp4GifStudio.page.export.removeDuplicateFrames')}
+                          </Label>
+                        </div>
+                        <div className="flex items-start gap-2">
+                          <Checkbox
+                            id="studio-gif-optimize-regions"
+                            checked={gifOptimizeChangedRegions}
+                            disabled={isExporting}
+                            onCheckedChange={(checked) =>
+                              setGifOptimizeChangedRegions(checked === true)
+                            }
+                          />
+                          <Label htmlFor="studio-gif-optimize-regions" className="cursor-pointer leading-5">
+                            {t('common.tools.mp4GifStudio.page.export.optimizeChangedRegions')}
+                          </Label>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between gap-3">
+                            <Label htmlFor="studio-gif-gifsicle-lossy">
+                              {t('common.tools.mp4GifStudio.page.export.gifsicleLossy')}
+                            </Label>
+                            <span className="font-mono text-sm tabular-nums">
+                              {gifGifsicleLossy === 0
+                                ? t('common.tools.mp4GifStudio.page.export.gifsicleLossyOff')
+                                : gifGifsicleLossy}
+                            </span>
+                          </div>
+                          <input
+                            id="studio-gif-gifsicle-lossy"
+                            type="range"
+                            min={0}
+                            max={MAX_GIFSICLE_LOSSY}
+                            step={5}
+                            value={gifGifsicleLossy}
+                            disabled={isExporting}
+                            onChange={(event) =>
+                              setGifGifsicleLossy(event.currentTarget.valueAsNumber)
+                            }
+                            className="h-2 w-full cursor-pointer accent-primary disabled:cursor-not-allowed"
+                          />
+                          <p className="text-xs leading-relaxed text-muted-foreground">
+                            {t('common.tools.mp4GifStudio.page.export.gifsicleLossyHint')}
+                          </p>
+                        </div>
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          {t('common.tools.mp4GifStudio.page.export.gifOptimizationHint')}
+                        </p>
+                      </fieldset>
 
                       <div className="flex items-center gap-2">
                         <Checkbox

@@ -16,6 +16,17 @@
         "zh": "Chinese"
       }
     },
+    "footer": {
+      "openSourceLicenses": "Open source licenses"
+    },
+    "licenses": {
+      "title": "Open Source Licenses",
+      "description": "WebToolBox is built with the following open source software.",
+      "runtimeNote": "FFmpeg and Gifsicle are fetched at runtime from the jsDelivr CDN and run entirely in your browser as WebAssembly. Your files never leave your device.",
+      "licenseLabel": "License",
+      "websiteLabel": "Website",
+      "sourceLabel": "Source code"
+    },
     "categories": {
       "string": {
         "title": "String",
@@ -355,6 +366,7 @@
             "preparingPreview": "Preparing preview...",
             "ready": "Ready to edit",
             "exporting": "Exporting...",
+            "optimizingGif": "Optimizing GIF...",
             "exportComplete": "Export complete"
           },
           "errors": {
@@ -415,6 +427,11 @@
             "gifDescription": "Widely supported animation without audio.",
             "webpDescription": "Compact animated image without audio.",
             "videoBitrate": "Video bitrate",
+            "rateControl": "Rate control",
+            "rateControlBitrate": "Bitrate",
+            "rateControlQuality": "Quality (CRF)",
+            "qualityCrf": "Quality (CRF)",
+            "qualityCrfHint": "Lower values improve quality and increase file size. Recommended: 18–28.",
             "estimatedSize": "Estimated size",
             "estimatedMemory": "Estimated peak memory",
             "frameRate": "Frame rate",
@@ -423,6 +440,9 @@
             "presetUltrafast": "Ultrafast",
             "presetVeryfast": "Very fast",
             "presetMedium": "Medium",
+            "presetSlow": "Slow",
+            "presetVeryslow": "Very slow",
+            "ffmpegCommandRecommended": "FFmpeg command recommended",
             "includeAudio": "Include audio",
             "audioBitrate": "Audio bitrate",
             "colorCount": "Color count",
@@ -431,6 +451,14 @@
             "ditherBayer": "Bayer",
             "ditherFloydSteinberg": "Floyd–Steinberg",
             "ditherSierra2_4a": "Sierra2-4A",
+            "gifOptimization": "GIF size optimization",
+            "dropEverySecondFrame": "Remove every second frame",
+            "removeDuplicateFrames": "Remove duplicate frames",
+            "optimizeChangedRegions": "Encode changed regions only",
+            "gifsicleLossy": "Gifsicle compression (lossy)",
+            "gifsicleLossyOff": "Off",
+            "gifsicleLossyHint": "Values above 0 run a Gifsicle post-processing pass after export. Higher values shrink the file more at the cost of quality. Recommended: 30–80.",
+            "gifOptimizationHint": "These options can reduce size, but may reduce smoothness or increase processing time.",
             "loopForever": "Loop forever",
             "webpQuality": "WebP quality",
             "compressionLevel": "Compression level",

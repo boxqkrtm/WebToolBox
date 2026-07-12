@@ -16,6 +16,17 @@
         "zh": "中文"
       }
     },
+    "footer": {
+      "openSourceLicenses": "开源许可证"
+    },
+    "licenses": {
+      "title": "开源许可证",
+      "description": "WebToolBox 使用以下开源软件构建。",
+      "runtimeNote": "FFmpeg 和 Gifsicle 在运行时从 jsDelivr CDN 获取，并以 WebAssembly 形式完全在浏览器中运行，文件不会离开您的设备。",
+      "licenseLabel": "许可证",
+      "websiteLabel": "网站",
+      "sourceLabel": "源代码"
+    },
     "categories": {
       "string": {
         "title": "字符串",
@@ -220,6 +231,7 @@
             "preparingPreview": "正在准备预览...",
             "ready": "已可编辑",
             "exporting": "正在导出...",
+            "optimizingGif": "正在优化GIF...",
             "exportComplete": "导出完成"
           },
           "errors": {
@@ -280,6 +292,11 @@
             "gifDescription": "兼容性广泛的无音频动画格式。",
             "webpDescription": "体积较小的无音频动态图片格式。",
             "videoBitrate": "视频比特率",
+            "rateControl": "码率控制",
+            "rateControlBitrate": "比特率",
+            "rateControlQuality": "质量（CRF）",
+            "qualityCrf": "质量（CRF）",
+            "qualityCrfHint": "数值越低，画质和文件大小越高。建议范围：18–28。",
             "estimatedSize": "预计文件大小",
             "estimatedMemory": "预计峰值内存",
             "frameRate": "帧率",
@@ -288,6 +305,9 @@
             "presetUltrafast": "极速",
             "presetVeryfast": "高速",
             "presetMedium": "均衡",
+            "presetSlow": "慢速",
+            "presetVeryslow": "非常慢",
+            "ffmpegCommandRecommended": "建议使用FFmpeg命令",
             "includeAudio": "包含音频",
             "audioBitrate": "音频比特率",
             "colorCount": "颜色数量",
@@ -296,6 +316,14 @@
             "ditherBayer": "Bayer",
             "ditherFloydSteinberg": "Floyd–Steinberg",
             "ditherSierra2_4a": "Sierra2-4A",
+            "gifOptimization": "GIF体积优化",
+            "dropEverySecondFrame": "每隔一帧删除一帧",
+            "removeDuplicateFrames": "删除重复帧",
+            "optimizeChangedRegions": "仅编码变化区域",
+            "gifsicleLossy": "Gifsicle压缩（有损）",
+            "gifsicleLossyOff": "关闭",
+            "gifsicleLossyHint": "大于0时将在导出后执行Gifsicle后处理。数值越大文件越小，画质越低。建议：30–80。",
+            "gifOptimizationHint": "这些选项可减小文件体积，但可能降低流畅度或增加处理时间。",
             "loopForever": "无限循环",
             "webpQuality": "WebP 质量",
             "compressionLevel": "压缩级别",

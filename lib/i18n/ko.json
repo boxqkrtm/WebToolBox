@@ -16,6 +16,17 @@
         "zh": "중국어"
       }
     },
+    "footer": {
+      "openSourceLicenses": "오픈소스 라이선스"
+    },
+    "licenses": {
+      "title": "오픈소스 라이선스",
+      "description": "WebToolBox는 다음 오픈소스 소프트웨어로 만들어졌습니다.",
+      "runtimeNote": "FFmpeg와 Gifsicle은 jsDelivr CDN에서 런타임에 받아 브라우저 내에서 WebAssembly로 실행됩니다. 파일은 기기 밖으로 전송되지 않습니다.",
+      "licenseLabel": "라이선스",
+      "websiteLabel": "웹사이트",
+      "sourceLabel": "소스 코드"
+    },
     "categories": {
       "string": {
         "title": "문자열",
@@ -220,6 +231,7 @@
             "preparingPreview": "미리보기를 준비하는 중...",
             "ready": "편집 준비 완료",
             "exporting": "내보내는 중...",
+            "optimizingGif": "GIF 최적화 중...",
             "exportComplete": "내보내기 완료"
           },
           "errors": {
@@ -280,6 +292,11 @@
             "gifDescription": "오디오 없이 널리 지원되는 애니메이션 형식입니다.",
             "webpDescription": "오디오 없이 용량이 작은 애니메이션 이미지 형식입니다.",
             "videoBitrate": "비디오 비트레이트",
+            "rateControl": "용량 및 품질 제어",
+            "rateControlBitrate": "비트레이트",
+            "rateControlQuality": "퀄리티(CRF)",
+            "qualityCrf": "퀄리티(CRF)",
+            "qualityCrfHint": "값이 낮을수록 화질과 파일 크기가 증가합니다. 권장 범위: 18~28.",
             "estimatedSize": "예상 파일 크기",
             "estimatedMemory": "예상 최대 메모리",
             "frameRate": "프레임 속도",
@@ -288,6 +305,9 @@
             "presetUltrafast": "초고속",
             "presetVeryfast": "매우 빠름",
             "presetMedium": "보통",
+            "presetSlow": "느림",
+            "presetVeryslow": "매우 느림",
+            "ffmpegCommandRecommended": "FFmpeg 명령어 권장",
             "includeAudio": "오디오 포함",
             "audioBitrate": "오디오 비트레이트",
             "colorCount": "색상 수",
@@ -296,6 +316,14 @@
             "ditherBayer": "Bayer",
             "ditherFloydSteinberg": "Floyd–Steinberg",
             "ditherSierra2_4a": "Sierra2-4A",
+            "gifOptimization": "GIF 용량 최적화",
+            "dropEverySecondFrame": "매 2번째 프레임 제거",
+            "removeDuplicateFrames": "중복 프레임 제거",
+            "optimizeChangedRegions": "변경 영역만 인코딩",
+            "gifsicleLossy": "Gifsicle 압축(손실)",
+            "gifsicleLossyOff": "사용 안 함",
+            "gifsicleLossyHint": "0보다 크게 설정하면 내보내기 후 Gifsicle 후처리를 실행합니다. 값이 클수록 용량이 더 줄지만 화질이 낮아집니다. 권장: 30~80.",
+            "gifOptimizationHint": "용량을 줄일 수 있지만 움직임이 덜 부드럽거나 처리 시간이 늘어날 수 있습니다.",
             "loopForever": "무한 반복",
             "webpQuality": "WebP 품질",
             "compressionLevel": "압축 수준",

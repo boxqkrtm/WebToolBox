@@ -6,7 +6,8 @@ export const MAX_ESTIMATED_MEMORY_BYTES = 1024 * 1024 * 1024;
 
 export type StudioOutputFormat = "mp4" | "gif" | "webp";
 export type StudioMp4FrameRate = "source" | 24 | 30 | 60;
-export type StudioMp4Preset = "ultrafast" | "veryfast" | "medium";
+export type StudioMp4Preset = "ultrafast" | "veryfast" | "medium" | "slow" | "veryslow";
+export type StudioMp4RateControl = "bitrate" | "quality";
 export type StudioGifDither = "none" | "bayer" | "floyd_steinberg" | "sierra2_4a";
 
 export type StudioCrop = {
@@ -17,7 +18,9 @@ export type StudioCrop = {
 };
 
 export type StudioMp4Options = {
+  rateControl: StudioMp4RateControl;
   videoBitrateKbps: number;
+  crf: number;
   frameRate: StudioMp4FrameRate;
   preset: StudioMp4Preset;
   includeAudio: boolean;
@@ -29,6 +32,11 @@ export type StudioGifOptions = {
   colors: number;
   dither: StudioGifDither;
   loopForever: boolean;
+  dropEverySecondFrame: boolean;
+  removeDuplicateFrames: boolean;
+  optimizeChangedRegions: boolean;
+  /** 0 disables the gifsicle post-processing pass; higher values are lossier. */
+  gifsicleLossy: number;
 };
 
 export type StudioWebpOptions = {
@@ -398,17 +406,22 @@ function buildMp4ExportArgs(
     videoLabel,
     "-c:v",
     "libx264",
-    "-b:v",
-    `${videoBitrate}k`,
-    "-maxrate",
-    `${videoBitrate}k`,
-    "-bufsize",
-    `${videoBitrate * 2}k`,
-    "-preset",
-    snapshot.mp4.preset,
-    "-pix_fmt",
-    "yuv420p",
   ];
+
+  if (snapshot.mp4.rateControl === "quality") {
+    args.push("-crf", `${snapshot.mp4.crf}`);
+  } else {
+    args.push(
+      "-b:v",
+      `${videoBitrate}k`,
+      "-maxrate",
+      `${videoBitrate}k`,
+      "-bufsize",
+      `${videoBitrate * 2}k`
+    );
+  }
+
+  args.push("-preset", snapshot.mp4.preset, "-pix_fmt", "yuv420p");
 
   if (includeAudio) {
     args.push(
@@ -436,11 +449,20 @@ function buildGifExportArgs(
 ): string[] {
   const { gif } = transform.snapshot;
   const videoFilter = buildVideoFilter(transform, gif.fps);
+  const optimizationFilters = [
+    gif.dropEverySecondFrame ? "select='not(mod(n,2))'" : "",
+    gif.removeDuplicateFrames ? "mpdecimate" : "",
+  ].filter(Boolean);
+  const optimizedVideoFilter = [videoFilter, ...optimizationFilters].join(",");
+  const paletteUseOptions = [
+    `dither=${gif.dither}`,
+    gif.optimizeChangedRegions ? "diff_mode=rectangle" : "",
+  ].filter(Boolean).join(":");
   const filterComplex = `${streamSpecifier(
     metadata.videoStreamIndex
-  )}${videoFilter},split[studio_frames][studio_palette_source];[studio_palette_source]palettegen=max_colors=${
+  )}${optimizedVideoFilter},split[studio_frames][studio_palette_source];[studio_palette_source]palettegen=max_colors=${
     gif.colors
-  }[studio_palette];[studio_frames][studio_palette]paletteuse=dither=${gif.dither}[studio_v]`;
+  }[studio_palette];[studio_frames][studio_palette]paletteuse=${paletteUseOptions}[studio_v]`;
 
   return [
     "-y",
@@ -599,12 +621,16 @@ function normalizeSettings(
     speed: clamp(finiteOr(settings?.speed, 1), 0.25, 4),
     scale: clamp(finiteOr(settings?.scale, 100), 25, 100),
     mp4: {
+      rateControl: isStudioMp4RateControl(settings?.mp4?.rateControl)
+        ? settings.mp4.rateControl
+        : "bitrate",
       videoBitrateKbps: clampInteger(
         settings?.mp4?.videoBitrateKbps,
         MIN_VIDEO_BITRATE_KBPS,
         MAX_VIDEO_BITRATE_KBPS,
         2_500
       ),
+      crf: clampInteger(settings?.mp4?.crf, 0, 51, 23),
       frameRate: isStudioMp4FrameRate(settings?.mp4?.frameRate)
         ? settings.mp4.frameRate
         : "source",
@@ -622,6 +648,10 @@ function normalizeSettings(
       colors: clampInteger(settings?.gif?.colors, 32, 256, 128),
       dither: isStudioGifDither(settings?.gif?.dither) ? settings.gif.dither : "sierra2_4a",
       loopForever: settings?.gif?.loopForever === true,
+      dropEverySecondFrame: settings?.gif?.dropEverySecondFrame === true,
+      removeDuplicateFrames: settings?.gif?.removeDuplicateFrames === true,
+      optimizeChangedRegions: settings?.gif?.optimizeChangedRegions === true,
+      gifsicleLossy: clampInteger(settings?.gif?.gifsicleLossy, 0, 200, 0),
     },
     webp: {
       fps: clampInteger(settings?.webp?.fps, 5, 30, 15),
@@ -782,7 +812,17 @@ function isStudioMp4FrameRate(value: unknown): value is StudioMp4FrameRate {
 }
 
 function isStudioMp4Preset(value: unknown): value is StudioMp4Preset {
-  return value === "ultrafast" || value === "veryfast" || value === "medium";
+  return (
+    value === "ultrafast" ||
+    value === "veryfast" ||
+    value === "medium" ||
+    value === "slow" ||
+    value === "veryslow"
+  );
+}
+
+function isStudioMp4RateControl(value: unknown): value is StudioMp4RateControl {
+  return value === "bitrate" || value === "quality";
 }
 
 function isStudioGifDither(value: unknown): value is StudioGifDither {
