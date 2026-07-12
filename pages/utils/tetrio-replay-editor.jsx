@@ -204,7 +204,7 @@ export default function TetrioReplayEditor() {
                 type="file"
                 accept=".ttrm,.ttr,.json"
                 onChange={handleFileUpload}
-                className="block w-full text-sm text-slate-500
+                className="block w-full text-sm text-muted-foreground
                   file:mr-4 file:py-2 file:px-4
                   file:rounded-full file:border-0
                   file:text-sm file:font-semibold
@@ -231,7 +231,7 @@ export default function TetrioReplayEditor() {
         </CardContent>
         <CardFooter className="flex justify-between">
           <Button onClick={handleDownload}>Download Replay</Button>
-          {filename && <span className="text-sm text-gray-500">Current file: {filename}</span>}
+          {filename && <span className="text-sm text-muted-foreground">Current file: {filename}</span>}
         </CardFooter>
       </Card>
     </UtilsLayout>

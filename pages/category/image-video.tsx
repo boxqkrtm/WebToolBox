@@ -1,69 +1,16 @@
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { PageContainer } from '@/components/layout/PageContainer';
-import { useI18n } from '@/lib/i18n/i18nContext';
+import { CategoryPage } from '@/components/layout/CategoryPage';
 
 export default function ImageVideoCategoryPage() {
-  const { t } = useI18n();
   return (
-    <PageContainer contentClassName="space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">{t('common.categories.imageVideo.title')}</h1>
-        <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-6">
-        <Link href="/utils/image-to-base64" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.imageToBase64.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.imageToBase64.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/mp4-gif-studio" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.mp4GifStudio.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.mp4GifStudio.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/qr-code-generator" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.qrCode.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.qrCode.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/svg-preview" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.svgPreview.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.svgPreview.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-        <Link href="/utils/video-recorder" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.videoRecorder.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.videoRecorder.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-      </div>
-    </PageContainer>
+    <CategoryPage
+      categoryKey="imageVideo"
+      tools={[
+        { href: '/utils/image-to-base64', toolKey: 'imageToBase64' },
+        { href: '/utils/mp4-gif-studio', toolKey: 'mp4GifStudio' },
+        { href: '/utils/qr-code-generator', toolKey: 'qrCode' },
+        { href: '/utils/svg-preview', toolKey: 'svgPreview' },
+        { href: '/utils/video-recorder', toolKey: 'videoRecorder' },
+      ]}
+    />
   );
 }

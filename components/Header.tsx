@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { useI18n } from '@/lib/i18n/i18nContext';
 import { useTheme } from '@/lib/theme/themeContext';
 import { Language } from '@/lib/i18n/translations';
@@ -39,16 +40,30 @@ export const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <PageContainer className="py-3" contentClassName="flex items-center justify-between gap-4">
-        {router.pathname !== '/' ? (
-          <Button type="button" variant="outline" className="flex items-center" onClick={handleBack}>
-            <HiArrowLeft className="mr-2 h-4 w-4" />
-            {t('common.backToCategories')}
-          </Button>
-        ) : <div />}
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+          {router.pathname !== '/' && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={handleBack}
+              aria-label={t('common.backToCategories')}
+              title={t('common.backToCategories')}
+            >
+              <HiArrowLeft className="h-5 w-5" />
+            </Button>
+          )}
+          <Link
+            href="/"
+            className="truncate text-lg font-semibold tracking-tight transition-colors hover:text-muted-foreground"
+          >
+            WebToolBox
+          </Link>
+        </div>
 
         <div className="flex items-center gap-3 sm:gap-4">
           <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
-            <SelectTrigger className="w-[140px]" data-testid="language-selector">
+            <SelectTrigger className="w-[140px] rounded-full" data-testid="language-selector">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -74,7 +89,7 @@ export const Header: React.FC = () => {
 
           <button
             onClick={toggleTheme}
-            className="rounded-md p-2 transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="rounded-full p-2 transition-colors hover:bg-accent hover:text-accent-foreground"
             aria-label={t('common.header.themeToggleAriaLabel')}
             data-testid="theme-toggle"
           >

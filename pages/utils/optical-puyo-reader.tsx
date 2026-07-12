@@ -274,7 +274,7 @@ export default function Component() {
           </div>
  
           <div className="mb-4">
-            <label htmlFor="threshold-slider" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="threshold-slider" className="block text-sm font-medium mb-1">
               {t('common.tools.opticalPuyoReader.colorSnapSensitivity')}: {threshold}
             </label>
             <Slider
@@ -294,7 +294,7 @@ export default function Component() {
               href={generateChainSimLink()} 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="text-blue-600 hover:text-blue-800 underline"
+              className="text-primary underline hover:text-muted-foreground"
             >
               {t('common.tools.opticalPuyoReader.openInChainSimulator')}
             </a>

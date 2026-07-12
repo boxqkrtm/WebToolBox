@@ -6,55 +6,46 @@ import {
   HiVideoCamera,
   HiCollection,
 } from 'react-icons/hi';
+import type { IconType } from 'react-icons';
 import { useI18n } from '@/lib/i18n/i18nContext';
+
+const CATEGORIES: Array<{ href: string; icon: IconType; key: string }> = [
+  { href: '/category/image-video', icon: HiVideoCamera, key: 'imageVideo' },
+  { href: '/category/string', icon: HiCode, key: 'string' },
+  { href: '/category/etc', icon: HiCollection, key: 'etc' },
+];
 
 export default function Home() {
   const { t } = useI18n();
-  
+
   return (
-    <PageContainer contentClassName="space-y-8">
-      <div className="space-y-2 text-center">
-        <h1 className="text-4xl font-bold">{t('common.title')}</h1>
-        <p className="text-xl text-muted-foreground">{t('common.subtitle')}</p>
+    <PageContainer contentClassName="space-y-10">
+      <div className="space-y-3 pt-6 text-center sm:pt-10">
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          {t('common.title')}
+        </h1>
+        <p className="mx-auto max-w-xl text-lg text-muted-foreground">
+          {t('common.subtitle')}
+        </p>
       </div>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-
-        <Link href="/category/image-video" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiVideoCamera className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.imageVideo.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.imageVideo.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/string" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiCode className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.string.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.string.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/category/etc" passHref>
-          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
-            <CardHeader className="flex flex-col items-center text-center">
-              <HiCollection className="h-12 w-12 mb-4 text-muted-foreground" />
-              <CardTitle>{t('common.categories.etc.title')}</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <p className="text-muted-foreground">{t('common.categories.etc.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
+      <div className="mx-auto grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:gap-5">
+        {CATEGORIES.map(({ href, icon: Icon, key }) => (
+          <Link key={href} href={href} passHref>
+            <Card className="group h-full cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+              <CardHeader className="flex flex-col items-center text-center">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary transition-colors group-hover:bg-accent">
+                  <Icon className="h-7 w-7" />
+                </div>
+                <CardTitle>{t(`common.categories.${key}.title`)}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {t(`common.categories.${key}.description`)}
+                </p>
+              </CardContent>
+            </Card>
+          </Link>
+        ))}
       </div>
     </PageContainer>
   );

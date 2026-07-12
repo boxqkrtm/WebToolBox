@@ -279,7 +279,7 @@ export default function Component() {
                             </TableBody>
                         </Table>
                         {sortedData.length > 10 && (
-                            <p className="text-center text-gray-500">Showing first 10 rows of {sortedData.length} total rows</p>
+                            <p className="text-center text-muted-foreground">Showing first 10 rows of {sortedData.length} total rows</p>
                         )}
                     </>
                 )}

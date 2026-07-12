@@ -227,7 +227,7 @@ export default function DiscordColorMessageGenerator() {
             </div>
             
             {selectedRange && (
-              <div className="p-3 border rounded-md bg-gray-50 dark:bg-gray-800">
+              <div className="p-3 border rounded-md bg-muted">
                 <div className="text-sm font-medium mb-2">
                   {t('common.tools.discordColorMessageGenerator.page.selectedRangeApply')} ({selectedRange[0]} ~ {selectedRange[1]})
                 </div>
@@ -474,7 +474,7 @@ export default function DiscordColorMessageGenerator() {
             <li>{t('common.tools.discordColorMessageGenerator.page.step5')}</li>
             <li>{t('common.tools.discordColorMessageGenerator.page.step6')}</li>
           </ol>
-          <p className="mt-4 text-sm text-gray-500">
+          <p className="mt-4 text-sm text-muted-foreground">
             {t('common.tools.discordColorMessageGenerator.page.note')}
           </p>
         </CardContent>
