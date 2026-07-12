@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { PageContainer } from '@/components/layout/PageContainer';
+import UtilsLayout from '@/components/layout/UtilsLayout';
 import { useI18n } from '@/lib/i18n/i18nContext';
 import { HiClipboardCopy, HiUpload, HiDownload, HiCheck } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -130,11 +130,11 @@ export default function SvgPreviewPage() {
   };
 
   return (
-    <PageContainer contentClassName="max-w-5xl space-y-8">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold">{t('common.tools.svgPreview.title')}</h1>
-        <p className="text-muted-foreground">{t('common.tools.svgPreview.description')}</p>
-      </div>
+    <UtilsLayout
+      title={t('common.tools.svgPreview.title')}
+      description={t('common.tools.svgPreview.description')}
+      contentClassName="space-y-8"
+    >
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 mb-6">
@@ -282,6 +282,6 @@ export default function SvgPreviewPage() {
           </CardContent>
           </Card>
         )}
-    </PageContainer>
+    </UtilsLayout>
   );
 }

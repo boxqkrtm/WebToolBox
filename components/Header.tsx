@@ -39,7 +39,10 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-      <PageContainer className="py-3" contentClassName="flex items-center justify-between gap-4">
+      <PageContainer
+        className="px-4 py-3 sm:px-6"
+        contentClassName="flex items-center justify-between gap-4"
+      >
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
           {router.pathname !== '/' && (
             <Button

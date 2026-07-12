@@ -1,16 +1,24 @@
 import { PageContainer } from "@/components/layout/PageContainer";
+import { cn } from "@/lib/utils";
 
 type UtilsLayoutProps = {
   children: React.ReactNode;
   onPaste?: (e: React.ClipboardEvent) => void;
   title?: string;
   description?: string;
+  contentClassName?: string;
 };
 
-export default function UtilsLayout({ children, onPaste, title, description }: UtilsLayoutProps) {
+export default function UtilsLayout({
+  children,
+  onPaste,
+  title,
+  description,
+  contentClassName,
+}: UtilsLayoutProps) {
   return (
     <div className="bg-background" onPaste={onPaste}>
-      <PageContainer contentClassName="space-y-6">
+      <PageContainer contentClassName={cn("space-y-6", contentClassName)}>
         <main>
           {(title || description) && (
             <div className="mb-6">

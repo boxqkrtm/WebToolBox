@@ -9,7 +9,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="border-t">
       <PageContainer
-        className="py-4"
+        className="px-4 py-4 sm:px-6"
         contentClassName="flex flex-wrap items-center justify-between gap-3 text-sm text-muted-foreground"
       >
         <span>© {new Date().getFullYear()} WebToolBox</span>
