@@ -9,7 +9,7 @@ import {
 } from 'react'
 import type { CSSProperties } from 'react'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
-import type { LogEventCallback, ProgressEventCallback } from '@ffmpeg/ffmpeg'
+import type { LogEventCallback } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
 import {
   Crop,
@@ -683,7 +683,7 @@ export default function Mp4GifStudioPage() {
     const outputName = `studio-output-${++jobIdRef.current}.${format}`
     const snapshot = settings
     let ffmpeg: FFmpeg | null = null
-    let progressHandler: ProgressEventCallback | null = null
+    let progressLogHandler: LogEventCallback | null = null
 
     setResult(null)
     setResultUrl('')
@@ -700,15 +700,28 @@ export default function Mp4GifStudioPage() {
         outputName
       )
 
-      progressHandler = ({ progress: nextProgress }) => {
-        if (!Number.isFinite(nextProgress)) return
-        const nextPercent = clamp(Math.round(nextProgress * 100), 0, 95)
+      progressLogHandler = ({ message }) => {
+        const match = message.trim().match(/^out_time_us=(\d+)$/)
+        if (!match) return
+
+        const processedSeconds = Number(match[1]) / 1_000_000
+        const nextPercent = clamp(
+          Math.floor((processedSeconds / plan.effectiveDuration) * 100),
+          0,
+          99
+        )
         setProgress((current) => Math.max(current, nextPercent))
       }
-      ffmpeg.on('progress', progressHandler)
+      ffmpeg.on('log', progressLogHandler)
 
       await safeDelete(ffmpeg, outputName)
-      const exitCode = await ffmpeg.exec(plan.args)
+      const exitCode = await ffmpeg.exec([
+        '-progress',
+        'pipe:1',
+        '-stats_period',
+        '0.5',
+        ...plan.args,
+      ])
       if (exitCode !== 0) {
         throw new Error(`FFmpeg exited with code ${exitCode}`)
       }
@@ -734,8 +747,8 @@ export default function Mp4GifStudioPage() {
       setPhase('ready')
       setErrorMessage(t('common.tools.mp4GifStudio.page.errors.exportFailed'))
     } finally {
-      if (ffmpeg && progressHandler) {
-        ffmpeg.off('progress', progressHandler)
+      if (ffmpeg && progressLogHandler) {
+        ffmpeg.off('log', progressLogHandler)
       }
       if (ffmpeg) await safeDelete(ffmpeg, outputName)
     }
