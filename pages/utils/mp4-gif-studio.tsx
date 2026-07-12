@@ -816,62 +816,6 @@ export default function Mp4GifStudioPage() {
       description={t('common.tools.mp4GifStudio.description')}
     >
       <div className="mx-auto max-w-7xl space-y-5">
-        <Card>
-          <CardContent className="p-5">
-            <FileUploadButton
-              key={uploadKey}
-              id={UPLOAD_ID}
-              accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.m4v,.gif,image/gif"
-              onFileSelect={(file) => void handleSourceFile(file)}
-              label={t('common.tools.mp4GifStudio.page.upload')}
-              disabled={isBusy}
-              className={sourceFile ? 'hidden' : undefined}
-            />
-
-            {!sourceFile && (
-              <div className="mt-4 grid gap-2 text-center text-sm text-muted-foreground sm:grid-cols-2">
-                <p>{t('common.tools.mp4GifStudio.page.supportedFormats')}</p>
-                <p>{t('common.tools.mp4GifStudio.page.privacy')}</p>
-              </div>
-            )}
-
-            {sourceFile && (
-              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div className="flex min-w-0 items-center gap-3">
-                  <div className="rounded-lg bg-primary/10 p-2.5 text-primary">
-                    <FileVideo2 className="h-5 w-5" aria-hidden="true" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="truncate font-medium">{sourceFile.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {formatStudioBytes(sourceFile.size)}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isBusy}
-                    onClick={handleReplaceSource}
-                  >
-                    {t('common.tools.mp4GifStudio.page.replace')}
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={isBusy}
-                    onClick={clearCurrentSource}
-                  >
-                    <RotateCcw className="mr-2 h-4 w-4" aria-hidden="true" />
-                    {t('common.tools.mp4GifStudio.page.startOver')}
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
         {errorMessage && (
           <Alert variant="destructive">
             <AlertTitle>{t('common.tools.mp4GifStudio.title')}</AlertTitle>
@@ -914,25 +858,78 @@ export default function Mp4GifStudioPage() {
           </div>
         )}
 
-        {sourceFile && metadata && (
-          <div
-            className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]"
-            aria-busy={isExporting}
-          >
+        <div
+          className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]"
+          aria-busy={isExporting}
+        >
             <div className="min-w-0 space-y-5">
               <Card role="region" aria-labelledby="studio-preview-heading">
                 <CardHeader className="pb-4">
-                  <CardTitle id="studio-preview-heading" className="flex items-center gap-2 text-lg">
-                    <Crop className="h-5 w-5" aria-hidden="true" />
-                    {t('common.tools.mp4GifStudio.page.editor.preview')}
-                  </CardTitle>
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <CardTitle id="studio-preview-heading" className="flex items-center gap-2 text-lg">
+                        <Crop className="h-5 w-5" aria-hidden="true" />
+                        {t('common.tools.mp4GifStudio.page.editor.preview')}
+                      </CardTitle>
+                      {sourceFile && (
+                        <div className="mt-2 flex min-w-0 items-center gap-2 text-sm text-muted-foreground">
+                          <FileVideo2 className="h-4 w-4 shrink-0" aria-hidden="true" />
+                          <span className="truncate">{sourceFile.name}</span>
+                          <span aria-hidden="true">·</span>
+                          <span className="shrink-0">{formatStudioBytes(sourceFile.size)}</span>
+                        </div>
+                      )}
+                    </div>
+                    {sourceFile && (
+                      <div className="flex shrink-0 flex-wrap gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={isBusy}
+                          onClick={handleReplaceSource}
+                        >
+                          {t('common.tools.mp4GifStudio.page.replace')}
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          disabled={isBusy}
+                          onClick={clearCurrentSource}
+                        >
+                          <RotateCcw className="mr-2 h-4 w-4" aria-hidden="true" />
+                          {t('common.tools.mp4GifStudio.page.startOver')}
+                        </Button>
+                      </div>
+                    )}
+                  </div>
                   <CardDescription>
-                    {t('common.tools.mp4GifStudio.page.crop.hint')}
+                    {metadata
+                      ? t('common.tools.mp4GifStudio.page.crop.hint')
+                      : t('common.tools.mp4GifStudio.page.supportedFormats')}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {sourceFile && (
+                    <FileUploadButton
+                      key={uploadKey}
+                      id={UPLOAD_ID}
+                      accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.m4v,.gif,image/gif"
+                      onFileSelect={(file) => void handleSourceFile(file)}
+                      label={t('common.tools.mp4GifStudio.page.upload')}
+                      disabled={isBusy}
+                      className="hidden"
+                    />
+                  )}
                   <div className="overflow-hidden rounded-xl bg-zinc-950 p-3 sm:p-5">
-                    <div className="mx-auto max-w-full" style={stageStyle}>
+                    {sourceFile && !metadata ? (
+                      <div className="flex aspect-video items-center justify-center text-zinc-300">
+                        <LoaderCircle className="mr-3 h-5 w-5 animate-spin" aria-hidden="true" />
+                        <span>{phaseText || t('common.tools.mp4GifStudio.page.status.analyzing')}</span>
+                      </div>
+                    ) : metadata && previewUrl ? (
+                      <div className="mx-auto max-w-full" style={stageStyle}>
                       <CropOverlay
                         value={crop}
                         onChange={setCrop}
@@ -965,7 +962,23 @@ export default function Mp4GifStudioPage() {
                           />
                         )}
                       </CropOverlay>
-                    </div>
+                      </div>
+                    ) : (
+                      <div className="mx-auto max-w-2xl py-4 text-zinc-100">
+                        <FileUploadButton
+                          key={uploadKey}
+                          id={UPLOAD_ID}
+                          accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.m4v,.gif,image/gif"
+                          onFileSelect={(file) => void handleSourceFile(file)}
+                          label={t('common.tools.mp4GifStudio.page.upload')}
+                          disabled={isBusy}
+                          className="mt-0 [&>div]:border-zinc-600 [&>div]:hover:bg-zinc-900"
+                        />
+                        <p className="mt-4 text-center text-sm text-zinc-400">
+                          {t('common.tools.mp4GifStudio.page.privacy')}
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -974,7 +987,7 @@ export default function Mp4GifStudioPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => void togglePlayback()}
-                      disabled={isExporting || previewKind !== 'video'}
+                      disabled={!metadata || isExporting || previewKind !== 'video'}
                       aria-label={
                         isPlaying
                           ? t('common.tools.mp4GifStudio.page.editor.pause')
@@ -991,7 +1004,9 @@ export default function Mp4GifStudioPage() {
                         : t('common.tools.mp4GifStudio.page.editor.play')}
                     </Button>
                     <span className="font-mono text-sm tabular-nums text-muted-foreground">
-                      {formatStudioTime(currentTime)} / {formatStudioTime(metadata.duration)}
+                      {metadata
+                        ? `${formatStudioTime(currentTime)} / ${formatStudioTime(metadata.duration)}`
+                        : '- / -'}
                     </span>
                     {outputGeometry && (
                       <span className="ml-auto text-sm text-muted-foreground">
@@ -1014,10 +1029,10 @@ export default function Mp4GifStudioPage() {
                 </CardHeader>
                 <CardContent>
                   <TimeRangeControl
-                    duration={metadata.duration}
+                    duration={metadata?.duration ?? 0}
                     value={trimRange}
                     onChange={handleTrimChange}
-                    disabled={isExporting}
+                    disabled={!metadata || isExporting}
                     labels={{
                       range: t('common.tools.mp4GifStudio.page.editor.timeline'),
                       start: t('common.tools.mp4GifStudio.page.editor.startTime'),
@@ -1040,36 +1055,44 @@ export default function Mp4GifStudioPage() {
                       <dt className="text-muted-foreground">
                         {t('common.tools.mp4GifStudio.page.source.fileSize')}
                       </dt>
-                      <dd className="mt-1 font-medium">{formatStudioBytes(sourceFile.size)}</dd>
+                      <dd className="mt-1 font-medium">
+                        {sourceFile ? formatStudioBytes(sourceFile.size) : '-'}
+                      </dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">
                         {t('common.tools.mp4GifStudio.page.source.resolution')}
                       </dt>
                       <dd className="mt-1 font-medium">
-                        {metadata.width} × {metadata.height}
+                        {metadata ? `${metadata.width} × ${metadata.height}` : '-'}
                       </dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">
                         {t('common.tools.mp4GifStudio.page.source.duration')}
                       </dt>
-                      <dd className="mt-1 font-medium">{formatStudioTime(metadata.duration)}</dd>
+                      <dd className="mt-1 font-medium">
+                        {metadata ? formatStudioTime(metadata.duration) : '-'}
+                      </dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">
                         {t('common.tools.mp4GifStudio.page.source.frameRate')}
                       </dt>
-                      <dd className="mt-1 font-medium">{metadata.fps.toFixed(2)} FPS</dd>
+                      <dd className="mt-1 font-medium">
+                        {metadata ? `${metadata.fps.toFixed(2)} FPS` : '-'}
+                      </dd>
                     </div>
                     <div>
                       <dt className="text-muted-foreground">
                         {t('common.tools.mp4GifStudio.page.source.audio')}
                       </dt>
                       <dd className="mt-1 font-medium">
-                        {metadata.hasAudio
+                        {metadata?.hasAudio
                           ? t('common.tools.mp4GifStudio.page.source.yes')
-                          : t('common.tools.mp4GifStudio.page.source.no')}
+                          : metadata
+                            ? t('common.tools.mp4GifStudio.page.source.no')
+                            : '-'}
                       </dd>
                     </div>
                   </dl>
@@ -1288,8 +1311,8 @@ export default function Mp4GifStudioPage() {
                       <div className="flex items-center gap-2">
                         <Checkbox
                           id="studio-include-audio"
-                          checked={includeAudio && metadata.hasAudio}
-                          disabled={isExporting || !metadata.hasAudio}
+                          checked={includeAudio && Boolean(metadata?.hasAudio)}
+                          disabled={!metadata || isExporting || !metadata.hasAudio}
                           onCheckedChange={(checked) => setIncludeAudio(checked === true)}
                         />
                         <Label htmlFor="studio-include-audio" className="cursor-pointer">
@@ -1297,7 +1320,7 @@ export default function Mp4GifStudioPage() {
                         </Label>
                       </div>
 
-                      {includeAudio && metadata.hasAudio && (
+                      {includeAudio && metadata?.hasAudio && (
                         <div className="space-y-1.5">
                           <Label htmlFor="studio-audio-bitrate">
                             {t('common.tools.mp4GifStudio.page.export.audioBitrate')}
@@ -1537,8 +1560,7 @@ export default function Mp4GifStudioPage() {
                 </CardContent>
               </Card>
             </aside>
-          </div>
-        )}
+        </div>
 
         {result && resultUrl && (
           <Card role="region" aria-labelledby="studio-result-heading">
