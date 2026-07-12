@@ -17,6 +17,10 @@
       }
     },
     "categories": {
+      "string": {
+        "title": "字符串",
+        "description": "用于处理文本和字符串的工具。"
+      },
       "imageVideo": {
         "title": "图像 & 视频",
         "description": "视频和图像处理工具。"

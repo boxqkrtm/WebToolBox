@@ -17,6 +17,10 @@
       }
     },
     "categories": {
+      "string": {
+        "title": "文字列",
+        "description": "テキストと文字列を扱うツール。"
+      },
       "imageVideo": {
         "title": "画像 & ビデオ",
         "description": "ビデオおよび画像操作ツール。"

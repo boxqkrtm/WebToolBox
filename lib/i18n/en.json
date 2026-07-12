@@ -17,6 +17,10 @@
       }
     },
     "categories": {
+      "string": {
+        "title": "String",
+        "description": "Tools for text and string manipulation."
+      },
       "imageVideo": {
         "title": "Image & Video",
         "description": "Tools for video and image manipulation."

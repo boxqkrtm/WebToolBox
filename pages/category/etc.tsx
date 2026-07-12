@@ -13,17 +13,6 @@ export default function EtcCategoryPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:gap-6">
-        <Link href="/utils/discord-color-message-generator" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.discordColorMessageGenerator.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.discordColorMessageGenerator.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
         <Link href="/utils/booth-algorithm-multiplier" passHref>
           <Card className="h-full hover:shadow-lg transition-colors">
             <CardHeader>
@@ -31,17 +20,6 @@ export default function EtcCategoryPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">{t('common.tools.boothAlgorithmMultiplier.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/utils/kakaotalk-chat-analyzer" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.kakaotalkChatAnalyzer.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.kakaotalkChatAnalyzer.description')}</p>
             </CardContent>
           </Card>
         </Link>
@@ -64,28 +42,6 @@ export default function EtcCategoryPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">{t('common.tools.ntripScanner.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/utils/escaped-string-decoder" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.escapedStringDecoder.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.escapedStringDecoder.description')}</p>
-            </CardContent>
-          </Card>
-        </Link>
-
-        <Link href="/utils/csv-sorter" passHref>
-          <Card className="h-full hover:shadow-lg transition-colors">
-            <CardHeader>
-              <CardTitle>{t('common.tools.csvSorter.title')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">{t('common.tools.csvSorter.description')}</p>
             </CardContent>
           </Card>
         </Link>

@@ -25,6 +25,12 @@ const routeMetaMap: Record<string, RouteMeta> = {
     description: "Tools for image conversion, QR processing, and video editing.",
     section: "Category",
   },
+  "/category/string": {
+    slug: "category-string",
+    title: "String Tools",
+    description: "Tools for text, chat, escaped strings, and delimited data.",
+    section: "Category",
+  },
   "/category/etc": {
     slug: "category-etc",
     title: "Miscellaneous Tools",
@@ -65,7 +71,7 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "kakaotalk-chat-analyzer",
     title: "KakaoTalk Chat Analyzer",
     description: "Analyze rankings and activity from KakaoTalk chat logs.",
-    section: "Etc",
+    section: "String",
   },
   "/utils/kakaomap-coord-opener": {
     slug: "kakaomap-coord-opener",
@@ -83,19 +89,19 @@ const routeMetaMap: Record<string, RouteMeta> = {
     slug: "escaped-string-decoder",
     title: "Escaped String Decoder",
     description: "Decode escaped strings into readable text.",
-    section: "Etc",
+    section: "String",
   },
   "/utils/discord-color-message-generator": {
     slug: "discord-color-message-generator",
     title: "Discord Color Message Generator",
     description: "Generate ANSI styled color text for Discord.",
-    section: "Etc",
+    section: "String",
   },
   "/utils/csv-sorter": {
     slug: "csv-sorter",
     title: "CSV Sorter",
     description: "Sort CSV data with flexible column options.",
-    section: "Etc",
+    section: "String",
   },
   "/utils/booth-algorithm-multiplier": {
     slug: "booth-algorithm-multiplier",

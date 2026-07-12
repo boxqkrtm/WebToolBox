@@ -31,6 +31,18 @@ export default function Home() {
           </Card>
         </Link>
 
+        <Link href="/category/string" passHref>
+          <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
+            <CardHeader className="flex flex-col items-center text-center">
+              <HiCode className="h-12 w-12 mb-4 text-muted-foreground" />
+              <CardTitle>{t('common.categories.string.title')}</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <p className="text-muted-foreground">{t('common.categories.string.description')}</p>
+            </CardContent>
+          </Card>
+        </Link>
+
         <Link href="/category/etc" passHref>
           <Card className="cursor-pointer hover:shadow-lg transition-shadow h-full">
             <CardHeader className="flex flex-col items-center text-center">

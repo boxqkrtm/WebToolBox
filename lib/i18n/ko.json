@@ -17,6 +17,10 @@
       }
     },
     "categories": {
+      "string": {
+        "title": "문자열",
+        "description": "텍스트와 문자열을 다루는 도구."
+      },
       "imageVideo": {
         "title": "이미지 & 비디오",
         "description": "비디오 및 이미지 조작 도구."
