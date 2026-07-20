@@ -328,7 +328,8 @@
             "webpQuality": "WebP 품질",
             "compressionLevel": "압축 수준",
             "lossless": "무손실",
-            "exportButton": "파일 내보내기"
+            "exportButton": "파일 내보내기",
+            "autoDownload": "내보내기 완료 후 자동으로 다운로드"
           },
           "result": {
             "title": "내보내기 완료",

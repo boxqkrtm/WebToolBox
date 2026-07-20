@@ -328,7 +328,8 @@
             "webpQuality": "WebP 质量",
             "compressionLevel": "压缩级别",
             "lossless": "无损",
-            "exportButton": "导出文件"
+            "exportButton": "\u5bfc\u51fa\u6587\u4ef6",
+            "autoDownload": "\u5bfc\u51fa\u5b8c\u6210\u540e\u81ea\u52a8\u4e0b\u8f7d"
           },
           "result": {
             "title": "导出完成",

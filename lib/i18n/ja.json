@@ -328,7 +328,8 @@
             "webpQuality": "WebP品質",
             "compressionLevel": "圧縮レベル",
             "lossless": "ロスレス",
-            "exportButton": "ファイルを書き出す"
+            "exportButton": "\u30d5\u30a1\u30a4\u30eb\u3092\u66f8\u304d\u51fa\u3059",
+            "autoDownload": "\u66f8\u304d\u51fa\u3057\u5b8c\u4e86\u5f8c\u306b\u81ea\u52d5\u3067\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9"
           },
           "result": {
             "title": "書き出し完了",

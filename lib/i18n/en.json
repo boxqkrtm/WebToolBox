@@ -463,7 +463,8 @@
             "webpQuality": "WebP quality",
             "compressionLevel": "Compression level",
             "lossless": "Lossless",
-            "exportButton": "Export file"
+            "exportButton": "Export file",
+            "autoDownload": "Download automatically when export completes"
           },
           "result": {
             "title": "Export complete",

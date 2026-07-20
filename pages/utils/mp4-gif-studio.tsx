@@ -251,6 +251,7 @@ export default function Mp4GifStudioPage() {
   const [webpCompressionLevel, setWebpCompressionLevel] = useState(4)
   const [webpLossless, setWebpLossless] = useState(false)
   const [webpLoopForever, setWebpLoopForever] = useState(true)
+  const [autoDownload, setAutoDownload] = useState(true)
 
   const [result, setResult] = useState<ResultState | null>(null)
   const [resultUrl, setResultUrl] = useState('')
@@ -487,6 +488,7 @@ export default function Mp4GifStudioPage() {
     setWebpCompressionLevel(4)
     setWebpLossless(false)
     setWebpLoopForever(true)
+    setAutoDownload(true)
   }, [])
 
   const clearCurrentSource = useCallback(() => {
@@ -835,7 +837,7 @@ export default function Mp4GifStudioPage() {
       setResult({ plan, fileName, size: outputBlob.size })
       setProgress(100)
       setPhase('complete')
-      downloadStudioResult(outputUrl, fileName)
+      if (autoDownload) downloadStudioResult(outputUrl, fileName)
     } catch (error) {
       console.error(error)
       setProgress(0)
@@ -848,6 +850,7 @@ export default function Mp4GifStudioPage() {
       if (ffmpeg) await safeDelete(ffmpeg, outputName)
     }
   }, [
+    autoDownload,
     ensureFfmpeg,
     estimatedMemoryBytes,
     exceedsMemoryLimit,
@@ -1735,6 +1738,17 @@ export default function Mp4GifStudioPage() {
                     </div>
                   )}
 
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      id="studio-auto-download"
+                      checked={autoDownload}
+                      disabled={isExporting}
+                      onCheckedChange={(checked) => setAutoDownload(checked === true)}
+                    />
+                    <Label htmlFor="studio-auto-download" className="cursor-pointer">
+                      {t('common.tools.mp4GifStudio.page.export.autoDownload')}
+                    </Label>
+                  </div>
                   <Button
                     type="button"
                     className="w-full"
