@@ -141,6 +141,11 @@
         "pasteHint": "Ctrl+V로 클립보드의 QR코드 이미지를 붙여넣으세요",
         "dragDropHint": "또는 이미지를 여기에 드래그 & 드롭",
         "downloadQr": "QR코드 다운로드",
+        "ditheredTitle": "디더링 QR 생성기",
+        "ditheredDescription": "이미지를 디더링 사진 느낌의 QR 코드로 변환합니다.",
+        "fun": "fun",
+        "sourceCode": "소스 코드",
+
         "previewAlt": "생성된 QR 코드 미리보기"
       },
       "discordColorMessageGenerator": {

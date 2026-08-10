@@ -141,6 +141,11 @@
         "pasteHint": "Ctrl+VでクリップボードのQRコード画像を貼り付けてください",
         "dragDropHint": "または画像をここにドラッグ＆ドロップ",
         "downloadQr": "QRコードをダウンロード",
+        "ditheredTitle": "ディザリング QR ジェネレーター",
+        "ditheredDescription": "\u753b\u50cf\u3092\u30c7\u30a3\u30b6\u30ea\u30f3\u30b0\u3057\u305f\u5199\u771f\u98a8\u306e QR \u30b3\u30fc\u30c9\u306b\u5909\u63db\u3057\u307e\u3059\u3002",
+        "fun": "fun",
+        "sourceCode": "\u30bd\u30fc\u30b9\u30b3\u30fc\u30c9",
+
         "previewAlt": "生成された QR コードのプレビュー"
       },
       "discordColorMessageGenerator": {

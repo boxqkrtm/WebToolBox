@@ -276,6 +276,11 @@
         "pasteHint": "Press Ctrl+V to paste a QR code image from clipboard",
         "dragDropHint": "or drag & drop an image here",
         "downloadQr": "Download QR Code",
+        "ditheredTitle": "Dithered QR Generator",
+        "ditheredDescription": "Turn an image into a QR code with a dithered photographic look.",
+        "fun": "fun",
+        "sourceCode": "Source code",
+
         "previewAlt": "Generated QR code preview"
       },
       "discordColorMessageGenerator": {

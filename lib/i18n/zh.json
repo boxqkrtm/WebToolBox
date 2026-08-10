@@ -141,6 +141,11 @@
         "pasteHint": "按Ctrl+V粘贴剪贴板中的二维码图片",
         "dragDropHint": "或将图片拖放到此处",
         "downloadQr": "下载二维码",
+        "ditheredTitle": "\u6296\u52a8\u4e8c\u7ef4\u7801\u751f\u6210\u5668",
+        "ditheredDescription": "\u5c06\u56fe\u7247\u8f6c\u6362\u4e3a\u5e26\u6709\u6296\u52a8\u7167\u7247\u6548\u679c\u7684\u4e8c\u7ef4\u7801\u3002",
+        "fun": "fun",
+        "sourceCode": "\u6e90\u4ee3\u7801",
+
         "previewAlt": "生成的二维码预览"
       },
       "discordColorMessageGenerator": {
