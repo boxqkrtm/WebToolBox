@@ -12,7 +12,7 @@ import {
   DEFAULT_DITHERED_QR,
   applyDitheredImage,
   encodeDitheredQr,
-  imageDataToBrightness,
+  imageDataToRgb,
 } from '@/lib/ditheredQr'
 
 const SOURCE_URL = 'https://codeberg.org/andrew-t/dithered-qr-codes'
@@ -52,7 +52,7 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
           const raster = rasterizeImage(image, qr.length, probeContext)
           const dithered = applyDitheredImage(
             qr,
-            imageDataToBrightness(raster, settings),
+            imageDataToRgb(raster, settings),
             settings,
           )
           if (cancelled) return
@@ -200,12 +200,12 @@ function rasterizeImage(
 
 function drawDitheredQr(
   canvas: HTMLCanvasElement,
-  qr: boolean[][],
+  colors: number[][][],
   scale: number,
   forBlackBackground: boolean,
 ) {
   const margin = scale * QUIET_ZONE_MODULES
-  const inner = qr.length
+  const inner = colors.length
   const size = inner + margin * 2
   canvas.width = size
   canvas.height = size
@@ -223,11 +223,11 @@ function drawDitheredQr(
 
   for (let y = 0; y < inner; y += 1) {
     for (let x = 0; x < inner; x += 1) {
-      const value = qr[y][x] ? 255 : 0
+      const [red, green, blue] = colors[y][x]
       const index = ((y + margin) * size + (x + margin)) * 4
-      pixels.data[index] = value
-      pixels.data[index + 1] = value
-      pixels.data[index + 2] = value
+      pixels.data[index] = red
+      pixels.data[index + 1] = green
+      pixels.data[index + 2] = blue
       pixels.data[index + 3] = 255
     }
   }

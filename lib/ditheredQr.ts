@@ -191,23 +191,21 @@ export function encodeDitheredQr(text: string, settings: DitheredQrSettings) {
   return qr
 }
 
-export function imageDataToBrightness(
+export function imageDataToRgb(
   image: Pick<ImageData, 'data' | 'width' | 'height'>,
   settings: DitheredQrSettings,
 ) {
   const size = image.width
-  const output: number[][] = []
+  const output: number[][][] = []
   for (let y = 0; y < size; y += 1) {
-    const row: number[] = []
+    const row: number[][] = []
     for (let x = 0; x < size; x += 1) {
-      let value = image.data[(x + y * size) * 4 + 1] / 255
-      value **= settings.gamma
-      value -= 0.5
-      value *= settings.contrast
-      value += settings.brightness + 0.5
-      if (value < settings.minBrightness) value = settings.minBrightness
-      if (value > settings.maxBrightness) value = settings.maxBrightness
-      row.push(value)
+      const index = (x + y * size) * 4
+      row.push([
+        prepareChannel(image.data[index] / 255, settings),
+        prepareChannel(image.data[index + 1] / 255, settings),
+        prepareChannel(image.data[index + 2] / 255, settings),
+      ])
     }
     output.push(row)
   }
@@ -215,7 +213,7 @@ export function imageDataToBrightness(
 }
 
 export function diffuseDataPoints(
-  imageData: number[][],
+  imageData: number[][][],
   qr: boolean[][],
   settings: DitheredQrSettings,
 ) {
@@ -225,15 +223,18 @@ export function diffuseDataPoints(
     for (let y = 0; y < size; y += 1) {
       for (let x = 0; x < size; x += 1) {
         if (isLockedPixel(size, x, y, settings) || !isDataPixel(x, y, scale)) continue
-        const error = imageData[y][x] - Number(qr[y][x])
-        addError(imageData, x, y - 1, error * 3 / 16)
-        addError(imageData, x, y + 1, error * 3 / 16)
-        addError(imageData, x - 1, y, error * 3 / 16)
-        addError(imageData, x + 1, y, error * 3 / 16)
-        addError(imageData, x - 1, y - 1, error / 16)
-        addError(imageData, x - 1, y + 1, error / 16)
-        addError(imageData, x + 1, y - 1, error / 16)
-        addError(imageData, x + 1, y + 1, error / 16)
+        const target = Number(qr[y][x])
+        for (let channel = 0; channel < 3; channel += 1) {
+          const error = imageData[y][x][channel] - target
+          addError(imageData, x, y - 1, channel, error * 3 / 16)
+          addError(imageData, x, y + 1, channel, error * 3 / 16)
+          addError(imageData, x - 1, y, channel, error * 3 / 16)
+          addError(imageData, x + 1, y, channel, error * 3 / 16)
+          addError(imageData, x - 1, y - 1, channel, error / 16)
+          addError(imageData, x - 1, y + 1, channel, error / 16)
+          addError(imageData, x + 1, y - 1, channel, error / 16)
+          addError(imageData, x + 1, y + 1, channel, error / 16)
+        }
       }
     }
     return
@@ -247,17 +248,20 @@ export function diffuseDataPoints(
         for (const dy of [-1, 1]) {
           const sx = x + 0.5 + dx * 0.5
           const sy = y + 0.5 + dy * 0.5
-          const error = imageData[sy][sx] - Number(qr[sy][sx])
-          addError(imageData, sx + dx, sy, error * 6 / 16)
-          addError(imageData, sx, sy + dy, error * 6 / 16)
-          addError(imageData, sx + dx, sy + dy, error * 4 / 16)
+          const target = Number(qr[sy][sx])
+          for (let channel = 0; channel < 3; channel += 1) {
+            const error = imageData[sy][sx][channel] - target
+            addError(imageData, sx + dx, sy, channel, error * 6 / 16)
+            addError(imageData, sx, sy + dy, channel, error * 6 / 16)
+            addError(imageData, sx + dx, sy + dy, channel, error * 4 / 16)
+          }
         }
       }
     }
   }
 }
 
-export function diffuseFreePoints(imageData: number[][], settings: DitheredQrSettings) {
+export function diffuseFreePoints(imageData: number[][][], settings: DitheredQrSettings) {
   const size = imageData.length
   const canChange = (x: number, y: number) =>
     x >= 0 && y >= 0 && x < size && y < size &&
@@ -267,44 +271,63 @@ export function diffuseFreePoints(imageData: number[][], settings: DitheredQrSet
   for (let y = 0; y < size; y += 1) {
     for (let x = 0; x < size; x += 1) {
       if (!canChange(x, y)) continue
-      const actual = Math.round(imageData[y][x])
-      const error = imageData[y][x] - actual
-      imageData[y][x] = actual
-      const right = canChange(x + 1, y)
-      const downLeft = canChange(x - 1, y + 1)
-      const down = canChange(x, y + 1)
-      const downRight = canChange(x + 1, y + 1)
-      const total = Number(right) * 7 + Number(downLeft) * 3 + Number(down) * 5 + Number(downRight)
-      if (!total) continue
-      if (right) imageData[y][x + 1] += error * 7 / total
-      if (downLeft) imageData[y + 1][x - 1] += error * 3 / total
-      if (down) imageData[y + 1][x] += error * 5 / total
-      if (downRight) imageData[y + 1][x + 1] += error / total
+      for (let channel = 0; channel < 3; channel += 1) {
+        const actual = Math.round(imageData[y][x][channel])
+        const error = imageData[y][x][channel] - actual
+        imageData[y][x][channel] = actual
+        const right = canChange(x + 1, y)
+        const downLeft = canChange(x - 1, y + 1)
+        const down = canChange(x, y + 1)
+        const downRight = canChange(x + 1, y + 1)
+        const total = Number(right) * 7 + Number(downLeft) * 3 + Number(down) * 5 + Number(downRight)
+        if (!total) continue
+        if (right) imageData[y][x + 1][channel] += error * 7 / total
+        if (downLeft) imageData[y + 1][x - 1][channel] += error * 3 / total
+        if (down) imageData[y + 1][x][channel] += error * 5 / total
+        if (downRight) imageData[y + 1][x + 1][channel] += error / total
+      }
     }
   }
 }
 
 export function applyDitheredImage(
   qr: boolean[][],
-  imageData: number[][],
+  imageData: number[][][],
   settings: DitheredQrSettings,
 ) {
   const size = qr.length
-  const pixels = imageData.map((row) => row.slice())
+  const pixels = imageData.map((row) => row.map((pixel) => pixel.slice()))
 
   if (settings.diffuseData) diffuseDataPoints(pixels, qr, settings)
   if (settings.diffuseFree) diffuseFreePoints(pixels, settings)
 
-  if (settings.includeImage) {
-    for (let y = 0; y < size; y += 1) {
-      for (let x = 0; x < size; x += 1) {
-        if (isLockedPixel(size, x, y, settings) || isDataPixel(x, y, settings.scale)) continue
-        qr[y][x] = pixels[y][x] > 0.5
+  const colors: number[][][] = []
+  for (let y = 0; y < size; y += 1) {
+    const row: number[][] = []
+    for (let x = 0; x < size; x += 1) {
+      const lockedOrData = isLockedPixel(size, x, y, settings) || isDataPixel(x, y, settings.scale)
+      if (!settings.includeImage || lockedOrData) {
+        const value = qr[y][x] ? 255 : 0
+        row.push([value, value, value])
+        continue
       }
+
+      const pixel = pixels[y][x]
+      if (!settings.diffuseFree) {
+        pixel[0] = pixel[0] > 0.5 ? 1 : 0
+        pixel[1] = pixel[1] > 0.5 ? 1 : 0
+        pixel[2] = pixel[2] > 0.5 ? 1 : 0
+      }
+      row.push([
+        toByte(pixel[0]),
+        toByte(pixel[1]),
+        toByte(pixel[2]),
+      ])
     }
+    colors.push(row)
   }
 
-  return qr
+  return colors
 }
 
 export function generateDitheredQr(
@@ -317,13 +340,32 @@ export function generateDitheredQr(
   if (image.width !== qr.length || image.height !== qr.length) {
     throw new Error('Image must already be resized to the QR pixel grid')
   }
-  const brightness = imageDataToBrightness(image, resolved)
-  return applyDitheredImage(qr, brightness, resolved)
+  return applyDitheredImage(qr, imageDataToRgb(image, resolved), resolved)
 }
 
-function addError(imageData: number[][], x: number, y: number, error: number) {
+function prepareChannel(value: number, settings: DitheredQrSettings) {
+  let next = value ** settings.gamma
+  next -= 0.5
+  next *= settings.contrast
+  next += settings.brightness + 0.5
+  if (next < settings.minBrightness) next = settings.minBrightness
+  if (next > settings.maxBrightness) next = settings.maxBrightness
+  return next
+}
+
+function toByte(value: number) {
+  return Math.max(0, Math.min(255, Math.round(value * 255)))
+}
+
+function addError(
+  imageData: number[][][],
+  x: number,
+  y: number,
+  channel: number,
+  error: number,
+) {
   if (y < 0 || x < 0 || y >= imageData.length || x >= imageData[y].length) return
-  imageData[y][x] += error
+  imageData[y][x][channel] += error
 }
 
 function alignmentCenters(moduleSize: number) {

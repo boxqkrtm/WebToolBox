@@ -142,7 +142,7 @@
         "dragDropHint": "または画像をここにドラッグ＆ドロップ",
         "downloadQr": "QRコードをダウンロード",
         "ditheredTitle": "ディザリング QR ジェネレーター",
-        "ditheredDescription": "画像をディザリングした写真風の QR コードに変換します。",
+        "ditheredDescription": "画像をカラーディザリングした QR コードに変換します。スキャナーは白黒モジュールだけを読みます。",
         "fun": "fun",
         "sourceCode": "ソースコード",
         "ditheredTextLabel": "QR コードのテキスト",

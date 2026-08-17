@@ -142,7 +142,7 @@
         "dragDropHint": "또는 이미지를 여기에 드래그 & 드롭",
         "downloadQr": "QR코드 다운로드",
         "ditheredTitle": "디더링 QR 생성기",
-        "ditheredDescription": "이미지를 디더링 사진 느낌의 QR 코드로 변환합니다.",
+        "ditheredDescription": "이미지를 컬러 디더링 QR 코드로 변환합니다. 스캐너는 흑백 모듈만 읽습니다.",
         "fun": "fun",
         "sourceCode": "소스 코드",
         "ditheredTextLabel": "QR 코드 텍스트",

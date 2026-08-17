@@ -30,11 +30,11 @@ test.describe('QR code generator', () => {
       name: 'sample.png',
       mimeType: 'image/png',
       buffer: Buffer.from(
-        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+        'iVBORw0KGgoAAAANSUhEUgAAAAMAAAADCAIAAADZSiLoAAAAG0lEQVR4nAXBgQEAIAzDINznvTyCEDrpJWeG+Y7yCILgHF5wAAAAAElFTkSuQmCC',
         'base64'
       ),
-    });
-    await expect(page.getByTestId('dithered-qr-canvas')).toBeVisible();
+    })
+    await expect(page.getByTestId('dithered-qr-canvas')).toBeVisible()
     const canvas = page.getByTestId('dithered-qr-canvas')
     await expect.poll(async () => canvas.evaluate((node) => (
       node instanceof HTMLCanvasElement ? node.width : 0
@@ -45,11 +45,18 @@ test.describe('QR code generator', () => {
       const context = node.getContext('2d')
       if (!context) return null
       const { data, width } = context.getImageData(0, 0, node.width, node.height)
-      const at = (x: number, y: number) => data[(y * width + x) * 4]
+      const at = (x: number, y: number) => {
+        const index = (y * width + x) * 4
+        return [data[index], data[index + 1], data[index + 2]]
+      }
       let mixed = 0
+      let colored = 0
       for (let y = 70; y < 90; y += 1) {
         for (let x = 70; x < 90; x += 1) {
-          if (at(x, y) !== at(70, 70)) mixed += 1
+          const [red, green, blue] = at(x, y)
+          const [baseRed, baseGreen, baseBlue] = at(70, 70)
+          if (red !== baseRed || green !== baseGreen || blue !== baseBlue) mixed += 1
+          if (red !== green || green !== blue) colored += 1
         }
       }
       return {
@@ -58,16 +65,18 @@ test.describe('QR code generator', () => {
         finderRing: at(15, 15),
         finderCenter: at(21, 21),
         mixed,
+        colored,
       }
     })
 
     expect(pixels).toMatchObject({
-      quiet: 255,
-      finder: 0,
-      finderRing: 255,
-      finderCenter: 0,
+      quiet: [255, 255, 255],
+      finder: [0, 0, 0],
+      finderRing: [255, 255, 255],
+      finderCenter: [0, 0, 0],
     })
     expect(pixels?.mixed).toBeGreaterThan(0)
+    expect(pixels?.colored).toBeGreaterThan(0)
     await expect(page.getByTestId('dithered-qr-error')).toHaveCount(0)
   });
 });

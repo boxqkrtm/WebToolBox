@@ -277,7 +277,7 @@
         "dragDropHint": "or drag & drop an image here",
         "downloadQr": "Download QR Code",
         "ditheredTitle": "Dithered QR Generator",
-        "ditheredDescription": "Turn an image into a QR code with a dithered photographic look.",
+        "ditheredDescription": "Turn an image into a color-dithered QR code. Scanners still read the black-and-white modules.",
         "fun": "fun",
         "sourceCode": "Source code",
         "ditheredTextLabel": "QR code text",

@@ -142,7 +142,7 @@
         "dragDropHint": "或将图片拖放到此处",
         "downloadQr": "下载二维码",
         "ditheredTitle": "抖动二维码生成器",
-        "ditheredDescription": "将图片转换为带有抖动照片效果的二维码。",
+        "ditheredDescription": "将图片转换为彩色抖动二维码。扫描器仍读取黑白模块。",
         "fun": "fun",
         "sourceCode": "源代码",
         "ditheredTextLabel": "QR 码文本",
