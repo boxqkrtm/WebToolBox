@@ -366,7 +366,7 @@
         "title": "MP4, GIF Studio",
         "description": "Edit video and GIF files, then export as MP4, GIF, or animated WebP.",
         "page": {
-          "upload": "Upload video or GIF",
+          "upload": "Upload video, GIF, or WebP",
           "supportedFormats": "Supported formats: MP4, WebM, MOV, MKV, AVI, M4V, GIF, and WebP",
           "privacy": "Your files stay in your browser and are never uploaded.",
           "replace": "Replace file",
@@ -381,9 +381,9 @@
             "exportComplete": "Export complete"
           },
           "errors": {
-            "invalidFile": "Choose a supported video or GIF file.",
+            "invalidFile": "Choose a supported video, GIF, or WebP file.",
             "fileTooLarge": "This file is too large. Choose a file smaller than {size}.",
-            "analysisFailed": "Could not analyze this file. Try another video or GIF.",
+            "analysisFailed": "Could not analyze this file. Try another video, GIF, or WebP.",
             "exportFailed": "Could not export the file. Try different export settings.",
             "memoryRisk": "Estimated peak memory is {estimate}, above the safe limit of {limit}. Shorten the clip or reduce the resolution, frame rate, or output scale."
           },

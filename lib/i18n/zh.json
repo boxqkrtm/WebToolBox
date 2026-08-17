@@ -230,7 +230,7 @@
         "title": "MP4, GIF Studio",
         "description": "编辑视频和 GIF，并导出为 MP4、GIF 或动态 WebP。",
         "page": {
-          "upload": "上传视频或 GIF",
+          "upload": "上传视频、GIF 或 WebP",
           "supportedFormats": "支持的格式：MP4、WebM、MOV、MKV、AVI、M4V、GIF、WebP",
           "privacy": "文件仅在浏览器中处理，不会上传到服务器。",
           "replace": "更换文件",
@@ -245,9 +245,9 @@
             "exportComplete": "导出完成"
           },
           "errors": {
-            "invalidFile": "请选择支持的视频或 GIF 文件。",
+            "invalidFile": "请选择支持的视频、GIF 或 WebP 文件。",
             "fileTooLarge": "文件过大。请选择小于 {size} 的文件。",
-            "analysisFailed": "无法分析此文件。请尝试其他视频或 GIF 文件。",
+            "analysisFailed": "无法分析此文件。请尝试其他视频、GIF 或 WebP 文件。",
             "exportFailed": "无法导出文件。请尝试其他导出设置。",
             "memoryRisk": "预计峰值内存为 {estimate}，超过 {limit} 的安全上限。请缩短片段，或降低分辨率、帧率或输出比例。"
           },

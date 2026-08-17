@@ -75,6 +75,10 @@ import {
   getStudioOutputGeometry,
   parseStudioProbe,
 } from '@/lib/media/mp4GifStudio'
+import {
+  decodeWebpSource,
+  writeDecodedWebpAsMp4,
+} from '@/lib/media/webpSource'
 import type {
   StudioExportPlan,
   StudioMediaMetadata,
@@ -567,7 +571,10 @@ export default function Mp4GifStudioPage() {
         : canUseNativeVideoPreview(immediatePreviewUrl)
 
 
-      const inputName = `studio-source-${jobId}.${source.extension}`
+      const decodedWebpPromise = source.extension === 'webp' ? decodeWebpSource(selected) : null
+      const inputName = source.extension === 'webp'
+        ? `studio-source-${jobId}.mp4`
+        : `studio-source-${jobId}.${source.extension}`
       const probeName = `studio-probe-${jobId}.json`
       let ffmpeg: FFmpeg | null = null
 
@@ -580,7 +587,11 @@ export default function Mp4GifStudioPage() {
         }
 
         setPhase('analyzing')
-        await ffmpeg.writeFile(inputName, await fetchFile(selected))
+        if (decodedWebpPromise) {
+          await writeDecodedWebpAsMp4(ffmpeg, await decodedWebpPromise, inputName)
+        } else {
+          await ffmpeg.writeFile(inputName, await fetchFile(selected))
+        }
         inputNameRef.current = inputName
 
         const probeLogs: string[] = []
@@ -1760,6 +1771,7 @@ export default function Mp4GifStudioPage() {
                     size="lg"
                     disabled={isExporting || !outputGeometry || exceedsMemoryLimit}
                     onClick={() => void handleExport()}
+                    data-testid="studio-export-button"
                   >
                     {isExporting && (
                       <LoaderCircle className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
@@ -1785,7 +1797,7 @@ export default function Mp4GifStudioPage() {
         </div>
 
         {result && resultUrl && (
-          <Card role="region" aria-labelledby="studio-result-heading">
+          <Card role="region" aria-labelledby="studio-result-heading" data-testid="studio-result">
             <CardHeader>
               <CardTitle id="studio-result-heading">
                 {t('common.tools.mp4GifStudio.page.result.title')}

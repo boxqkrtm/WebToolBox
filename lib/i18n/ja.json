@@ -230,7 +230,7 @@
         "title": "MP4, GIF Studio",
         "description": "動画とGIFを編集し、MP4、GIF、またはアニメーションWebPとして書き出します。",
         "page": {
-          "upload": "動画またはGIFをアップロード",
+          "upload": "動画、GIF、または WebP をアップロード",
           "supportedFormats": "対応形式: MP4、WebM、MOV、MKV、AVI、M4V、GIF、WebP",
           "privacy": "ファイルはブラウザ内だけで処理され、サーバーにはアップロードされません。",
           "replace": "ファイルを変更",
@@ -245,9 +245,9 @@
             "exportComplete": "書き出し完了"
           },
           "errors": {
-            "invalidFile": "対応している動画またはGIFファイルを選択してください。",
+            "invalidFile": "対応している動画、GIF、または WebP ファイルを選択してください。",
             "fileTooLarge": "ファイルが大きすぎます。{size}未満のファイルを選択してください。",
-            "analysisFailed": "ファイルを解析できませんでした。別の動画またはGIFをお試しください。",
+            "analysisFailed": "ファイルを解析できませんでした。別の動画、GIF、または WebP をお試しください。",
             "exportFailed": "ファイルを書き出せませんでした。別の書き出し設定をお試しください。",
             "memoryRisk": "推定ピークメモリが{estimate}で、安全上限の{limit}を超えています。範囲を短くするか、解像度、フレームレート、出力倍率を下げてください。"
           },
