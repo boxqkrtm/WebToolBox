@@ -8,46 +8,15 @@ import { Download, Sparkles, Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useI18n } from '@/lib/i18n/i18nContext'
-import encodeQR from 'qr'
+import {
+  DEFAULT_DITHERED_QR,
+  applyDitheredImage,
+  encodeDitheredQr,
+  imageDataToBrightness,
+} from '@/lib/ditheredQr'
 
 const SOURCE_URL = 'https://codeberg.org/andrew-t/dithered-qr-codes'
-const QR_VERSION = 6
-const QR_SCALE = 3
-const BAYER_4X4 = [
-  [0, 8, 2, 10],
-  [12, 4, 14, 6],
-  [3, 11, 1, 9],
-  [15, 7, 13, 5],
-]
-
-function alignmentPositions(version: number) {
-  if (version === 1) return []
-  const count = Math.floor(version / 7) + 2
-  const step = version === 32
-    ? 26
-    : Math.ceil((version * 4 + count * 2 + 1) / (count * 2 - 2)) * 2
-  return [6, ...Array.from({ length: count - 1 }, (_, index) => version * 4 + 10 - (count - 2 - index) * step)]
-}
-
-function isLockedModule(version: number, x: number, y: number) {
-  const size = version * 4 + 17
-  const inFinder = (left: number, top: number) =>
-    x >= left && x < left + 9 && y >= top && y < top + 9
-  if (inFinder(0, 0) || inFinder(size - 8, 0) || inFinder(0, size - 8)) return true
-  if (x === 6 || y === 6 || x === 8 || y === 8) return true
-
-  const positions = alignmentPositions(version)
-  return positions.some((centerX) =>
-    positions.some((centerY) => {
-      if ((centerX < 9 && centerY < 9) ||
-          (centerX < 9 && centerY >= size - 8) ||
-          (centerX >= size - 8 && centerY < 9)) {
-        return false
-      }
-      return Math.abs(x - centerX) <= 2 && Math.abs(y - centerY) <= 2
-    })
-  )
-}
+const QUIET_ZONE_MODULES = 4
 
 type DitheredQrGeneratorProps = {
   className?: string
@@ -60,83 +29,57 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
   const [text, setText] = useState('https://www.andrewt.net')
   const [imageDataUrl, setImageDataUrl] = useState('')
   const [outputUrl, setOutputUrl] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const outputRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
     if (!isOpen || !text || !imageDataUrl) return
 
+    let cancelled = false
     const frame = requestAnimationFrame(() => {
       const outputCanvas = outputRef.current
       if (!outputCanvas) return
 
-      const qr = encodeQR(text, 'raw', {
-        border: 0,
-        ecc: 'high',
-        version: QR_VERSION,
-        scale: 1,
-      })
-      const moduleCount = qr.length
-      const innerSize = moduleCount * QR_SCALE
-      const margin = QR_SCALE * 5
-      const size = innerSize + margin * 2
-      const context = outputCanvas.getContext('2d')
-      if (!context) return
-
-      outputCanvas.width = size
-      outputCanvas.height = size
-      context.fillStyle = 'white'
-      context.fillRect(0, 0, size, size)
-
       const image = new Image()
       image.onload = () => {
-        const imageCanvas = document.createElement('canvas')
-        imageCanvas.width = innerSize
-        imageCanvas.height = innerSize
-        const imageContext = imageCanvas.getContext('2d')
-        if (!imageContext) return
-        imageContext.drawImage(image, 0, 0, innerSize, innerSize)
-        const imagePixels = imageContext.getImageData(0, 0, innerSize, innerSize)
-        const pixels = context.createImageData(size, size)
-        pixels.data.fill(255)
+        if (cancelled) return
+        try {
+          const settings = DEFAULT_DITHERED_QR
+          const qr = encodeDitheredQr(text, settings)
+          const probe = document.createElement('canvas')
+          const probeContext = probe.getContext('2d')
+          if (!probeContext) throw new Error('Canvas is unavailable')
+          const raster = rasterizeImage(image, qr.length, probeContext)
+          const dithered = applyDitheredImage(
+            qr,
+            imageDataToBrightness(raster, settings),
+            settings,
+          )
+          if (cancelled) return
 
-        for (let moduleY = 0; moduleY < moduleCount; moduleY += 1) {
-          for (let moduleX = 0; moduleX < moduleCount; moduleX += 1) {
-            const locked = isLockedModule(QR_VERSION, moduleX, moduleY)
-            for (let subY = 0; subY < QR_SCALE; subY += 1) {
-              for (let subX = 0; subX < QR_SCALE; subX += 1) {
-                const x = margin + moduleX * QR_SCALE + subX
-                const y = margin + moduleY * QR_SCALE + subY
-                const outputIndex = (y * size + x) * 4
-                const imageX = moduleX * QR_SCALE + subX
-                const imageY = moduleY * QR_SCALE + subY
-                const imageIndex = (imageY * innerSize + imageX) * 4
-                const sourceValue =
-                  imagePixels.data[imageIndex] * 0.299 +
-                  imagePixels.data[imageIndex + 1] * 0.587 +
-                  imagePixels.data[imageIndex + 2] * 0.114
-                const threshold = (BAYER_4X4[imageY % 4][imageX % 4] + 0.5) * 16
-                const isDataPoint = subX === 1 && subY === 1
-                const dark = locked || isDataPoint
-                  ? qr[moduleY][moduleX]
-                  : sourceValue < threshold
-                const value = dark ? 0 : 255
-                pixels.data[outputIndex] = value
-                pixels.data[outputIndex + 1] = value
-                pixels.data[outputIndex + 2] = value
-                pixels.data[outputIndex + 3] = 255
-              }
-            }
-          }
+          drawDitheredQr(outputCanvas, dithered, settings.scale, settings.forBlackBackground)
+          setOutputUrl(outputCanvas.toDataURL('image/png'))
+          setErrorMessage('')
+        } catch (error) {
+          if (cancelled) return
+          setOutputUrl('')
+          setErrorMessage(error instanceof Error ? error.message : t('common.tools.qrCode.ditheredError'))
         }
-
-        context.putImageData(pixels, 0, 0)
-        setOutputUrl(outputCanvas.toDataURL('image/png'))
+      }
+      image.onerror = () => {
+        if (cancelled) return
+        setOutputUrl('')
+        setErrorMessage(t('common.tools.qrCode.ditheredError'))
       }
       image.src = imageDataUrl
     })
 
-    return () => cancelAnimationFrame(frame)
-  }, [imageDataUrl, isOpen, text])
+    return () => {
+      cancelled = true
+      cancelAnimationFrame(frame)
+    }
+  }, [imageDataUrl, isOpen, t, text])
+
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (!file) return
@@ -209,13 +152,18 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
               <p className="text-xs text-muted-foreground">
                 {t('common.tools.qrCode.ditheredImageHint')}
               </p>
+              {errorMessage && (
+                <p className="text-sm text-destructive" data-testid="dithered-qr-error">
+                  {errorMessage}
+                </p>
+              )}
             </div>
 
             <div className="flex flex-col items-center gap-3">
               {imageDataUrl ? (
                 <canvas
                   ref={outputRef}
-                  className="w-full max-w-sm rounded-lg bg-white p-2"
+                  className="w-full max-w-sm rounded-lg bg-white p-2 [image-rendering:pixelated]"
                   data-testid="dithered-qr-canvas"
                 />
               ) : (
@@ -233,4 +181,56 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
       )}
     </div>
   )
+}
+
+function rasterizeImage(
+  image: CanvasImageSource & { width: number; height: number },
+  size: number,
+  context: CanvasRenderingContext2D,
+) {
+  const canvas = context.canvas
+  canvas.width = size
+  canvas.height = size
+  const sourceWidth = 'naturalWidth' in image && image.naturalWidth ? image.naturalWidth : image.width
+  const sourceHeight = 'naturalHeight' in image && image.naturalHeight ? image.naturalHeight : image.height
+  context.drawImage(image, 0, 0, sourceWidth, sourceHeight, 0, 0, size, size)
+  return context.getImageData(0, 0, size, size)
+}
+
+
+function drawDitheredQr(
+  canvas: HTMLCanvasElement,
+  qr: boolean[][],
+  scale: number,
+  forBlackBackground: boolean,
+) {
+  const margin = scale * QUIET_ZONE_MODULES
+  const inner = qr.length
+  const size = inner + margin * 2
+  canvas.width = size
+  canvas.height = size
+  const context = canvas.getContext('2d')
+  if (!context) throw new Error('Canvas is unavailable')
+
+  const pixels = context.createImageData(size, size)
+  const background = forBlackBackground ? 0 : 255
+  pixels.data.fill(255)
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    pixels.data[i] = background
+    pixels.data[i + 1] = background
+    pixels.data[i + 2] = background
+  }
+
+  for (let y = 0; y < inner; y += 1) {
+    for (let x = 0; x < inner; x += 1) {
+      const value = qr[y][x] ? 255 : 0
+      const index = ((y + margin) * size + (x + margin)) * 4
+      pixels.data[index] = value
+      pixels.data[index + 1] = value
+      pixels.data[index + 2] = value
+      pixels.data[index + 3] = 255
+    }
+  }
+
+  context.putImageData(pixels, 0, 0)
 }

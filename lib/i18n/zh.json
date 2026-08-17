@@ -141,16 +141,17 @@
         "pasteHint": "按Ctrl+V粘贴剪贴板中的二维码图片",
         "dragDropHint": "或将图片拖放到此处",
         "downloadQr": "下载二维码",
-        "ditheredTitle": "\u6296\u52a8\u4e8c\u7ef4\u7801\u751f\u6210\u5668",
-        "ditheredDescription": "\u5c06\u56fe\u7247\u8f6c\u6362\u4e3a\u5e26\u6709\u6296\u52a8\u7167\u7247\u6548\u679c\u7684\u4e8c\u7ef4\u7801\u3002",
+        "ditheredTitle": "抖动二维码生成器",
+        "ditheredDescription": "将图片转换为带有抖动照片效果的二维码。",
         "fun": "fun",
-        "sourceCode": "\u6e90\u4ee3\u7801",
-        "ditheredTextLabel": "QR \u7801\u6587\u672c",
-        "ditheredTextPlaceholder": "\u8f93\u5165\u8981\u7f16\u7801\u7684\u6587\u672c",
-        "ditheredImageLabel": "\u4e0a\u4f20\u56fe\u7247\uff08\u652f\u6301 WebP\uff09",
-        "ditheredImageHint": "\u56fe\u7247\u4ec5\u5728\u6d4f\u89c8\u5668\u4e2d\u672c\u5730\u5904\u7406\u3002",
-        "ditheredDownload": "\u4e0b\u8f7d\u6296\u52a8\u4e8c\u7ef4\u7801",
-        "previewAlt": "\u751f\u6210\u7684\u4e8c\u7ef4\u7801\u9884\u89c8"
+        "sourceCode": "源代码",
+        "ditheredTextLabel": "QR 码文本",
+        "ditheredTextPlaceholder": "输入要编码的文本",
+        "ditheredImageLabel": "上传图片（支持 WebP）",
+        "ditheredImageHint": "图片仅在浏览器中本地处理。",
+        "ditheredDownload": "下载抖动二维码",
+        "ditheredError": "无法生成抖动二维码。",
+        "previewAlt": "生成的二维码预览"
       },
       "discordColorMessageGenerator": {
         "title": "Discord 彩色消息生成器",
@@ -230,7 +231,7 @@
         "description": "编辑视频和 GIF，并导出为 MP4、GIF 或动态 WebP。",
         "page": {
           "upload": "上传视频或 GIF",
-          "supportedFormats": "\u652f\u6301\u7684\u683c\u5f0f\uff1aMP4\u3001WebM\u3001MOV\u3001MKV\u3001AVI\u3001M4V\u3001GIF\u3001WebP",
+          "supportedFormats": "支持的格式：MP4、WebM、MOV、MKV、AVI、M4V、GIF、WebP",
           "privacy": "文件仅在浏览器中处理，不会上传到服务器。",
           "replace": "更换文件",
           "startOver": "重新开始",
@@ -337,8 +338,8 @@
             "webpQuality": "WebP 质量",
             "compressionLevel": "压缩级别",
             "lossless": "无损",
-            "exportButton": "\u5bfc\u51fa\u6587\u4ef6",
-            "autoDownload": "\u5bfc\u51fa\u5b8c\u6210\u540e\u81ea\u52a8\u4e0b\u8f7d"
+            "exportButton": "导出文件",
+            "autoDownload": "导出完成后自动下载"
           },
           "result": {
             "title": "导出完成",

@@ -285,6 +285,7 @@
         "ditheredImageLabel": "Upload an image (WebP supported)",
         "ditheredImageHint": "The image is processed locally in your browser.",
         "ditheredDownload": "Download dithered QR",
+        "ditheredError": "Could not generate the dithered QR code.",
         "previewAlt": "Generated QR code preview"
       },
 

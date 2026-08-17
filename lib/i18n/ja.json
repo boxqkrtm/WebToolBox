@@ -142,15 +142,16 @@
         "dragDropHint": "または画像をここにドラッグ＆ドロップ",
         "downloadQr": "QRコードをダウンロード",
         "ditheredTitle": "ディザリング QR ジェネレーター",
-        "ditheredDescription": "\u753b\u50cf\u3092\u30c7\u30a3\u30b6\u30ea\u30f3\u30b0\u3057\u305f\u5199\u771f\u98a8\u306e QR \u30b3\u30fc\u30c9\u306b\u5909\u63db\u3057\u307e\u3059\u3002",
+        "ditheredDescription": "画像をディザリングした写真風の QR コードに変換します。",
         "fun": "fun",
-        "sourceCode": "\u30bd\u30fc\u30b9\u30b3\u30fc\u30c9",
-        "ditheredTextLabel": "QR \u30b3\u30fc\u30c9\u306e\u30c6\u30ad\u30b9\u30c8",
-        "ditheredTextPlaceholder": "\u30a8\u30f3\u30b3\u30fc\u30c9\u3059\u308b\u30c6\u30ad\u30b9\u30c8\u3092\u5165\u529b",
-        "ditheredImageLabel": "\u753b\u50cf\u3092\u30a2\u30c3\u30d7\u30ed\u30fc\u30c9\uff08WebP \u5bfe\u5fdc\uff09",
-        "ditheredImageHint": "\u753b\u50cf\u306f\u30d6\u30e9\u30a6\u30b6\u5185\u3067\u306e\u307f\u51e6\u7406\u3055\u308c\u307e\u3059\u3002",
-        "ditheredDownload": "\u30c7\u30a3\u30b6\u30ea\u30f3\u30b0 QR \u3092\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9",
-        "previewAlt": "\u751f\u6210\u3055\u308c\u305f QR \u30b3\u30fc\u30c9\u306e\u30d7\u30ec\u30d3\u30e5\u30fc"
+        "sourceCode": "ソースコード",
+        "ditheredTextLabel": "QR コードのテキスト",
+        "ditheredTextPlaceholder": "エンコードするテキストを入力",
+        "ditheredImageLabel": "画像をアップロード（WebP 対応）",
+        "ditheredImageHint": "画像はブラウザ内でのみ処理されます。",
+        "ditheredDownload": "ディザリング QR をダウンロード",
+        "ditheredError": "ディザリング QR コードを生成できませんでした。",
+        "previewAlt": "生成された QR コードのプレビュー"
       },
       "discordColorMessageGenerator": {
         "title": "Discord カラーメッセージジェネレータ",
@@ -230,7 +231,7 @@
         "description": "動画とGIFを編集し、MP4、GIF、またはアニメーションWebPとして書き出します。",
         "page": {
           "upload": "動画またはGIFをアップロード",
-          "supportedFormats": "\u5bfe\u5fdc\u5f62\u5f0f: MP4\u3001WebM\u3001MOV\u3001MKV\u3001AVI\u3001M4V\u3001GIF\u3001WebP",
+          "supportedFormats": "対応形式: MP4、WebM、MOV、MKV、AVI、M4V、GIF、WebP",
           "privacy": "ファイルはブラウザ内だけで処理され、サーバーにはアップロードされません。",
           "replace": "ファイルを変更",
           "startOver": "最初からやり直す",
@@ -337,8 +338,8 @@
             "webpQuality": "WebP品質",
             "compressionLevel": "圧縮レベル",
             "lossless": "ロスレス",
-            "exportButton": "\u30d5\u30a1\u30a4\u30eb\u3092\u66f8\u304d\u51fa\u3059",
-            "autoDownload": "\u66f8\u304d\u51fa\u3057\u5b8c\u4e86\u5f8c\u306b\u81ea\u52d5\u3067\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9"
+            "exportButton": "ファイルを書き出す",
+            "autoDownload": "書き出し完了後に自動でダウンロード"
           },
           "result": {
             "title": "書き出し完了",

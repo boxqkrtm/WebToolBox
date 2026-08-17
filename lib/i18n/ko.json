@@ -150,6 +150,7 @@
         "ditheredImageLabel": "이미지 업로드 (WebP 지원)",
         "ditheredImageHint": "이미지는 브라우저에서만 로컬로 처리됩니다.",
         "ditheredDownload": "디더링 QR 다운로드",
+        "ditheredError": "디더링 QR 코드를 생성하지 못했습니다.",
         "previewAlt": "생성된 QR 코드 미리보기"
       },
 
