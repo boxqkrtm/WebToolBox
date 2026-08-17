@@ -35,68 +35,64 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
   const [text, setText] = useState('https://www.andrewt.net')
   const [imageDataUrl, setImageDataUrl] = useState('')
   const [outputUrl, setOutputUrl] = useState('')
-  const sourceRef = useRef<HTMLDivElement>(null)
   const outputRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    if (!isOpen || !text) return
+    if (!isOpen || !text || !imageDataUrl) return
 
-    const sourceCanvas = sourceRef.current?.querySelector('canvas')
-    const outputCanvas = outputRef.current
-    if (!sourceCanvas || !outputCanvas) return
+    const frame = requestAnimationFrame(() => {
+      const outputCanvas = outputRef.current
+      if (!outputCanvas) return
 
-    const qrContext = outputCanvas.getContext('2d')
-    if (!qrContext) return
+      const qrContext = outputCanvas.getContext('2d')
+      if (!qrContext) return
 
-    outputCanvas.width = PREVIEW_SIZE
-    outputCanvas.height = PREVIEW_SIZE
-    qrContext.imageSmoothingEnabled = false
-    qrContext.drawImage(sourceCanvas, 0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
-    const qrPixels = qrContext.getImageData(0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
+      outputCanvas.width = PREVIEW_SIZE
+      outputCanvas.height = PREVIEW_SIZE
+      qrContext.imageSmoothingEnabled = false
+      const qrPixels = qrContext.getImageData(0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
 
-    const drawOutput = (imagePixels?: ImageData) => {
-      const pixels = qrContext.createImageData(PREVIEW_SIZE, PREVIEW_SIZE)
-      for (let y = 0; y < PREVIEW_SIZE; y += 1) {
-        for (let x = 0; x < PREVIEW_SIZE; x += 1) {
-          const index = (y * PREVIEW_SIZE + x) * 4
-          const qrIsDark = qrPixels.data[index] < 128
-          let value = qrIsDark ? 0 : 255
+      const image = new Image()
+      image.onload = () => {
+        const imageCanvas = document.createElement('canvas')
+        imageCanvas.width = PREVIEW_SIZE
+        imageCanvas.height = PREVIEW_SIZE
+        const imageContext = imageCanvas.getContext('2d')
+        if (!imageContext) return
 
-          if (!qrIsDark && imagePixels) {
+        imageContext.drawImage(image, 0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
+        const imagePixels = imageContext.getImageData(0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
+        const pixels = qrContext.createImageData(PREVIEW_SIZE, PREVIEW_SIZE)
+
+        for (let y = 0; y < PREVIEW_SIZE; y += 1) {
+          for (let x = 0; x < PREVIEW_SIZE; x += 1) {
+            const index = (y * PREVIEW_SIZE + x) * 4
+            const qrIsDark = qrPixels.data[index] < 128
             const sourceValue =
               imagePixels.data[index] * 0.299 +
               imagePixels.data[index + 1] * 0.587 +
               imagePixels.data[index + 2] * 0.114
             const threshold = (BAYER_4X4[y % 4][x % 4] + 0.5) * 16
-            value = sourceValue >= threshold ? 255 : 0
+            const value = qrIsDark
+              ? 0
+              : sourceValue >= threshold
+                ? 255
+                : 0
+
+            pixels.data[index] = value
+            pixels.data[index + 1] = value
+            pixels.data[index + 2] = value
+            pixels.data[index + 3] = 255
           }
-
-          pixels.data[index] = value
-          pixels.data[index + 1] = value
-          pixels.data[index + 2] = value
-          pixels.data[index + 3] = 255
         }
+
+        qrContext.putImageData(pixels, 0, 0)
+        setOutputUrl(outputCanvas.toDataURL('image/png'))
       }
-      qrContext.putImageData(pixels, 0, 0)
-      setOutputUrl(outputCanvas.toDataURL('image/png'))
-    }
+      image.src = imageDataUrl
+    })
 
-    if (!imageDataUrl) {
-      qrContext.clearRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
-      return
-    }
-
-    const image = new Image()
-    image.onload = () => {
-      const imageCanvas = document.createElement('canvas')
-      imageCanvas.width = PREVIEW_SIZE
-      imageCanvas.height = PREVIEW_SIZE
-      const imageContext = imageCanvas.getContext('2d')
-      if (!imageContext) return
-      imageContext.drawImage(image, 0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
-      drawOutput(imageContext.getImageData(0, 0, PREVIEW_SIZE, PREVIEW_SIZE))
-    }
-    image.src = imageDataUrl
+    return () => cancelAnimationFrame(frame)
   }, [imageDataUrl, isOpen, text])
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -173,10 +169,21 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
             </div>
 
             <div className="flex flex-col items-center gap-3">
-              <div ref={sourceRef} className="hidden" aria-hidden="true">
-                <QRCodeCanvas value={text || ' '} size={PREVIEW_SIZE} level="H" marginSize={4} />
-              </div>
-              <canvas ref={outputRef} className="w-full max-w-sm rounded-lg bg-white p-2" data-testid="dithered-qr-canvas" />
+              {imageDataUrl ? (
+                <QRCodeCanvas
+                  ref={outputRef}
+                  value={text || ' '}
+                  size={PREVIEW_SIZE}
+                  level="H"
+                  marginSize={4}
+                  className="w-full max-w-sm rounded-lg bg-white p-2"
+                  data-testid="dithered-qr-canvas"
+                />
+              ) : (
+                <div className="flex min-h-16 items-center justify-center text-center text-sm text-muted-foreground">
+                  {t('common.tools.qrCode.ditheredImageHint')}
+                </div>
+              )}
               <Button type="button" variant="outline" onClick={handleDownload} disabled={!outputUrl || !imageDataUrl}>
                 <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                 {t('common.tools.qrCode.ditheredDownload')}
