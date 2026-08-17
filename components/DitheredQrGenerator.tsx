@@ -118,12 +118,11 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
     <div className={className} data-testid="dithered-qr-tool">
       <Button
         type="button"
-        onClick={() =>
-          setIsOpen((value) => {
-            onOpenChange?.(!value)
-            return !value
-          })
-        }
+        onClick={() => {
+          const nextOpen = !isOpen
+          setIsOpen(nextOpen)
+          onOpenChange?.(nextOpen)
+        }}
         data-testid="dithered-qr-fun-button"
       >
         {isOpen ? <X className="mr-2 h-4 w-4" aria-hidden="true" /> : <Sparkles className="mr-2 h-4 w-4" aria-hidden="true" />}
@@ -174,7 +173,7 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
             </div>
 
             <div className="flex flex-col items-center gap-3">
-              <div ref={sourceRef} className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+              <div ref={sourceRef} className="hidden" aria-hidden="true">
                 <QRCodeCanvas value={text || ' '} size={PREVIEW_SIZE} level="H" marginSize={4} />
               </div>
               <canvas ref={outputRef} className="w-full max-w-sm rounded-lg bg-white p-2" data-testid="dithered-qr-canvas" />

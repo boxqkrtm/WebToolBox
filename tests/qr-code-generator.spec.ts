@@ -17,6 +17,7 @@ test.describe('QR code generator', () => {
     await page.getByTestId('dithered-qr-fun-button').click();
 
     await expect(page.getByTestId('dithered-qr-panel')).toBeVisible();
+    await expect(page.getByTestId('qr-code-canvas-container')).toBeHidden();
     await expect(page.getByTestId('dithered-qr-source-link')).toHaveAttribute(
       'href',
       DITHERED_QR_SOURCE_URL
