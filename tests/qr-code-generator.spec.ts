@@ -26,6 +26,14 @@ test.describe('QR code generator', () => {
       'accept',
       'image/*,.webp'
     );
-    await expect(page.getByTestId('dithered-qr-canvas')).toHaveCount(0);
+    await page.getByTestId('dithered-qr-image-input').setInputFiles({
+      name: 'sample.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+        'base64'
+      ),
+    });
+    await expect(page.getByTestId('dithered-qr-canvas')).toBeVisible();
   });
 });
