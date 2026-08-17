@@ -976,8 +976,6 @@ export default function Mp4GifStudioPage() {
                     <FileUploadButton
                       key={uploadKey}
                       id={UPLOAD_ID}
-                      accept="video/*,image/gif"
-                      capture="environment"
                       onFileSelect={(file) => void handleSourceFile(file)}
                       label={t('common.tools.mp4GifStudio.page.upload')}
                       disabled={isBusy}
@@ -1030,8 +1028,6 @@ export default function Mp4GifStudioPage() {
                         <FileUploadButton
                           key={uploadKey}
                           id={UPLOAD_ID}
-                          accept="video/*,image/gif"
-                          capture="environment"
                           onFileSelect={(file) => void handleSourceFile(file)}
                           label={t('common.tools.mp4GifStudio.page.upload')}
                           disabled={isBusy}

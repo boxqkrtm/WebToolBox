@@ -6,11 +6,10 @@ import { HiUpload } from 'react-icons/hi'
 
 type FileUploadButtonProps = {
   id: string
-  accept: string
+  accept?: string
   onFileSelect: (file: File | null) => void
   label: string
   disabled?: boolean
-  capture?: boolean | 'user' | 'environment'
   className?: string
 }
 
@@ -20,7 +19,6 @@ export function FileUploadButton({
   onFileSelect,
   label,
   disabled = false,
-  capture,
   className,
 }: FileUploadButtonProps) {
   const { t } = useI18n()
@@ -35,7 +33,7 @@ export function FileUploadButton({
 
   const matchesAccept = useCallback(
     (file: File) => {
-      if (!accept.trim()) return true
+      if (!accept?.trim()) return true
 
       return accept
         .split(',')
@@ -97,7 +95,6 @@ export function FileUploadButton({
         ref={fileInputRef}
         type="file"
         accept={accept}
-        capture={capture}
         className="hidden"
         onChange={handleFileChange}
         disabled={disabled}
