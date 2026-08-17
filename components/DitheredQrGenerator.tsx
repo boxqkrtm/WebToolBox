@@ -26,9 +26,10 @@ const BAYER_4X4 = [
 
 type DitheredQrGeneratorProps = {
   className?: string
+  onOpenChange?: (open: boolean) => void
 }
 
-export default function DitheredQrGenerator({ className }: DitheredQrGeneratorProps) {
+export default function DitheredQrGenerator({ className, onOpenChange }: DitheredQrGeneratorProps) {
   const { t } = useI18n()
   const [isOpen, setIsOpen] = useState(false)
   const [text, setText] = useState('https://www.andrewt.net')
@@ -81,7 +82,7 @@ export default function DitheredQrGenerator({ className }: DitheredQrGeneratorPr
     }
 
     if (!imageDataUrl) {
-      drawOutput()
+      qrContext.clearRect(0, 0, PREVIEW_SIZE, PREVIEW_SIZE)
       return
     }
 
@@ -115,7 +116,16 @@ export default function DitheredQrGenerator({ className }: DitheredQrGeneratorPr
 
   return (
     <div className={className} data-testid="dithered-qr-tool">
-      <Button type="button" onClick={() => setIsOpen((value) => !value)} data-testid="dithered-qr-fun-button">
+      <Button
+        type="button"
+        onClick={() =>
+          setIsOpen((value) => {
+            onOpenChange?.(!value)
+            return !value
+          })
+        }
+        data-testid="dithered-qr-fun-button"
+      >
         {isOpen ? <X className="mr-2 h-4 w-4" aria-hidden="true" /> : <Sparkles className="mr-2 h-4 w-4" aria-hidden="true" />}
         {t('common.tools.qrCode.fun')}
       </Button>
@@ -168,7 +178,7 @@ export default function DitheredQrGenerator({ className }: DitheredQrGeneratorPr
                 <QRCodeCanvas value={text || ' '} size={PREVIEW_SIZE} level="H" marginSize={4} />
               </div>
               <canvas ref={outputRef} className="w-full max-w-sm rounded-lg bg-white p-2" data-testid="dithered-qr-canvas" />
-              <Button type="button" variant="outline" onClick={handleDownload} disabled={!outputUrl}>
+              <Button type="button" variant="outline" onClick={handleDownload} disabled={!outputUrl || !imageDataUrl}>
                 <Download className="mr-2 h-4 w-4" aria-hidden="true" />
                 {t('common.tools.qrCode.ditheredDownload')}
               </Button>

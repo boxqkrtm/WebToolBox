@@ -366,7 +366,7 @@
         "description": "Edit video and GIF files, then export as MP4, GIF, or animated WebP.",
         "page": {
           "upload": "Upload video or GIF",
-          "supportedFormats": "Supported formats: MP4, WebM, MOV, MKV, AVI, M4V, and GIF",
+          "supportedFormats": "Supported formats: MP4, WebM, MOV, MKV, AVI, M4V, GIF, and WebP",
           "privacy": "Your files stay in your browser and are never uploaded.",
           "replace": "Replace file",
           "startOver": "Start over",

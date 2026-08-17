@@ -230,7 +230,7 @@
         "description": "動画とGIFを編集し、MP4、GIF、またはアニメーションWebPとして書き出します。",
         "page": {
           "upload": "動画またはGIFをアップロード",
-          "supportedFormats": "対応形式: MP4、WebM、MOV、MKV、AVI、M4V、GIF",
+          "supportedFormats": "\u5bfe\u5fdc\u5f62\u5f0f: MP4\u3001WebM\u3001MOV\u3001MKV\u3001AVI\u3001M4V\u3001GIF\u3001WebP",
           "privacy": "ファイルはブラウザ内だけで処理され、サーバーにはアップロードされません。",
           "replace": "ファイルを変更",
           "startOver": "最初からやり直す",

@@ -21,9 +21,12 @@ test.describe('MP4, GIF Studio', () => {
     }
   })
 
-  test('opens the client-side dithered QR tool', async ({ page }) => {
+  test('allows WebP input', async ({ page }) => {
     await page.goto('/utils/mp4-gif-studio')
-    await page.getByTestId('dithered-qr-fun-button').click()
-    await expect(page.getByTestId('dithered-qr-panel')).toBeVisible()
+    await expect(page.locator('#mp4-gif-studio-upload')).toHaveAttribute(
+      'accept',
+      'video/*,image/gif,image/webp,.gif,.webp'
+    )
   })
+
 })

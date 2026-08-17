@@ -230,7 +230,7 @@
         "description": "编辑视频和 GIF，并导出为 MP4、GIF 或动态 WebP。",
         "page": {
           "upload": "上传视频或 GIF",
-          "supportedFormats": "支持的格式：MP4、WebM、MOV、MKV、AVI、M4V、GIF",
+          "supportedFormats": "\u652f\u6301\u7684\u683c\u5f0f\uff1aMP4\u3001WebM\u3001MOV\u3001MKV\u3001AVI\u3001M4V\u3001GIF\u3001WebP",
           "privacy": "文件仅在浏览器中处理，不会上传到服务器。",
           "replace": "更换文件",
           "startOver": "重新开始",

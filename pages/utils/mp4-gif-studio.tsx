@@ -27,7 +27,6 @@ import {
 } from 'lucide-react'
 
 import CropOverlay from '@/components/media/CropOverlay'
-import DitheredQrGenerator from '@/components/DitheredQrGenerator'
 
 import type { CropOverlayLabels, CropRect } from '@/components/media/CropOverlay'
 import {
@@ -95,7 +94,6 @@ type StudioPhase =
   | 'exporting'
   | 'optimizing'
   | 'complete'
-
 type PreviewKind = 'video' | 'image'
 
 type ResultState = {
@@ -148,17 +146,21 @@ async function canUseNativeVideoPreview(url: string): Promise<boolean> {
 }
 
 type StudioSource = {
-  kind: 'mp4' | 'gif' | 'video'
-  extension: 'mp4' | 'gif' | 'webm' | 'mov' | 'mkv' | 'avi' | 'm4v' | 'video'
+  kind: 'mp4' | 'gif' | 'image' | 'video'
+  extension: 'mp4' | 'gif' | 'webp' | 'webm' | 'mov' | 'mkv' | 'avi' | 'm4v' | 'video'
 }
-
 const VIDEO_EXTENSION_PATTERN = /\.(mp4|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i
+const STUDIO_UPLOAD_ACCEPT = 'video/*,image/gif,image/webp,.gif,.webp'
 
 function getStudioSource(file: File): StudioSource | null {
   const lowerName = file.name.toLowerCase()
   if (file.type === 'image/gif' || lowerName.endsWith('.gif')) {
     return { kind: 'gif', extension: 'gif' }
   }
+  if (file.type === 'image/webp' || lowerName.endsWith('.webp')) {
+    return { kind: 'image', extension: 'webp' }
+  }
+
   if (file.type === 'video/mp4' || lowerName.endsWith('.mp4')) {
     return { kind: 'mp4', extension: 'mp4' }
   }
@@ -181,7 +183,7 @@ function getStudioSource(file: File): StudioSource | null {
 }
 
 function getBaseName(fileName: string) {
-  const withoutExtension = fileName.replace(/\.(?:mp4|gif|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i, '')
+  const withoutExtension = fileName.replace(/\.(?:mp4|gif|webp|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i, '')
   return withoutExtension || 'media'
 }
 
@@ -558,11 +560,12 @@ export default function Mp4GifStudioPage() {
 
       const immediatePreviewUrl = URL.createObjectURL(selected)
       setPreviewUrl(immediatePreviewUrl)
-      setPreviewKind(source.kind === 'gif' ? 'image' : 'video')
-      const nativePreviewPromise =
-        source.kind === 'gif'
-          ? Promise.resolve(false)
-          : canUseNativeVideoPreview(immediatePreviewUrl)
+      const isImageSource = source.kind === 'gif' || source.kind === 'image'
+      setPreviewKind(isImageSource ? 'image' : 'video')
+      const nativePreviewPromise = isImageSource
+        ? Promise.resolve(false)
+        : canUseNativeVideoPreview(immediatePreviewUrl)
+
 
       const inputName = `studio-source-${jobId}.${source.extension}`
       const probeName = `studio-probe-${jobId}.json`
@@ -608,7 +611,7 @@ export default function Mp4GifStudioPage() {
         setMetadata(nextMetadata)
         setTrimRange([0, nextMetadata.duration])
 
-        const needsProxy = source.kind === 'gif' || !(await nativePreviewPromise)
+        const needsProxy = isImageSource || !(await nativePreviewPromise)
         if (jobId !== jobIdRef.current) return
 
         if (needsProxy) {
@@ -921,9 +924,6 @@ export default function Mp4GifStudioPage() {
           </div>
         )}
 
-        <div className="rounded-xl border bg-muted/30 p-4">
-          <DitheredQrGenerator />
-        </div>
         <div
           className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]"
           aria-busy={isExporting}
@@ -981,6 +981,7 @@ export default function Mp4GifStudioPage() {
                     <FileUploadButton
                       key={uploadKey}
                       id={UPLOAD_ID}
+                      accept={STUDIO_UPLOAD_ACCEPT}
                       onFileSelect={(file) => void handleSourceFile(file)}
                       label={t('common.tools.mp4GifStudio.page.upload')}
                       disabled={isBusy}
@@ -1033,6 +1034,7 @@ export default function Mp4GifStudioPage() {
                         <FileUploadButton
                           key={uploadKey}
                           id={UPLOAD_ID}
+                          accept={STUDIO_UPLOAD_ACCEPT}
                           onFileSelect={(file) => void handleSourceFile(file)}
                           label={t('common.tools.mp4GifStudio.page.upload')}
                           disabled={isBusy}

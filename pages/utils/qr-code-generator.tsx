@@ -45,11 +45,11 @@ function loadImageAndDecode(
   img.onerror = () => {
     onResult(null, src);
   };
-  img.src = src;
 }
 
 export default function QrCodePage() {
   const { t } = useI18n();
+  const [isDitheredOpen, setIsDitheredOpen] = useState(false);
   const [text, setText] = useState('');
   const [activeTab, setActiveTab] = useState('generate');
   const [decodedResult, setDecodedResult] = useState<string | null>(null);
@@ -172,28 +172,33 @@ export default function QrCodePage() {
         <TabsContent value="generate">
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">{t('common.tools.qrCode.generateTitle')}</h2>
-            <DitheredQrGenerator />
+            <DitheredQrGenerator onOpenChange={setIsDitheredOpen} />
 
-            <Input
-              data-testid="qr-code-input"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder={t('common.tools.qrCode.placeholder')}
-            />
-            {text && (
-              <div className="flex flex-col items-center gap-4">
-                <div
-                  className="p-4 bg-white rounded-lg shadow inline-block"
-                  data-testid="qr-code-canvas-container"
-                  ref={qrCanvasRef}
-                >
-                  <QRCode value={text} size={256} key={text} />
-                </div>
-                <Button onClick={handleDownloadQr} variant="outline" data-testid="download-qr-btn">
-                  <HiDownload className="mr-2 h-5 w-5" />
-                  {t('common.tools.qrCode.downloadQr')}
-                </Button>
-              </div>
+
+            {!isDitheredOpen && (
+              <>
+                <Input
+                  data-testid="qr-code-input"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder={t('common.tools.qrCode.placeholder')}
+                />
+                {text && (
+                  <div className="flex flex-col items-center gap-4">
+                    <div
+                      className="p-4 bg-white rounded-lg shadow inline-block"
+                      data-testid="qr-code-canvas-container"
+                      ref={qrCanvasRef}
+                    >
+                      <QRCode value={text} size={256} key={text} />
+                    </div>
+                    <Button onClick={handleDownloadQr} variant="outline" data-testid="download-qr-btn">
+                      <HiDownload className="mr-2 h-5 w-5" />
+                      {t('common.tools.qrCode.downloadQr')}
+                    </Button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </TabsContent>
