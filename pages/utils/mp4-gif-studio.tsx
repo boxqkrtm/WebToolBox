@@ -150,7 +150,7 @@ type StudioSource = {
   extension: 'mp4' | 'gif' | 'webm' | 'mov' | 'mkv' | 'avi' | 'm4v' | 'video'
 }
 
-const VIDEO_EXTENSION_PATTERN = /\.(mp4|webm|mov|mkv|avi|m4v)$/i
+const VIDEO_EXTENSION_PATTERN = /\.(mp4|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i
 
 function getStudioSource(file: File): StudioSource | null {
   const lowerName = file.name.toLowerCase()
@@ -179,7 +179,7 @@ function getStudioSource(file: File): StudioSource | null {
 }
 
 function getBaseName(fileName: string) {
-  const withoutExtension = fileName.replace(/\.(?:mp4|gif|webm|mov|mkv|avi|m4v)$/i, '')
+  const withoutExtension = fileName.replace(/\.(?:mp4|gif|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i, '')
   return withoutExtension || 'media'
 }
 
@@ -976,7 +976,8 @@ export default function Mp4GifStudioPage() {
                     <FileUploadButton
                       key={uploadKey}
                       id={UPLOAD_ID}
-                      accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.m4v,.gif,image/gif"
+                      accept="video/*,image/gif"
+                      capture="environment"
                       onFileSelect={(file) => void handleSourceFile(file)}
                       label={t('common.tools.mp4GifStudio.page.upload')}
                       disabled={isBusy}
@@ -1029,7 +1030,8 @@ export default function Mp4GifStudioPage() {
                         <FileUploadButton
                           key={uploadKey}
                           id={UPLOAD_ID}
-                          accept="video/*,.mp4,.webm,.mov,.mkv,.avi,.m4v,.gif,image/gif"
+                          accept="video/*,image/gif"
+                          capture="environment"
                           onFileSelect={(file) => void handleSourceFile(file)}
                           label={t('common.tools.mp4GifStudio.page.upload')}
                           disabled={isBusy}

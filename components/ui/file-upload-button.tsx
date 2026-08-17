@@ -10,6 +10,7 @@ type FileUploadButtonProps = {
   onFileSelect: (file: File | null) => void
   label: string
   disabled?: boolean
+  capture?: boolean | 'user' | 'environment'
   className?: string
 }
 
@@ -19,6 +20,7 @@ export function FileUploadButton({
   onFileSelect,
   label,
   disabled = false,
+  capture,
   className,
 }: FileUploadButtonProps) {
   const { t } = useI18n()
@@ -62,6 +64,9 @@ export function FileUploadButton({
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     processFile(event.target.files?.[0] ?? null)
+    // Android keeps the picked file in the input and swallows the next
+    // picker open; clear it right after selection so the picker reopens.
+    event.target.value = ''
   }
 
   useEffect(() => {
@@ -92,6 +97,7 @@ export function FileUploadButton({
         ref={fileInputRef}
         type="file"
         accept={accept}
+        capture={capture}
         className="hidden"
         onChange={handleFileChange}
         disabled={disabled}
