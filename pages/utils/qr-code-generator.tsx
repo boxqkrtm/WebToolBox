@@ -4,12 +4,12 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n/i18nContext';
 import UtilsLayout from '@/components/layout/UtilsLayout';
 import { HiClipboardCopy, HiDownload, HiUpload, HiClipboard } from 'react-icons/hi';
+import DitheredQrGenerator from '@/components/DitheredQrGenerator';
+
 import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const QRCode = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeCanvas), { ssr: false });
-const DITHERED_QR_GENERATOR_URL = 'https://www.andrewt.net/dithered-qr-codes';
-const DITHERED_QR_SOURCE_URL = 'https://codeberg.org/andrew-t/dithered-qr-codes';
 
 
 function decodeQrFromImageData(imageData: ImageData): string | null {
@@ -149,9 +149,6 @@ export default function QrCodePage() {
     a.click();
   };
 
-  const handleOpenDitheredQr = () => {
-    window.open(DITHERED_QR_GENERATOR_URL, '_blank', 'noopener,noreferrer');
-  };
 
 
   return (
@@ -175,31 +172,7 @@ export default function QrCodePage() {
         <TabsContent value="generate">
           <div className="flex flex-col gap-4">
             <h2 className="text-xl font-semibold">{t('common.tools.qrCode.generateTitle')}</h2>
-            <div className="flex flex-col gap-4 rounded-xl border bg-muted/30 p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="space-y-1">
-                <h3 className="font-semibold">{t('common.tools.qrCode.ditheredTitle')}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {t('common.tools.qrCode.ditheredDescription')}
-                </p>
-                <a
-                  href={DITHERED_QR_SOURCE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-primary underline hover:text-muted-foreground"
-                  data-testid="dithered-qr-source-link"
-                >
-                  {t('common.tools.qrCode.sourceCode')}
-                </a>
-              </div>
-              <Button
-                type="button"
-                onClick={handleOpenDitheredQr}
-                data-testid="dithered-qr-fun-button"
-                className="shrink-0"
-              >
-                {t('common.tools.qrCode.fun')}
-              </Button>
-            </div>
+            <DitheredQrGenerator />
 
             <Input
               data-testid="qr-code-input"

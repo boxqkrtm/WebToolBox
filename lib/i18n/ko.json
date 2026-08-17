@@ -145,9 +145,14 @@
         "ditheredDescription": "이미지를 디더링 사진 느낌의 QR 코드로 변환합니다.",
         "fun": "fun",
         "sourceCode": "소스 코드",
-
+        "ditheredTextLabel": "QR 코드 텍스트",
+        "ditheredTextPlaceholder": "인코딩할 텍스트를 입력하세요",
+        "ditheredImageLabel": "이미지 업로드 (WebP 지원)",
+        "ditheredImageHint": "이미지는 브라우저에서만 로컬로 처리됩니다.",
+        "ditheredDownload": "디더링 QR 다운로드",
         "previewAlt": "생성된 QR 코드 미리보기"
       },
+
       "discordColorMessageGenerator": {
         "title": "디스코드 색상 메시지 생성기",
         "description": "디스코드용 색상 메시지를 생성합니다.",

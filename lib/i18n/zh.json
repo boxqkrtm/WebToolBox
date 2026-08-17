@@ -145,8 +145,12 @@
         "ditheredDescription": "\u5c06\u56fe\u7247\u8f6c\u6362\u4e3a\u5e26\u6709\u6296\u52a8\u7167\u7247\u6548\u679c\u7684\u4e8c\u7ef4\u7801\u3002",
         "fun": "fun",
         "sourceCode": "\u6e90\u4ee3\u7801",
-
-        "previewAlt": "生成的二维码预览"
+        "ditheredTextLabel": "QR \u7801\u6587\u672c",
+        "ditheredTextPlaceholder": "\u8f93\u5165\u8981\u7f16\u7801\u7684\u6587\u672c",
+        "ditheredImageLabel": "\u4e0a\u4f20\u56fe\u7247\uff08\u652f\u6301 WebP\uff09",
+        "ditheredImageHint": "\u56fe\u7247\u4ec5\u5728\u6d4f\u89c8\u5668\u4e2d\u672c\u5730\u5904\u7406\u3002",
+        "ditheredDownload": "\u4e0b\u8f7d\u6296\u52a8\u4e8c\u7ef4\u7801",
+        "previewAlt": "\u751f\u6210\u7684\u4e8c\u7ef4\u7801\u9884\u89c8"
       },
       "discordColorMessageGenerator": {
         "title": "Discord 彩色消息生成器",

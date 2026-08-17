@@ -20,4 +20,10 @@ test.describe('MP4, GIF Studio', () => {
       expect(response.headers().location, route).toBe('/utils/mp4-gif-studio')
     }
   })
+
+  test('opens the client-side dithered QR tool', async ({ page }) => {
+    await page.goto('/utils/mp4-gif-studio')
+    await page.getByTestId('dithered-qr-fun-button').click()
+    await expect(page.getByTestId('dithered-qr-panel')).toBeVisible()
+  })
 })

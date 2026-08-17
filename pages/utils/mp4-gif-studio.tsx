@@ -27,6 +27,8 @@ import {
 } from 'lucide-react'
 
 import CropOverlay from '@/components/media/CropOverlay'
+import DitheredQrGenerator from '@/components/DitheredQrGenerator'
+
 import type { CropOverlayLabels, CropRect } from '@/components/media/CropOverlay'
 import {
   TimeRangeControl,
@@ -919,6 +921,9 @@ export default function Mp4GifStudioPage() {
           </div>
         )}
 
+        <div className="rounded-xl border bg-muted/30 p-4">
+          <DitheredQrGenerator />
+        </div>
         <div
           className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_22rem]"
           aria-busy={isExporting}
