@@ -79,4 +79,29 @@ test.describe('QR code generator', () => {
     expect(pixels?.colored).toBeGreaterThan(0)
     await expect(page.getByTestId('dithered-qr-error')).toHaveCount(0)
   });
+
+  test('reads and decodes a QR code from an uploaded image', async ({ page }) => {
+    // Generate a QR code in the generate tab
+    await page.getByTestId('qr-code-input').fill('HELLO-WORLD-123');
+    const canvas = page.getByTestId('qr-code-canvas-container').locator('canvas');
+    await expect(canvas).toBeVisible();
+
+    const png = await canvas.evaluate((node) =>
+      (node as HTMLCanvasElement).toDataURL('image/png')
+    );
+    const buffer = Buffer.from(png.split(',')[1], 'base64');
+
+    // Switch to the read tab and upload the generated QR image
+    await page.getByTestId('tab-read').click();
+    await page.getByTestId('qr-file-input').setInputFiles({
+      name: 'sample-qr.png',
+      mimeType: 'image/png',
+      buffer,
+    });
+
+    // Preview appears and the QR content is decoded, with no error
+    await expect(page.getByTestId('qr-preview-image')).toBeVisible();
+    await expect(page.getByTestId('qr-decoded-result')).toContainText('HELLO-WORLD-123');
+    await expect(page.getByTestId('qr-error')).toHaveCount(0);
+  });
 });

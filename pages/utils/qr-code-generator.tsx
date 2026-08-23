@@ -10,11 +10,11 @@ import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const QRCode = dynamic(() => import('qrcode.react').then((mod) => mod.QRCodeCanvas), { ssr: false });
+import jsQR from 'jsqr';
 
 
 function decodeQrFromImageData(imageData: ImageData): string | null {
   try {
-    const jsQR = require('jsqr');
     const code = jsQR(imageData.data, imageData.width, imageData.height);
     return code ? code.data : null;
   } catch {
@@ -45,6 +45,7 @@ function loadImageAndDecode(
   img.onerror = () => {
     onResult(null, src);
   };
+  img.src = src;
 }
 
 export default function QrCodePage() {
