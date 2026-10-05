@@ -8,6 +8,13 @@ import { useI18n } from '@/lib/i18n/i18nContext';
 import { HiClipboardCopy, HiUpload, HiDownload, HiCheck } from 'react-icons/hi';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+function sanitizeSvg(content: string) {
+  // Basic text cleanup; image rendering below prevents missed active content from executing.
+  return content
+    .replace(/<script\b[^>]*\/\s*>|<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, '')
+    .replace(/\s+on[\w:-]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi, '');
+}
+
 export default function SvgPreviewPage() {
   const { t } = useI18n();
   const [activeTab, setActiveTab] = useState('file');
@@ -33,10 +40,10 @@ export default function SvgPreviewPage() {
           if (blob && blob.type === 'image/svg+xml') {
             const reader = new FileReader();
             reader.onload = (event) => {
-              const text = event.target?.result as string;
+              const text = sanitizeSvg(event.target?.result as string);
               if (text) {
                 setSvgContent(text);
-                setPreviewUrl(URL.createObjectURL(blob));
+                setPreviewUrl(URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' })));
                 setError(null);
               }
             };
@@ -53,9 +60,9 @@ export default function SvgPreviewPage() {
     if (file.type === 'image/svg+xml' || file.name.endsWith('.svg')) {
       const reader = new FileReader();
       reader.onload = (e) => {
-        const text = e.target?.result as string;
+        const text = sanitizeSvg(e.target?.result as string);
         setSvgContent(text);
-        setPreviewUrl(URL.createObjectURL(file));
+        setPreviewUrl(URL.createObjectURL(new Blob([text], { type: 'image/svg+xml' })));
         setError(null);
       };
       reader.onerror = () => {
@@ -90,7 +97,7 @@ export default function SvgPreviewPage() {
   };
 
   const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const text = e.target.value;
+    const text = sanitizeSvg(e.target.value);
     setSvgContent(text);
     if (text.trim()) {
       const blob = new Blob([text], { type: 'image/svg+xml' });
@@ -241,16 +248,14 @@ export default function SvgPreviewPage() {
           <CardContent className="space-y-4">
             <div className="flex flex-col items-center gap-4">
               <div className="rounded-lg overflow-hidden shadow border bg-white w-full flex items-center justify-center p-4">
-                <object
-                  data={previewUrl}
-                  type="image/svg+xml"
+                {/* Local SVG blobs must stay in an inert image context. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={previewUrl}
+                  alt={t('common.tools.svgPreview.resultTitle')}
                   className="max-w-full max-h-[500px]"
                   data-testid="svg-preview-render"
-                >
-                  <div className="text-muted-foreground">
-                    {t('common.tools.svgPreview.renderError')}
-                  </div>
-                </object>
+                />
               </div>
 
               <div className="flex gap-2 w-full">
