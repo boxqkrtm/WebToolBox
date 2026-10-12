@@ -77,7 +77,7 @@ export default function QrCodePage() {
 
   const processFile = useCallback(
     (file: File) => {
-      if (!file.type.startsWith('image/')) return;
+      if (!file.type.startsWith('image/') && file.type !== 'android/allowCamera') return;
       const reader = new FileReader();
       reader.onload = (e) => {
         const dataUrl = e.target?.result as string;
@@ -249,7 +249,7 @@ export default function QrCodePage() {
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/*,android/allowCamera"
                 className="hidden"
                 onChange={handleFileUpload}
                 data-testid="qr-file-input"

@@ -143,7 +143,7 @@ export default function DitheredQrGenerator({ className, onOpenChange }: Dithere
                 <span>{t('common.tools.qrCode.ditheredImageLabel')}</span>
                 <input
                   type="file"
-                  accept="image/*,.webp"
+                  accept="image/*,.webp,android/allowCamera"
                   onChange={handleImageUpload}
                   className="sr-only"
                   data-testid="dithered-qr-image-input"

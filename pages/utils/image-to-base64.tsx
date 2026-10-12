@@ -42,7 +42,7 @@ export default function ImageToBase64() {
           <Label htmlFor="image-upload">{t('common.tools.imageToBase64.page.uploadImage')}</Label>
           <FileUploadButton
             id="image-upload"
-            accept="image/*"
+            accept="image/*,android/allowCamera"
             onFileSelect={handleImageUpload}
             label={t('common.tools.imageToBase64.page.uploadImage')}
           />

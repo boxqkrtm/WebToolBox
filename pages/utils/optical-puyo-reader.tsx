@@ -200,7 +200,7 @@ export default function Component() {
       <h1 className="text-2xl font-bold mb-4">{t('common.tools.opticalPuyoReader.title')}</h1>
       <FileUploadButton
         id="optical-puyo-upload"
-        accept="image/png"
+        accept="image/png,android/allowCamera"
         onFileSelect={handleImageUpload}
         label={t('common.tools.opticalPuyoReader.uploadPngImageAriaLabel')}
         className="mb-4"

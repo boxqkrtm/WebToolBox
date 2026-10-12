@@ -24,7 +24,7 @@ test.describe('QR code generator', () => {
     );
     await expect(page.getByTestId('dithered-qr-image-input')).toHaveAttribute(
       'accept',
-      'image/*,.webp'
+      'image/*,.webp,android/allowCamera'
     );
     await page.getByTestId('dithered-qr-image-input').setInputFiles({
       name: 'sample.png',
