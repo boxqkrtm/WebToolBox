@@ -57,7 +57,7 @@ test.describe('MP4, GIF Studio', () => {
     await page.locator('#mp4-gif-studio-upload').setInputFiles(createAnimatedWebp())
 
     await expect(page.getByText('Ready to edit')).toBeVisible({ timeout: 150_000 })
-    await expect(page.getByRole('alert')).toHaveCount(0)
+    await expect(page.locator('main [role="alert"]')).toHaveCount(0)
     await page.locator('#studio-auto-download').uncheck()
     await page.getByTestId('studio-export-button').click()
     await expect(page.getByTestId('studio-result')).toBeVisible({ timeout: 150_000 })

@@ -104,6 +104,7 @@ type ResultState = {
   plan: StudioExportPlan
   fileName: string
   size: number
+  settings: StudioSettings
 }
 
 const PHASE_KEYS: Record<Exclude<StudioPhase, 'idle'>, string> = {
@@ -265,13 +266,6 @@ export default function Mp4GifStudioPage() {
   const [resultUrl, setResultUrl] = useState('')
   const [commandCopied, setCommandCopied] = useState(false)
 
-  const isBusy =
-    phase === 'loadingEngine' ||
-    phase === 'analyzing' ||
-    phase === 'preparingPreview' ||
-    phase === 'exporting' ||
-    phase === 'optimizing'
-  const isExporting = phase === 'exporting' || phase === 'optimizing'
 
   const settings = useMemo<StudioSettings>(
     () => ({
@@ -335,6 +329,15 @@ export default function Mp4GifStudioPage() {
       webpQuality,
     ]
   )
+  const currentPhase =
+    phase === 'complete' && result?.settings !== settings ? 'ready' : phase
+  const isBusy =
+    currentPhase === 'loadingEngine' ||
+    currentPhase === 'analyzing' ||
+    currentPhase === 'preparingPreview' ||
+    currentPhase === 'exporting' ||
+    currentPhase === 'optimizing'
+  const isExporting = currentPhase === 'exporting' || currentPhase === 'optimizing'
 
   const cropLabels = useMemo<CropOverlayLabels>(
     () => ({
@@ -399,7 +402,7 @@ export default function Mp4GifStudioPage() {
     }
   }, [format, gifGifsicleLossy, metadata, settings, sourceFile])
 
-  const phaseText = phase === 'idle' ? '' : t(PHASE_KEYS[phase])
+  const phaseText = currentPhase === 'idle' ? '' : t(PHASE_KEYS[currentPhase])
 
   const ensureFfmpeg = useCallback(async () => {
     if (ffmpegRef.current?.loaded) return ffmpegRef.current
@@ -457,12 +460,13 @@ export default function Mp4GifStudioPage() {
       if (resultUrl) URL.revokeObjectURL(resultUrl)
     }
   }, [resultUrl])
-
   useEffect(() => {
-    setResult(null)
-    setResultUrl('')
-    setPhase((current) => (current === 'complete' ? 'ready' : current))
-  }, [settings])
+    if (result?.settings !== settings && resultUrl) {
+      URL.revokeObjectURL(resultUrl)
+    }
+  }, [result, resultUrl, settings])
+
+
 
   useEffect(() => {
     if (previewRef.current) {
@@ -850,7 +854,7 @@ export default function Mp4GifStudioPage() {
       const fileName = `${getBaseName(sourceFile.name)}-edited.${format}`
       const outputUrl = URL.createObjectURL(outputBlob)
       setResultUrl(outputUrl)
-      setResult({ plan, fileName, size: outputBlob.size })
+      setResult({ plan, fileName, size: outputBlob.size, settings: snapshot })
       setProgress(100)
       setPhase('complete')
       if (autoDownload) downloadStudioResult(outputUrl, fileName)
@@ -1796,7 +1800,7 @@ export default function Mp4GifStudioPage() {
             </aside>
         </div>
 
-        {result && resultUrl && (
+        {result && result.settings === settings && resultUrl && (
           <Card role="region" aria-labelledby="studio-result-heading" data-testid="studio-result">
             <CardHeader>
               <CardTitle id="studio-result-heading">
