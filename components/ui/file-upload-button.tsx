@@ -1,5 +1,5 @@
 import { type ChangeEvent, useCallback, useEffect, useRef, useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useI18n } from '@/lib/i18n/i18nContext'
 import { HiUpload } from 'react-icons/hi'
@@ -25,10 +25,9 @@ export function FileUploadButton({
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isDragOver, setIsDragOver] = useState(false)
 
-  const handleButtonClick = () => {
+  const handleLabelClick = () => {
     if (disabled || !fileInputRef.current) return
     fileInputRef.current.value = ''
-    fileInputRef.current.click()
   }
 
   const matchesAccept = useCallback(
@@ -95,14 +94,24 @@ export function FileUploadButton({
         ref={fileInputRef}
         type="file"
         accept={accept}
-        className="hidden"
+        aria-hidden="true"
+        tabIndex={-1}
+        className="sr-only"
         onChange={handleFileChange}
         disabled={disabled}
       />
-      <div
+      <label
+        htmlFor={id}
         role="button"
         tabIndex={disabled ? -1 : 0}
-        onClick={handleButtonClick}
+        aria-label={label}
+        onClick={handleLabelClick}
+        onKeyDown={(event) => {
+          if (disabled || (event.key !== 'Enter' && event.key !== ' ')) return
+          event.preventDefault()
+          handleLabelClick()
+          fileInputRef.current?.click()
+        }}
         onDragOver={(event) => {
           event.preventDefault()
           if (!disabled) {
@@ -118,42 +127,27 @@ export function FileUploadButton({
           setIsDragOver(false)
           processFile(event.dataTransfer.files?.[0] ?? null)
         }}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter' || event.key === ' ') {
-            event.preventDefault()
-            handleButtonClick()
-          }
-        }}
         aria-disabled={disabled}
         className={cn(
-          "cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all",
+          "block cursor-pointer rounded-xl border-2 border-dashed p-8 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           isDragOver
             ? "border-primary bg-primary/5 scale-[1.01]"
             : "border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30",
           disabled && "cursor-not-allowed opacity-50"
         )}
       >
-        <div className="flex flex-col items-center gap-3">
-          <div className="rounded-full bg-muted p-4">
+        <span className="flex flex-col items-center gap-3">
+          <span className="rounded-full bg-muted p-4">
             <HiUpload className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <p className="text-lg font-medium">{t('common.uploadZone.pasteHint')}</p>
-          <p className="text-sm text-muted-foreground">{t('common.uploadZone.dragDropHint')}</p>
-          <Button
-            type="button"
-            onClick={(event) => {
-              event.stopPropagation()
-              handleButtonClick()
-            }}
-            disabled={disabled}
-            variant="outline"
-            className="mt-2 shadow-sm"
-          >
+          </span>
+          <span className="text-lg font-medium">{t('common.uploadZone.pasteHint')}</span>
+          <span className="text-sm text-muted-foreground">{t('common.uploadZone.dragDropHint')}</span>
+          <span className={cn(buttonVariants({ variant: "outline" }), "mt-2 shadow-sm")}>
             <HiUpload className="mr-2 h-5 w-5" />
             {label}
-          </Button>
-        </div>
-      </div>
+          </span>
+        </span>
+      </label>
     </div>
   )
 }

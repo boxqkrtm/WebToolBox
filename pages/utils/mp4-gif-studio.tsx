@@ -36,7 +36,7 @@ import {
 import type { TimeRangeEndpoint } from '@/components/media/TimeRangeControl'
 import UtilsLayout from '@/components/layout/UtilsLayout'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -526,14 +526,6 @@ export default function Mp4GifStudioPage() {
     }
   }, [resetOptionState])
 
-  const handleReplaceSource = () => {
-    const fileInput = document.getElementById(UPLOAD_ID)
-    if (!(fileInput instanceof HTMLInputElement)) return
-
-    fileInput.value = ''
-    fileInput.click()
-  }
-
   const handleSourceFile = useCallback(
     async (selected: File | null) => {
       if (!selected) return
@@ -963,15 +955,20 @@ export default function Mp4GifStudioPage() {
                     </div>
                     {sourceFile && (
                       <div className="flex shrink-0 flex-wrap gap-2">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          disabled={isBusy}
-                          onClick={handleReplaceSource}
+                        <label
+                          htmlFor={UPLOAD_ID}
+                          tabIndex={isBusy ? -1 : 0}
+                          role="button"
+                          aria-disabled={isBusy}
+                          onKeyDown={(event) => {
+                            if (event.key !== 'Enter' && event.key !== ' ') return
+                            event.preventDefault()
+                            if (!isBusy) event.currentTarget.control?.click()
+                          }}
+                          className={`${buttonVariants({ variant: 'outline', size: 'sm' })} ${isBusy ? 'pointer-events-none opacity-50' : ''}`}
                         >
                           {t('common.tools.mp4GifStudio.page.replace')}
-                        </Button>
+                        </label>
                         <Button
                           type="button"
                           variant="outline"
@@ -1053,7 +1050,7 @@ export default function Mp4GifStudioPage() {
                           onFileSelect={(file) => void handleSourceFile(file)}
                           label={t('common.tools.mp4GifStudio.page.upload')}
                           disabled={isBusy}
-                          className="mt-0 [&>div]:border-zinc-600 [&>div]:hover:bg-zinc-900"
+                          className="mt-0 [&>label]:border-zinc-600 [&>label]:hover:bg-zinc-900"
                         />
                         <p className="mt-4 text-center text-sm text-zinc-400">
                           {t('common.tools.mp4GifStudio.page.privacy')}

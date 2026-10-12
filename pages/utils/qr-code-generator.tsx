@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n/i18nContext';
 import UtilsLayout from '@/components/layout/UtilsLayout';
 import { HiClipboardCopy, HiDownload, HiUpload, HiClipboard } from 'react-icons/hi';
@@ -58,7 +58,6 @@ export default function QrCodePage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const qrCanvasRef = useRef<HTMLDivElement>(null);
 
   const handleImageResult = useCallback(
@@ -112,6 +111,7 @@ export default function QrCodePage() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (file) processFile(file);
   };
 
@@ -210,51 +210,44 @@ export default function QrCodePage() {
             <h2 className="text-xl font-semibold">{t('common.tools.qrCode.readTitle')}</h2>
 
             {/* Drop zone / Paste zone */}
-            <div
+            <input
+              id="qr-file-input"
+              type="file"
+              accept="image/*,android/allowCamera"
+              className="peer sr-only"
+              onChange={handleFileUpload}
+              data-testid="qr-file-input"
+            />
+            <label
+              htmlFor="qr-file-input"
               data-testid="qr-drop-zone"
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               className={`
-                border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer
+                block border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2
                 ${isDragOver
                   ? 'border-primary bg-primary/5 scale-[1.01]'
                   : 'border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30'
                 }
               `}
-              onClick={() => fileInputRef.current?.click()}
             >
-              <div className="flex flex-col items-center gap-3">
-                <div className="rounded-full bg-muted p-4">
+              <span className="flex flex-col items-center gap-3">
+                <span className="rounded-full bg-muted p-4">
                   <HiClipboard className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <p className="font-medium text-lg">
+                </span>
+                <span className="font-medium text-lg">
                   {t('common.tools.qrCode.pasteHint')}
-                </p>
-                <p className="text-muted-foreground text-sm">
+                </span>
+                <span className="text-muted-foreground text-sm">
                   {t('common.tools.qrCode.dragDropHint')}
-                </p>
-                <Button
-                  variant="outline"
-                  className="mt-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
-                >
+                </span>
+                <span className={buttonVariants({ variant: 'outline', className: 'mt-2' })}>
                   <HiUpload className="mr-2 h-5 w-5" />
                   {t('common.tools.qrCode.uploadFile')}
-                </Button>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*,android/allowCamera"
-                className="hidden"
-                onChange={handleFileUpload}
-                data-testid="qr-file-input"
-              />
-            </div>
+                </span>
+              </span>
+            </label>
 
             {/* Preview uploaded image */}
             {previewImage && (

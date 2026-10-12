@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import UtilsLayout from '@/components/layout/UtilsLayout';
@@ -69,6 +69,7 @@ export default function SvgPreviewPage() {
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    e.target.value = '';
     if (file) processFile(file);
   };
 
@@ -152,51 +153,45 @@ export default function SvgPreviewPage() {
             <h2 className="text-xl font-semibold">{t('common.tools.svgPreview.fileTitle')}</h2>
 
             {/* Drop zone */}
-            <div
+            <input
+              id="svg-file-input"
+              ref={fileInputRef}
+              type="file"
+              accept=".svg,image/svg+xml"
+              className="peer sr-only"
+              onChange={handleFileUpload}
+              data-testid="svg-file-input"
+            />
+            <label
+              htmlFor="svg-file-input"
               data-testid="svg-drop-zone"
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               className={`
-                border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer
+                block border-2 border-dashed rounded-xl p-8 text-center transition-all cursor-pointer peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2
                 ${isDragOver
                   ? 'border-primary bg-primary/5 scale-[1.01]'
                   : 'border-muted-foreground/30 hover:border-primary/50 hover:bg-muted/30'
                 }
               `}
-              onClick={() => fileInputRef.current?.click()}
             >
-              <div className="flex flex-col items-center gap-3">
-                <div className="rounded-full bg-muted p-4">
+              <span className="flex flex-col items-center gap-3">
+                <span className="rounded-full bg-muted p-4">
                   <HiUpload className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <p className="font-medium text-lg">
+                </span>
+                <span className="font-medium text-lg">
                   {t('common.tools.svgPreview.pasteHint')}
-                </p>
-                <p className="text-muted-foreground text-sm">
+                </span>
+                <span className="text-muted-foreground text-sm">
                   {t('common.tools.svgPreview.dragDropHint')}
-                </p>
-                <Button
-                  variant="outline"
-                  className="mt-2"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    fileInputRef.current?.click();
-                  }}
-                >
+                </span>
+                <span className={buttonVariants({ variant: 'outline', className: 'mt-2' })}>
                   <HiUpload className="mr-2 h-5 w-5" />
                   {t('common.tools.svgPreview.uploadFile')}
-                </Button>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".svg,image/svg+xml"
-                className="hidden"
-                onChange={handleFileUpload}
-                data-testid="svg-file-input"
-              />
-            </div>
+                </span>
+              </span>
+            </label>
 
             {error && (
               <div
