@@ -155,7 +155,7 @@ type StudioSource = {
   extension: 'mp4' | 'gif' | 'webp' | 'webm' | 'mov' | 'mkv' | 'avi' | 'm4v' | 'video'
 }
 const VIDEO_EXTENSION_PATTERN = /\.(mp4|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i
-const STUDIO_UPLOAD_ACCEPT = 'video/*,image/gif,image/webp,.gif,.webp'
+const STUDIO_UPLOAD_ACCEPT = 'video/*,image/gif,image/webp,.gif,.webp,android/allowCamera'
 
 function getStudioSource(file: File): StudioSource | null {
   const lowerName = file.name.toLowerCase()

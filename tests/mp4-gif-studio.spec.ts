@@ -47,7 +47,7 @@ test.describe('MP4, GIF Studio', () => {
     await page.goto('/utils/mp4-gif-studio')
     await expect(page.locator('#mp4-gif-studio-upload')).toHaveAttribute(
       'accept',
-      'video/*,image/gif,image/webp,.gif,.webp'
+      'video/*,image/gif,image/webp,.gif,.webp,android/allowCamera'
     )
   })
 
