@@ -288,7 +288,6 @@
         "ditheredError": "Could not generate the dithered QR code.",
         "previewAlt": "Generated QR code preview"
       },
-
       "discordColorMessageGenerator": {
         "title": "Discord Color Message Generator",
         "description": "Generate colored messages for Discord",
@@ -359,7 +358,14 @@
           "scanning": "Scanning...",
           "scanStart": "Scan Start",
           "mountPointList": "Mount Point List",
-          "title": "NTRIP Scanner"
+          "title": "NTRIP Scanner",
+          "allowedPorts": "Allowed ports:",
+          "errors": {
+            "invalidHost": "Enter a valid host name or IP address.",
+            "invalidPort": "Enter a valid port number.",
+            "blockedAddress": "Private or internal addresses cannot be scanned.",
+            "timeout": "The caster did not respond in time."
+          }
         }
       },
       "mp4GifStudio": {

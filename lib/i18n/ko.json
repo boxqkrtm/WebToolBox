@@ -153,7 +153,6 @@
         "ditheredError": "디더링 QR 코드를 생성하지 못했습니다.",
         "previewAlt": "생성된 QR 코드 미리보기"
       },
-
       "discordColorMessageGenerator": {
         "title": "디스코드 색상 메시지 생성기",
         "description": "디스코드용 색상 메시지를 생성합니다.",
@@ -224,7 +223,14 @@
           "scanning": "스캔 중...",
           "scanStart": "스캔 시작",
           "mountPointList": "마운트 포인트 목록",
-          "title": "NTRIP 스캐너"
+          "title": "NTRIP 스캐너",
+          "allowedPorts": "허용 포트:",
+          "errors": {
+            "invalidHost": "올바른 호스트 이름이나 IP 주소를 입력하세요.",
+            "invalidPort": "올바른 포트 번호를 입력하세요.",
+            "blockedAddress": "사설 또는 내부 주소는 스캔할 수 없습니다.",
+            "timeout": "캐스터가 제시간에 응답하지 않았습니다."
+          }
         }
       },
       "mp4GifStudio": {

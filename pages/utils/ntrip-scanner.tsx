@@ -5,16 +5,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Label } from "@/components/ui/label";
 import UtilsLayout from '@/components/layout/UtilsLayout';
 import { useI18n } from '@/lib/i18n/i18nContext';
-
-interface ErrorDetails {
-    message: string;
-    details?: {
-        host: string;
-        port: number;
-        connectionStatus: string;
-        error?: string;
-    };
-}
+import { NTRIP_ALLOWED_PORTS, type NtripErrorCode } from '@/lib/ntrip/shared';
 
 export default function NtripScanner() {
     const { t } = useI18n();
@@ -24,11 +15,33 @@ export default function NtripScanner() {
     const [password, setPassword] = useState('');
     const [mountPoints, setMountPoints] = useState<string[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<ErrorDetails | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    const allowedPortsText = `${t('common.tools.ntripScanner.page.allowedPorts')} ${NTRIP_ALLOWED_PORTS.join(', ')}`;
+
+    const errorMessage = (code: NtripErrorCode | undefined): string => {
+        switch (code) {
+            case 'invalidHost':
+                return t('common.tools.ntripScanner.page.errors.invalidHost');
+            case 'invalidPort':
+                return t('common.tools.ntripScanner.page.errors.invalidPort');
+            case 'portNotAllowed':
+                return allowedPortsText;
+            case 'blockedAddress':
+                return t('common.tools.ntripScanner.page.errors.blockedAddress');
+            case 'timeout':
+                return t('common.tools.ntripScanner.page.errors.timeout');
+            case 'unreachable':
+                return t('common.tools.ntripScanner.page.connectionFailed');
+            default:
+                return t('common.tools.ntripScanner.page.unknownError');
+        }
+    };
 
     const handleScan = async () => {
         setLoading(true);
         setError(null);
+        setMountPoints([]);
         try {
             const response = await fetch('/api/ntrip-scan', {
                 method: 'POST',
@@ -37,25 +50,14 @@ export default function NtripScanner() {
                 },
                 body: JSON.stringify({ host: ip, port }),
             });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(JSON.stringify(data));
+            const data = await response.json().catch(() => null);
+            if (!response.ok || !data?.success) {
+                setError(errorMessage(data?.code));
+                return;
             }
             setMountPoints(data.mountPoints || []);
-        } catch (err) {
-            let errorData: ErrorDetails;
-            try {
-                errorData = err instanceof Error ? JSON.parse(err.message) : {
-                    message: t('common.tools.ntripScanner.page.unknownError'),
-                    details: { host: ip, port: Number(port), connectionStatus: t('common.tools.ntripScanner.page.connectionFailed') }
-                };
-            } catch {
-                errorData = {
-                    message: err instanceof Error ? err.message : t('common.tools.ntripScanner.page.unknownError'),
-                    details: { host: ip, port: Number(port), connectionStatus: t('common.tools.ntripScanner.page.connectionFailed') }
-                };
-            }
-            setError(errorData);
+        } catch {
+            setError(t('common.tools.ntripScanner.page.unknownError'));
         } finally {
             setLoading(false);
         }
@@ -88,6 +90,7 @@ export default function NtripScanner() {
                                 onChange={(e) => setPort(e.target.value)}
                                 placeholder={t('common.tools.ntripScanner.page.portPlaceholder')}
                             />
+                            <p className="mt-1 text-xs text-muted-foreground">{allowedPortsText}</p>
                         </div>
                         <div>
                             <Label htmlFor="id">{t('common.tools.ntripScanner.page.id')}</Label>
@@ -116,8 +119,8 @@ export default function NtripScanner() {
                             {loading ? t('common.tools.ntripScanner.page.scanning') : t('common.tools.ntripScanner.page.scanStart')}
                         </Button>
                         {error && (
-                            <div className="text-red-500">
-                                {error.message}
+                            <div className="text-red-500" role="alert" data-testid="ntrip-error">
+                                {error}
                             </div>
                         )}
                         {mountPoints.length > 0 && (

@@ -223,7 +223,14 @@
           "scanning": "スキャン中...",
           "scanStart": "スキャン開始",
           "mountPointList": "マウントポイントリスト",
-          "title": "NTRIPスキャナー"
+          "title": "NTRIPスキャナー",
+          "allowedPorts": "許可ポート:",
+          "errors": {
+            "invalidHost": "有効なホスト名またはIPアドレスを入力してください。",
+            "invalidPort": "有効なポート番号を入力してください。",
+            "blockedAddress": "プライベートまたは内部アドレスはスキャンできません。",
+            "timeout": "キャスターが時間内に応答しませんでした。"
+          }
         }
       },
       "mp4GifStudio": {

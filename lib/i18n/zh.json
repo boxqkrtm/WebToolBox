@@ -223,7 +223,14 @@
           "scanning": "扫描中...",
           "scanStart": "扫描开始",
           "mountPointList": "挂载点列表",
-          "title": "NTRIP扫描器"
+          "title": "NTRIP扫描器",
+          "allowedPorts": "允许的端口：",
+          "errors": {
+            "invalidHost": "请输入有效的主机名或 IP 地址。",
+            "invalidPort": "请输入有效的端口号。",
+            "blockedAddress": "无法扫描私有或内部地址。",
+            "timeout": "Caster 未在规定时间内响应。"
+          }
         }
       },
       "mp4GifStudio": {
