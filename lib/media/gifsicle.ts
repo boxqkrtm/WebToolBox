@@ -13,7 +13,10 @@ type GifsicleModule = {
 
 let gifsiclePromise: Promise<GifsicleModule> | null = null;
 
-/** Import the browser build at runtime so the GPL binary stays out of the bundle. */
+/**
+ * Import the browser build at runtime so the GPL binary stays out of the bundle.
+ * A runtime import() cannot carry an SRI hash, so keep the CDN URL pinned to an exact version.
+ */
 const importFromUrl = new Function(
   "url",
   "return import(/* webpackIgnore: true */ url)"
