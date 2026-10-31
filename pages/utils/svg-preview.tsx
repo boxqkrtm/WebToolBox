@@ -16,6 +16,7 @@ export default function SvgPreviewPage() {
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [failedPreviewUrl, setFailedPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Clipboard paste handler for SVG files
@@ -236,16 +237,21 @@ export default function SvgPreviewPage() {
           <CardContent className="space-y-4">
             <div className="flex flex-col items-center gap-4">
               <div className="rounded-lg overflow-hidden shadow border bg-white w-full flex items-center justify-center p-4">
-                <object
-                  data={previewUrl}
-                  type="image/svg+xml"
-                  className="max-w-full max-h-[500px]"
-                  data-testid="svg-preview-render"
-                >
+                {/* <img> keeps scripts inside the SVG from running in this page's origin. */}
+                {failedPreviewUrl === previewUrl ? (
                   <div className="text-muted-foreground">
                     {t('common.tools.svgPreview.renderError')}
                   </div>
-                </object>
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={previewUrl}
+                    alt={t('common.tools.svgPreview.resultTitle')}
+                    className="max-w-full max-h-[500px]"
+                    data-testid="svg-preview-render"
+                    onError={() => setFailedPreviewUrl(previewUrl)}
+                  />
+                )}
               </div>
 
               <div className="flex gap-2 w-full">
