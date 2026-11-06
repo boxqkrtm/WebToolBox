@@ -104,4 +104,24 @@ test.describe('MP4, GIF Studio', () => {
     await expect(page.getByTestId('studio-result-engine')).toContainText('FFmpeg (WebAssembly)')
     await expect(page.getByTestId('studio-result')).toContainText('64 × 48')
   })
+
+  test('defaults to the auto preset and forces FFmpeg for an explicit preset', async ({ page }) => {
+    test.setTimeout(180_000)
+    await page.goto('/utils/mp4-gif-studio')
+    await page.locator('#mp4-gif-studio-upload').setInputFiles(createAnimatedGif())
+
+    await expect(page.getByText('Ready to edit')).toBeVisible({ timeout: 150_000 })
+    const command = page.locator('#studio-command-heading').locator('xpath=../..').locator('code')
+    await expect(page.locator('#studio-preset')).toContainText('Auto (fastest available)')
+    await expect(command).toContainText('-preset ultrafast')
+
+    await page.locator('#studio-auto-download').uncheck()
+    await page.locator('#studio-preset').click()
+    await page.getByRole('option', { name: 'Medium' }).click()
+    await expect(command).toContainText('-preset medium')
+    await page.getByTestId('studio-export-button').click()
+
+    await expect(page.getByTestId('studio-result')).toBeVisible({ timeout: 150_000 })
+    await expect(page.getByTestId('studio-result-engine')).toContainText('FFmpeg (WebAssembly)')
+  })
 })

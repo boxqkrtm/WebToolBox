@@ -456,6 +456,7 @@
             "frameRate": "Frame rate",
             "sourceFrameRate": "Source frame rate",
             "encodingPreset": "Encoding preset",
+            "presetAuto": "Auto (fastest available)",
             "presetUltrafast": "Ultrafast",
             "presetVeryfast": "Very fast",
             "presetMedium": "Medium",
@@ -484,7 +485,7 @@
             "lossless": "Lossless",
             "exportButton": "Export file",
             "autoDownload": "Download automatically when export completes",
-            "presetFfmpegOnly": "Encoding presets apply only when FFmpeg is used.",
+            "presetFfmpegOnly": "Choosing a specific preset always uses FFmpeg. Auto tries the browser encoder first, then falls back to FFmpeg ultrafast.",
             "memoryBrowserHint": "This limit applies only if export falls back to FFmpeg. The browser encoder is tried first."
           },
           "engine": {

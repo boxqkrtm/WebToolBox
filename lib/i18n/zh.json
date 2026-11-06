@@ -321,6 +321,7 @@
             "frameRate": "帧率",
             "sourceFrameRate": "源文件帧率",
             "encodingPreset": "编码预设",
+            "presetAuto": "自动（最快方式）",
             "presetUltrafast": "极速",
             "presetVeryfast": "高速",
             "presetMedium": "均衡",
@@ -349,7 +350,7 @@
             "lossless": "无损",
             "exportButton": "导出文件",
             "autoDownload": "导出完成后自动下载",
-            "presetFfmpegOnly": "编码预设仅在使用 FFmpeg 时生效。",
+            "presetFfmpegOnly": "手动选择预设时始终使用 FFmpeg 编码。自动模式会先使用浏览器编码器，不可用时回退到 FFmpeg 超快预设。",
             "memoryBrowserHint": "此限制仅在回退到 FFmpeg 时适用。会先尝试浏览器编码器。"
           },
           "engine": {

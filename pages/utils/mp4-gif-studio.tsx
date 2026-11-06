@@ -90,6 +90,7 @@ import {
 import type { BrowserStudioSource } from '@/lib/media/browserStudio'
 import type {
   StudioMediaMetadata,
+  StudioMp4Preset,
   StudioOutputFormat,
   StudioOutputGeometry,
   StudioSettings,
@@ -351,7 +352,7 @@ export default function Mp4GifStudioPage() {
   const [mp4RateControl, setMp4RateControl] = useState<'bitrate' | 'quality'>('bitrate')
   const [mp4Crf, setMp4Crf] = useState(23)
   const [mp4FrameRate, setMp4FrameRate] = useState<'source' | 24 | 30 | 60>('source')
-  const [mp4Preset, setMp4Preset] = useState<'ultrafast' | 'veryfast' | 'medium' | 'slow' | 'veryslow'>('veryfast')
+  const [mp4Preset, setMp4Preset] = useState<StudioMp4Preset>('auto')
   const [includeAudio, setIncludeAudio] = useState(true)
   const [audioBitrateKbps, setAudioBitrateKbps] = useState(128)
 
@@ -487,8 +488,9 @@ export default function Mp4GifStudioPage() {
 
   const exceedsMemoryLimit = estimatedMemoryBytes > MAX_ESTIMATED_MEMORY_BYTES
   // The memory estimate models FFmpeg.wasm; the WebCodecs path streams from the file instead.
+  // Picking an explicit x264 preset means the user wants FFmpeg's encoder.
   const canTryBrowserExport =
-    encoderEngine === 'auto' && format === 'mp4' && webCodecsAvailable
+    encoderEngine === 'auto' && mp4Preset === 'auto' && format === 'mp4' && webCodecsAvailable
 
   const nativeFfmpegCommand = useMemo(() => {
     if (!metadata || !sourceFile) return ''
@@ -694,7 +696,7 @@ export default function Mp4GifStudioPage() {
     setMp4RateControl('bitrate')
     setMp4Crf(23)
     setMp4FrameRate('source')
-    setMp4Preset('veryfast')
+    setMp4Preset('auto')
     setIncludeAudio(true)
     setAudioBitrateKbps(128)
     setGifFps(15)
@@ -981,7 +983,12 @@ export default function Mp4GifStudioPage() {
       let geometry: StudioOutputGeometry | null = null
       let effectiveDuration = 0
 
-      if (encoderEngine === 'auto' && format === 'mp4' && hasWebCodecsVideoSupport()) {
+      if (
+        encoderEngine === 'auto' &&
+        format === 'mp4' &&
+        snapshot.mp4.preset === 'auto' &&
+        hasWebCodecsVideoSupport()
+      ) {
         try {
           const browserSource = await getBrowserSource(current, signal)
           if (browserSource) {
@@ -1706,9 +1713,7 @@ export default function Mp4GifStudioPage() {
                         <Select
                           value={mp4Preset}
                           onValueChange={(value) =>
-                            setMp4Preset(
-                              value as 'ultrafast' | 'veryfast' | 'medium' | 'slow' | 'veryslow'
-                            )
+                            setMp4Preset(value as StudioMp4Preset)
                           }
                           disabled={isExporting}
                         >
@@ -1716,6 +1721,9 @@ export default function Mp4GifStudioPage() {
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
+                            <SelectItem value="auto">
+                              {t('common.tools.mp4GifStudio.page.export.presetAuto')}
+                            </SelectItem>
                             <SelectItem value="ultrafast">
                               {t('common.tools.mp4GifStudio.page.export.presetUltrafast')}
                             </SelectItem>
@@ -1735,7 +1743,7 @@ export default function Mp4GifStudioPage() {
                             </SelectItem>
                           </SelectContent>
                         </Select>
-                        {canTryBrowserExport && (
+                        {encoderEngine === 'auto' && webCodecsAvailable && (
                           <p className="text-xs leading-relaxed text-muted-foreground">
                             {t('common.tools.mp4GifStudio.page.export.presetFfmpegOnly')}
                           </p>

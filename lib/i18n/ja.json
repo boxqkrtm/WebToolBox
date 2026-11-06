@@ -321,6 +321,7 @@
             "frameRate": "フレームレート",
             "sourceFrameRate": "元のフレームレート",
             "encodingPreset": "エンコードプリセット",
+            "presetAuto": "自動 (最速の方法)",
             "presetUltrafast": "超高速",
             "presetVeryfast": "非常に高速",
             "presetMedium": "標準",
@@ -349,7 +350,7 @@
             "lossless": "ロスレス",
             "exportButton": "ファイルを書き出す",
             "autoDownload": "書き出し完了後に自動でダウンロード",
-            "presetFfmpegOnly": "エンコードプリセットは FFmpeg を使用する場合のみ適用されます。",
+            "presetFfmpegOnly": "プリセットを指定すると常に FFmpeg でエンコードします。自動ではまずブラウザーのエンコーダーを使い、使えない場合は FFmpeg の超高速で処理します。",
             "memoryBrowserHint": "この上限は FFmpeg に切り替わった場合のみ適用されます。まずブラウザーのエンコーダーを試します。"
           },
           "engine": {

@@ -6,7 +6,9 @@ export const MAX_ESTIMATED_MEMORY_BYTES = 1024 * 1024 * 1024;
 
 export type StudioOutputFormat = "mp4" | "gif" | "webp";
 export type StudioMp4FrameRate = "source" | 24 | 30 | 60;
-export type StudioMp4Preset = "ultrafast" | "veryfast" | "medium" | "slow" | "veryslow";
+export type StudioFfmpegMp4Preset = "ultrafast" | "veryfast" | "medium" | "slow" | "veryslow";
+/** "auto" picks the fastest method: browser WebCodecs first, then FFmpeg ultrafast. */
+export type StudioMp4Preset = "auto" | StudioFfmpegMp4Preset;
 export type StudioMp4RateControl = "bitrate" | "quality";
 export type StudioGifDither = "none" | "bayer" | "floyd_steinberg" | "sierra2_4a";
 
@@ -353,6 +355,11 @@ export function buildStudioMp4TranscodePlan(
  * Rough bitrate that an x264 CRF value tends to land on. Used as the fallback when an encoder
  * cannot do constant-quantizer rate control.
  */
+/** x264 preset FFmpeg should use; "auto" falls back to the fastest one. */
+export function resolveFfmpegMp4Preset(preset: StudioMp4Preset): StudioFfmpegMp4Preset {
+  return preset === "auto" ? "ultrafast" : preset;
+}
+
 export function estimateCrfBitrateKbps(
   geometry: StudioOutputGeometry,
   frameRate: number,
@@ -483,7 +490,7 @@ function buildMp4ExportArgs(
     );
   }
 
-  args.push("-preset", snapshot.mp4.preset, "-pix_fmt", "yuv420p");
+  args.push("-preset", resolveFfmpegMp4Preset(snapshot.mp4.preset), "-pix_fmt", "yuv420p");
 
   if (includeAudio) {
     args.push(
@@ -696,7 +703,7 @@ function normalizeSettings(
       frameRate: isStudioMp4FrameRate(settings?.mp4?.frameRate)
         ? settings.mp4.frameRate
         : "source",
-      preset: isStudioMp4Preset(settings?.mp4?.preset) ? settings.mp4.preset : "veryfast",
+      preset: isStudioMp4Preset(settings?.mp4?.preset) ? settings.mp4.preset : "auto",
       includeAudio: settings?.mp4?.includeAudio === true,
       audioBitrateKbps: clampInteger(
         settings?.mp4?.audioBitrateKbps,
@@ -875,6 +882,7 @@ function isStudioMp4FrameRate(value: unknown): value is StudioMp4FrameRate {
 
 function isStudioMp4Preset(value: unknown): value is StudioMp4Preset {
   return (
+    value === "auto" ||
     value === "ultrafast" ||
     value === "veryfast" ||
     value === "medium" ||

@@ -321,6 +321,7 @@
             "frameRate": "프레임 속도",
             "sourceFrameRate": "원본 프레임 속도",
             "encodingPreset": "인코딩 프리셋",
+            "presetAuto": "자동 (가장 빠른 방법)",
             "presetUltrafast": "초고속",
             "presetVeryfast": "매우 빠름",
             "presetMedium": "보통",
@@ -349,7 +350,7 @@
             "lossless": "무손실",
             "exportButton": "파일 내보내기",
             "autoDownload": "내보내기 완료 후 자동으로 다운로드",
-            "presetFfmpegOnly": "인코딩 프리셋은 FFmpeg를 사용할 때만 적용됩니다.",
+            "presetFfmpegOnly": "프리셋을 직접 고르면 항상 FFmpeg로 인코딩합니다. 자동은 브라우저 인코더를 먼저 쓰고, 안 되면 FFmpeg 초고속으로 처리합니다.",
             "memoryBrowserHint": "이 한도는 FFmpeg로 대체될 때만 적용됩니다. 브라우저 인코더를 먼저 시도합니다."
           },
           "engine": {
