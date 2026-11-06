@@ -249,7 +249,9 @@
             "ready": "已可编辑",
             "exporting": "正在导出...",
             "optimizingGif": "正在优化GIF...",
-            "exportComplete": "导出完成"
+            "exportComplete": "导出完成",
+            "exportingBrowser": "正在使用浏览器编码器（WebCodecs）导出...",
+            "exportingFfmpeg": "正在使用 FFmpeg 导出..."
           },
           "errors": {
             "invalidFile": "请选择支持的视频、GIF 或 WebP 文件。",
@@ -346,7 +348,20 @@
             "compressionLevel": "压缩级别",
             "lossless": "无损",
             "exportButton": "导出文件",
-            "autoDownload": "导出完成后自动下载"
+            "autoDownload": "导出完成后自动下载",
+            "presetFfmpegOnly": "编码预设仅在使用 FFmpeg 时生效。",
+            "memoryBrowserHint": "此限制仅在回退到 FFmpeg 时适用。会先尝试浏览器编码器。"
+          },
+          "engine": {
+            "title": "编码引擎",
+            "auto": "自动（优先使用浏览器硬件加速）",
+            "ffmpeg": "仅使用 FFmpeg（WebAssembly）",
+            "autoHint": "自动模式使用浏览器内置的 WebCodecs 编码器生成 MP4，设备支持时会使用硬件加速。如果浏览器无法处理该文件或设置，则改用 FFmpeg。GIF 和 WebP 始终使用 FFmpeg。",
+            "unavailableHint": "此浏览器不支持 WebCodecs，将使用 FFmpeg 编码。",
+            "usedLabel": "编码器",
+            "resultBrowserHardware": "浏览器 WebCodecs（硬件加速）",
+            "resultBrowser": "浏览器 WebCodecs",
+            "resultFfmpeg": "FFmpeg（WebAssembly）"
           },
           "result": {
             "title": "导出完成",

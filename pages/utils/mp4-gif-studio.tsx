@@ -6,6 +6,7 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from 'react'
 import type { CSSProperties } from 'react'
 import { FFmpeg } from '@ffmpeg/ffmpeg'
@@ -79,15 +80,36 @@ import {
   decodeWebpSource,
   writeDecodedWebpAsMp4,
 } from '@/lib/media/webpSource'
+import {
+  BrowserStudioAbortError,
+  createBrowserPreviewProxy,
+  exportMp4WithBrowser,
+  hasWebCodecsVideoSupport,
+  probeBrowserStudioSource,
+} from '@/lib/media/browserStudio'
+import type { BrowserStudioSource } from '@/lib/media/browserStudio'
 import type {
-  StudioExportPlan,
   StudioMediaMetadata,
   StudioOutputFormat,
+  StudioOutputGeometry,
   StudioSettings,
 } from '@/lib/media/mp4GifStudio'
 
 const UPLOAD_ID = 'mp4-gif-studio-upload'
 const FULL_CROP: CropRect = { x: 0, y: 0, width: 100, height: 100 }
+
+/** `auto` tries the browser's WebCodecs encoder first and falls back to FFmpeg. */
+type EncoderEngine = 'auto' | 'ffmpeg'
+type ExportEngine = 'browserHardware' | 'browser' | 'ffmpeg'
+
+const EXPORT_ENGINE_LABEL_KEYS: Record<ExportEngine, string> = {
+  browserHardware: 'common.tools.mp4GifStudio.page.engine.resultBrowserHardware',
+  browser: 'common.tools.mp4GifStudio.page.engine.resultBrowser',
+  ffmpeg: 'common.tools.mp4GifStudio.page.engine.resultFfmpeg',
+}
+
+const subscribeToNothing = () => () => {}
+const getServerWebCodecsSnapshot = () => false
 
 type StudioPhase =
   | 'idle'
@@ -101,10 +123,33 @@ type StudioPhase =
 type PreviewKind = 'video' | 'image'
 
 type ResultState = {
-  plan: StudioExportPlan
+  format: StudioOutputFormat
+  geometry: StudioOutputGeometry
+  effectiveDuration: number
+  engine: ExportEngine
   fileName: string
   size: number
   settings: StudioSettings
+}
+
+/** The file currently loaded in the editor. `sourceId` changes whenever the file changes. */
+type CurrentSource = {
+  sourceId: number
+  file: File
+  source: StudioSource
+}
+
+/** The source written into the FFmpeg virtual filesystem, created lazily on first FFmpeg use. */
+type FfmpegSource = {
+  sourceId: number
+  inputName: string
+  metadata: StudioMediaMetadata
+}
+
+type BrowserSourceEntry = {
+  sourceId: number
+  /** `null` means the browser could not read the source. */
+  source: BrowserStudioSource | null
 }
 
 const PHASE_KEYS: Record<Exclude<StudioPhase, 'idle'>, string> = {
@@ -127,6 +172,57 @@ async function safeDelete(ffmpeg: FFmpeg, path: string) {
     await ffmpeg.deleteFile(path)
   } catch {
     // The virtual file may not exist after a failed or cancelled job.
+  }
+}
+
+async function probeWithFfmpeg(
+  ffmpeg: FFmpeg,
+  inputName: string,
+  probeName: string
+): Promise<StudioMediaMetadata> {
+  const probeLogs: string[] = []
+  const probeLogHandler: LogEventCallback = ({ message }) => {
+    probeLogs.push(message)
+    if (probeLogs.length > 20) probeLogs.shift()
+  }
+  ffmpeg.on('log', probeLogHandler)
+  let probeExitCode: number
+  try {
+    probeExitCode = await ffmpeg.ffprobe(buildStudioProbeCommand(inputName, probeName))
+  } finally {
+    ffmpeg.off('log', probeLogHandler)
+  }
+
+  try {
+    const rawProbe = await ffmpeg.readFile(probeName, 'utf8')
+    return parseStudioProbe(String(rawProbe))
+  } catch {
+    throw new Error(
+      `FFprobe exited with code ${probeExitCode}: ${probeLogs.slice(-4).join(' | ')}`
+    )
+  }
+}
+
+async function createFfmpegPreview(
+  ffmpeg: FFmpeg,
+  metadata: StudioMediaMetadata,
+  inputName: string,
+  proxyName: string
+): Promise<Blob> {
+  try {
+    const exitCode = await ffmpeg.exec(
+      buildStudioPreviewCommand(metadata, inputName, proxyName)
+    )
+    if (exitCode !== 0) {
+      throw new Error(`Preview generation exited with code ${exitCode}`)
+    }
+    const proxyData = await ffmpeg.readFile(proxyName)
+    if (typeof proxyData === 'string') {
+      throw new Error('Preview generation returned text output')
+    }
+    return new Blob([proxyData], { type: 'video/mp4' })
+  } finally {
+    await safeDelete(ffmpeg, proxyName)
   }
 }
 
@@ -156,6 +252,10 @@ type StudioSource = {
 }
 const VIDEO_EXTENSION_PATTERN = /\.(mp4|webm|mov|mkv|avi|m4v|3gp|3g2|mpeg|mpg|m2v|mpe|ts|mts|m2ts|flv|f4v|wmv|asf|ogv|ogm|vob|rm|rmvb|divx)$/i
 const STUDIO_UPLOAD_ACCEPT = 'video/*,image/gif,image/webp,.gif,.webp,android/allowCamera'
+
+function isImageStudioSource(source: StudioSource) {
+  return source.kind === 'gif' || source.kind === 'image'
+}
 
 function getStudioSource(file: File): StudioSource | null {
   const lowerName = file.name.toLowerCase()
@@ -217,9 +317,18 @@ export default function Mp4GifStudioPage() {
   const { t } = useI18n()
   const ffmpegRef = useRef<FFmpeg | null>(null)
   const loadPromiseRef = useRef<Promise<FFmpeg> | null>(null)
-  const inputNameRef = useRef('')
+  const currentSourceRef = useRef<CurrentSource | null>(null)
+  const ffmpegSourceRef = useRef<FfmpegSource | null>(null)
+  const browserSourceRef = useRef<BrowserSourceEntry | null>(null)
+  const jobAbortRef = useRef<AbortController | null>(null)
   const jobIdRef = useRef(0)
+  const exportIdRef = useRef(0)
   const previewRef = useRef<HTMLVideoElement>(null)
+  const webCodecsAvailable = useSyncExternalStore(
+    subscribeToNothing,
+    hasWebCodecsVideoSupport,
+    getServerWebCodecsSnapshot
+  )
 
   const [uploadKey, setUploadKey] = useState(0)
   const [sourceFile, setSourceFile] = useState<File | null>(null)
@@ -261,6 +370,8 @@ export default function Mp4GifStudioPage() {
   const [webpLossless, setWebpLossless] = useState(false)
   const [webpLoopForever, setWebpLoopForever] = useState(true)
   const [autoDownload, setAutoDownload] = useState(true)
+  const [encoderEngine, setEncoderEngine] = useState<EncoderEngine>('auto')
+  const [activeEngine, setActiveEngine] = useState<'browser' | 'ffmpeg' | null>(null)
 
   const [result, setResult] = useState<ResultState | null>(null)
   const [resultUrl, setResultUrl] = useState('')
@@ -375,6 +486,9 @@ export default function Mp4GifStudioPage() {
   }, [metadata, settings, sourceFile])
 
   const exceedsMemoryLimit = estimatedMemoryBytes > MAX_ESTIMATED_MEMORY_BYTES
+  // The memory estimate models FFmpeg.wasm; the WebCodecs path streams from the file instead.
+  const canTryBrowserExport =
+    encoderEngine === 'auto' && format === 'mp4' && webCodecsAvailable
 
   const nativeFfmpegCommand = useMemo(() => {
     if (!metadata || !sourceFile) return ''
@@ -402,7 +516,14 @@ export default function Mp4GifStudioPage() {
     }
   }, [format, gifGifsicleLossy, metadata, settings, sourceFile])
 
-  const phaseText = currentPhase === 'idle' ? '' : t(PHASE_KEYS[currentPhase])
+  const phaseText =
+    currentPhase === 'idle'
+      ? ''
+      : currentPhase === 'exporting' && activeEngine === 'browser'
+        ? t('common.tools.mp4GifStudio.page.status.exportingBrowser')
+        : currentPhase === 'exporting' && activeEngine === 'ffmpeg'
+          ? t('common.tools.mp4GifStudio.page.status.exportingFfmpeg')
+          : t(PHASE_KEYS[currentPhase])
 
   const ensureFfmpeg = useCallback(async () => {
     if (ffmpegRef.current?.loaded) return ffmpegRef.current
@@ -443,11 +564,100 @@ export default function Mp4GifStudioPage() {
   useEffect(() => {
     return () => {
       jobIdRef.current += 1
+      jobAbortRef.current?.abort()
+      jobAbortRef.current = null
       ffmpegRef.current?.terminate()
       ffmpegRef.current = null
       loadPromiseRef.current = null
+      ffmpegSourceRef.current = null
     }
   }, [])
+
+  const releaseFfmpegSource = useCallback(() => {
+    const cached = ffmpegSourceRef.current
+    ffmpegSourceRef.current = null
+    if (cached && ffmpegRef.current?.loaded) {
+      void safeDelete(ffmpegRef.current, cached.inputName)
+    }
+  }, [])
+
+  /**
+   * Loads FFmpeg and writes/probes the current source on first use. Analysis normally runs in
+   * the browser, so this only happens when FFmpeg is actually needed.
+   */
+  const prepareFfmpegSource = useCallback(
+    async (current: CurrentSource, phaseAfterLoad: StudioPhase) => {
+      const ffmpeg = await ensureFfmpeg()
+      setPhase(phaseAfterLoad)
+
+      const cached = ffmpegSourceRef.current
+      if (cached?.sourceId === current.sourceId) {
+        return { ffmpeg, ...cached }
+      }
+      if (cached) {
+        ffmpegSourceRef.current = null
+        await safeDelete(ffmpeg, cached.inputName)
+      }
+      if (current.sourceId !== jobIdRef.current) {
+        throw new Error('The studio source changed while FFmpeg was loading')
+      }
+
+      const { sourceId, file, source } = current
+      const inputName =
+        source.extension === 'webp'
+          ? `studio-source-${sourceId}.mp4`
+          : `studio-source-${sourceId}.${source.extension}`
+      const probeName = `studio-probe-${sourceId}.json`
+
+      try {
+        if (source.extension === 'webp') {
+          await writeDecodedWebpAsMp4(ffmpeg, await decodeWebpSource(file), inputName)
+        } else {
+          await ffmpeg.writeFile(inputName, await fetchFile(file))
+        }
+        const metadata = await probeWithFfmpeg(ffmpeg, inputName, probeName)
+        if (sourceId !== jobIdRef.current) {
+          throw new Error('The studio source changed while FFmpeg was analyzing it')
+        }
+
+        const prepared: FfmpegSource = { sourceId, inputName, metadata }
+        ffmpegSourceRef.current = prepared
+        return { ffmpeg, ...prepared }
+      } catch (error) {
+        await safeDelete(ffmpeg, inputName)
+        throw error
+      } finally {
+        await safeDelete(ffmpeg, probeName)
+      }
+    },
+    [ensureFfmpeg]
+  )
+
+  /** Reads the current source with browser APIs (cached per source). */
+  const getBrowserSource = useCallback(
+    async (current: CurrentSource, signal?: AbortSignal) => {
+      const cached = browserSourceRef.current
+      if (cached?.sourceId === current.sourceId) return cached.source
+
+      let browserSource: BrowserStudioSource | null = null
+      try {
+        browserSource = await probeBrowserStudioSource(
+          current.file,
+          isImageStudioSource(current.source) ? 'image' : 'container',
+          signal
+        )
+      } catch (error) {
+        if (error instanceof BrowserStudioAbortError) throw error
+        console.warn('Browser media analysis failed; using FFmpeg instead.', error)
+      }
+
+      if (current.sourceId === jobIdRef.current) {
+        browserSourceRef.current = { sourceId: current.sourceId, source: browserSource }
+      }
+      return browserSource
+    },
+    []
+  )
 
   useEffect(() => {
     return () => {
@@ -505,6 +715,11 @@ export default function Mp4GifStudioPage() {
 
   const clearCurrentSource = useCallback(() => {
     jobIdRef.current += 1
+    jobAbortRef.current?.abort()
+    jobAbortRef.current = null
+    currentSourceRef.current = null
+    browserSourceRef.current = null
+    releaseFfmpegSource()
     previewRef.current?.pause()
     setIsPlaying(false)
     setCurrentTime(0)
@@ -518,13 +733,7 @@ export default function Mp4GifStudioPage() {
     setPhase('idle')
     setUploadKey((value) => value + 1)
     resetOptionState()
-
-    const inputName = inputNameRef.current
-    inputNameRef.current = ''
-    if (inputName && ffmpegRef.current?.loaded) {
-      void safeDelete(ffmpegRef.current, inputName)
-    }
-  }, [resetOptionState])
+  }, [releaseFfmpegSource, resetOptionState])
 
   const handleSourceFile = useCallback(
     async (selected: File | null) => {
@@ -545,9 +754,17 @@ export default function Mp4GifStudioPage() {
         return
       }
 
+      jobAbortRef.current?.abort()
+      const abortController = new AbortController()
+      jobAbortRef.current = abortController
+      const { signal } = abortController
+
       const jobId = ++jobIdRef.current
-      const previousInputName = inputNameRef.current
-      inputNameRef.current = ''
+      const current: CurrentSource = { sourceId: jobId, file: selected, source }
+      const isCurrent = () => jobId === jobIdRef.current
+      currentSourceRef.current = current
+      browserSourceRef.current = null
+      releaseFfmpegSource()
       setSourceFile(selected)
       setMetadata(null)
       setResult(null)
@@ -557,100 +774,77 @@ export default function Mp4GifStudioPage() {
       setCurrentTime(0)
       setIsPlaying(false)
       resetOptionState()
+      setPhase('analyzing')
 
       const immediatePreviewUrl = URL.createObjectURL(selected)
       setPreviewUrl(immediatePreviewUrl)
-      const isImageSource = source.kind === 'gif' || source.kind === 'image'
+      const isImageSource = isImageStudioSource(source)
       setPreviewKind(isImageSource ? 'image' : 'video')
       const nativePreviewPromise = isImageSource
         ? Promise.resolve(false)
         : canUseNativeVideoPreview(immediatePreviewUrl)
 
-
-      const decodedWebpPromise = source.extension === 'webp' ? decodeWebpSource(selected) : null
-      const inputName = source.extension === 'webp'
-        ? `studio-source-${jobId}.mp4`
-        : `studio-source-${jobId}.${source.extension}`
-      const probeName = `studio-probe-${jobId}.json`
-      let ffmpeg: FFmpeg | null = null
-
       try {
-        ffmpeg = await ensureFfmpeg()
-        if (jobId !== jobIdRef.current) return
+        // Browser APIs first: no FFmpeg download is needed when the browser can read the file.
+        const browserSource = await getBrowserSource(current, signal)
+        if (!isCurrent()) return
 
-        if (previousInputName) {
-          await safeDelete(ffmpeg, previousInputName)
-        }
-
-        setPhase('analyzing')
-        if (decodedWebpPromise) {
-          await writeDecodedWebpAsMp4(ffmpeg, await decodedWebpPromise, inputName)
-        } else {
-          await ffmpeg.writeFile(inputName, await fetchFile(selected))
-        }
-        inputNameRef.current = inputName
-
-        const probeLogs: string[] = []
-        const probeLogHandler: LogEventCallback = ({ message }) => {
-          probeLogs.push(message)
-          if (probeLogs.length > 20) probeLogs.shift()
-        }
-        ffmpeg.on('log', probeLogHandler)
-        let probeExitCode: number
-        try {
-          probeExitCode = await ffmpeg.ffprobe(
-            buildStudioProbeCommand(inputName, probeName)
-          )
-        } finally {
-          ffmpeg.off('log', probeLogHandler)
-        }
-        let nextMetadata: StudioMediaMetadata
-        try {
-          const rawProbe = await ffmpeg.readFile(probeName, 'utf8')
-          nextMetadata = parseStudioProbe(String(rawProbe))
-        } catch {
-          throw new Error(
-            `FFprobe exited with code ${probeExitCode}: ${probeLogs.slice(-4).join(' | ')}`
-          )
-        }
-        if (jobId !== jobIdRef.current) return
+        const nextMetadata = browserSource
+          ? browserSource.metadata
+          : (await prepareFfmpegSource(current, 'analyzing')).metadata
+        if (!isCurrent()) return
 
         setMetadata(nextMetadata)
         setTrimRange([0, nextMetadata.duration])
 
         const needsProxy = isImageSource || !(await nativePreviewPromise)
-        if (jobId !== jobIdRef.current) return
+        if (!isCurrent()) return
 
         if (needsProxy) {
           setPhase('preparingPreview')
-          const proxyName = `studio-preview-${jobId}.mp4`
-          try {
-            const proxyExitCode = await ffmpeg.exec(
-              buildStudioPreviewCommand(nextMetadata, inputName, proxyName)
-            )
-            if (proxyExitCode !== 0 && source.kind !== 'gif') {
-              throw new Error(`Preview generation exited with code ${proxyExitCode}`)
+          let proxyBlob: Blob | null = null
+
+          if (browserSource && webCodecsAvailable) {
+            try {
+              proxyBlob = await createBrowserPreviewProxy(browserSource, signal)
+            } catch (error) {
+              if (error instanceof BrowserStudioAbortError) return
+              console.warn('Browser preview failed; using FFmpeg instead.', error)
             }
-            if (proxyExitCode === 0 && jobId === jobIdRef.current) {
-              const proxyData = await ffmpeg.readFile(proxyName)
-              if (typeof proxyData !== 'string') {
-                const proxyBlob = new Blob([proxyData], { type: 'video/mp4' })
-                setPreviewUrl(URL.createObjectURL(proxyBlob))
-                setPreviewKind('video')
-              }
+          }
+          if (!isCurrent()) return
+
+          if (!proxyBlob) {
+            try {
+              const prepared = await prepareFfmpegSource(current, 'preparingPreview')
+              proxyBlob = await createFfmpegPreview(
+                prepared.ffmpeg,
+                prepared.metadata,
+                prepared.inputName,
+                `studio-preview-${jobId}.mp4`
+              )
+            } catch (error) {
+              // GIF and WebP still preview natively as images.
+              if (!isImageSource) throw error
+              console.warn('Preview generation failed; showing the original image.', error)
             }
-          } finally {
-            await safeDelete(ffmpeg, proxyName)
+          }
+
+          if (proxyBlob && isCurrent()) {
+            setPreviewUrl(URL.createObjectURL(proxyBlob))
+            setPreviewKind('video')
           }
         }
 
-        if (jobId === jobIdRef.current) {
+        if (isCurrent()) {
           setPhase('ready')
         }
       } catch (error) {
+        if (error instanceof BrowserStudioAbortError) return
         console.error(error)
-        if (jobId === jobIdRef.current) {
-          inputNameRef.current = ''
+        if (isCurrent()) {
+          currentSourceRef.current = null
+          browserSourceRef.current = null
           setSourceFile(null)
           setMetadata(null)
           setPreviewUrl('')
@@ -660,12 +854,16 @@ export default function Mp4GifStudioPage() {
             t('common.tools.mp4GifStudio.page.errors.analysisFailed')
           )
         }
-        if (ffmpeg) await safeDelete(ffmpeg, inputName)
-      } finally {
-        if (ffmpeg) await safeDelete(ffmpeg, probeName)
       }
     },
-    [ensureFfmpeg, resetOptionState, t]
+    [
+      getBrowserSource,
+      prepareFfmpegSource,
+      releaseFfmpegSource,
+      resetOptionState,
+      t,
+      webCodecsAvailable,
+    ]
   )
 
   const handleTrimChange = useCallback(
@@ -761,19 +959,12 @@ export default function Mp4GifStudioPage() {
   }, [nativeFfmpegCommand])
 
   const handleExport = useCallback(async () => {
-    if (!sourceFile || !metadata || !inputNameRef.current || isExporting) return
+    const current = currentSourceRef.current
+    if (!current || !sourceFile || !metadata || isExporting) return
 
-    if (exceedsMemoryLimit) {
-      setErrorMessage(
-        t('common.tools.mp4GifStudio.page.errors.memoryRisk')
-          .replace('{estimate}', formatStudioBytes(estimatedMemoryBytes))
-          .replace('{limit}', formatStudioBytes(MAX_ESTIMATED_MEMORY_BYTES))
-      )
-      return
-    }
-
-    const outputName = `studio-output-${++jobIdRef.current}.${format}`
     const snapshot = settings
+    const outputName = `studio-output-${++exportIdRef.current}.${format}`
+    const signal = jobAbortRef.current?.signal
     let ffmpeg: FFmpeg | null = null
     let progressLogHandler: LogEventCallback | null = null
 
@@ -781,81 +972,140 @@ export default function Mp4GifStudioPage() {
     setResultUrl('')
     setErrorMessage('')
     setProgress(0)
+    setActiveEngine(null)
     setPhase('exporting')
 
     try {
-      ffmpeg = await ensureFfmpeg()
-      const plan = buildStudioExportPlan(
-        metadata,
-        snapshot,
-        inputNameRef.current,
-        outputName
-      )
+      let outputBlob: Blob | null = null
+      let engine: ExportEngine = 'ffmpeg'
+      let geometry: StudioOutputGeometry | null = null
+      let effectiveDuration = 0
 
-      progressLogHandler = ({ message }) => {
-        const match = message.trim().match(/^out_time_us=(\d+)$/)
-        if (!match) return
-
-        const processedSeconds = Number(match[1]) / 1_000_000
-        const nextPercent = clamp(
-          Math.floor((processedSeconds / plan.effectiveDuration) * 100),
-          0,
-          99
-        )
-        setProgress((current) => Math.max(current, nextPercent))
-      }
-      ffmpeg.on('log', progressLogHandler)
-
-      await safeDelete(ffmpeg, outputName)
-      const exitCode = await ffmpeg.exec([
-        '-progress',
-        'pipe:1',
-        '-stats_period',
-        '0.5',
-        ...plan.args,
-      ])
-      if (exitCode !== 0) {
-        throw new Error(`FFmpeg exited with code ${exitCode}`)
-      }
-
-      const outputData = await ffmpeg.readFile(outputName)
-      if (typeof outputData === 'string' || outputData.byteLength === 0) {
-        throw new Error('FFmpeg returned an empty output')
-      }
-
-      let outputBlob: Blob = new Blob([outputData], {
-        type: getOutputMimeType(format),
-      })
-
-      if (format === 'gif' && snapshot.gif.gifsicleLossy > 0) {
-        setPhase('optimizing')
+      if (encoderEngine === 'auto' && format === 'mp4' && hasWebCodecsVideoSupport()) {
         try {
-          const optimized = await optimizeGifWithGifsicle(
-            outputBlob,
-            snapshot.gif.gifsicleLossy
-          )
-          if (optimized.size > 0 && optimized.size < outputBlob.size) {
-            outputBlob = new Blob([optimized], { type: getOutputMimeType(format) })
+          const browserSource = await getBrowserSource(current, signal)
+          if (browserSource) {
+            setActiveEngine('browser')
+            const exported = await exportMp4WithBrowser(browserSource, snapshot, {
+              signal,
+              onProgress: (value) => setProgress(clamp(Math.floor(value * 100), 0, 99)),
+            })
+            outputBlob = exported.blob
+            engine = exported.hardwareAccelerated ? 'browserHardware' : 'browser'
+            geometry = exported.plan.geometry
+            effectiveDuration = exported.plan.effectiveDuration
           }
-        } catch (optimizeError) {
-          // Keep the un-optimized FFmpeg output when gifsicle fails to load or run.
-          console.error(optimizeError)
+        } catch (error) {
+          if (error instanceof BrowserStudioAbortError) throw error
+          console.warn('Browser export failed; falling back to FFmpeg.', error)
+          setProgress(0)
         }
+      }
+
+      if (!outputBlob) {
+        if (exceedsMemoryLimit) {
+          setActiveEngine(null)
+          setPhase('ready')
+          setErrorMessage(
+            t('common.tools.mp4GifStudio.page.errors.memoryRisk')
+              .replace('{estimate}', formatStudioBytes(estimatedMemoryBytes))
+              .replace('{limit}', formatStudioBytes(MAX_ESTIMATED_MEMORY_BYTES))
+          )
+          return
+        }
+
+        setActiveEngine('ffmpeg')
+        const prepared = await prepareFfmpegSource(current, 'exporting')
+        const activeFfmpeg = prepared.ffmpeg
+        ffmpeg = activeFfmpeg
+        const plan = buildStudioExportPlan(
+          prepared.metadata,
+          snapshot,
+          prepared.inputName,
+          outputName
+        )
+
+        progressLogHandler = ({ message }) => {
+          const match = message.trim().match(/^out_time_us=(\d+)$/)
+          if (!match) return
+
+          const processedSeconds = Number(match[1]) / 1_000_000
+          const nextPercent = clamp(
+            Math.floor((processedSeconds / plan.effectiveDuration) * 100),
+            0,
+            99
+          )
+          setProgress((value) => Math.max(value, nextPercent))
+        }
+        activeFfmpeg.on('log', progressLogHandler)
+
+        await safeDelete(activeFfmpeg, outputName)
+        const exitCode = await activeFfmpeg.exec([
+          '-progress',
+          'pipe:1',
+          '-stats_period',
+          '0.5',
+          ...plan.args,
+        ])
+        if (exitCode !== 0) {
+          throw new Error(`FFmpeg exited with code ${exitCode}`)
+        }
+
+        const outputData = await activeFfmpeg.readFile(outputName)
+        if (typeof outputData === 'string' || outputData.byteLength === 0) {
+          throw new Error('FFmpeg returned an empty output')
+        }
+
+        outputBlob = new Blob([outputData], {
+          type: getOutputMimeType(format),
+        })
+        geometry = plan.geometry
+        effectiveDuration = plan.effectiveDuration
+
+        if (format === 'gif' && snapshot.gif.gifsicleLossy > 0) {
+          setPhase('optimizing')
+          try {
+            const optimized = await optimizeGifWithGifsicle(
+              outputBlob,
+              snapshot.gif.gifsicleLossy
+            )
+            if (optimized.size > 0 && optimized.size < outputBlob.size) {
+              outputBlob = new Blob([optimized], { type: getOutputMimeType(format) })
+            }
+          } catch (optimizeError) {
+            // Keep the un-optimized FFmpeg output when gifsicle fails to load or run.
+            console.error(optimizeError)
+          }
+        }
+      }
+
+      if (!geometry) {
+        throw new Error('Export finished without output geometry')
       }
 
       const fileName = `${getBaseName(sourceFile.name)}-edited.${format}`
       const outputUrl = URL.createObjectURL(outputBlob)
       setResultUrl(outputUrl)
-      setResult({ plan, fileName, size: outputBlob.size, settings: snapshot })
+      setResult({
+        format,
+        geometry,
+        effectiveDuration,
+        engine,
+        fileName,
+        size: outputBlob.size,
+        settings: snapshot,
+      })
       setProgress(100)
       setPhase('complete')
       if (autoDownload) downloadStudioResult(outputUrl, fileName)
     } catch (error) {
+      if (error instanceof BrowserStudioAbortError) return
       console.error(error)
       setProgress(0)
       setPhase('ready')
       setErrorMessage(t('common.tools.mp4GifStudio.page.errors.exportFailed'))
     } finally {
+      setActiveEngine(null)
       if (ffmpeg && progressLogHandler) {
         ffmpeg.off('log', progressLogHandler)
       }
@@ -863,12 +1113,14 @@ export default function Mp4GifStudioPage() {
     }
   }, [
     autoDownload,
-    ensureFfmpeg,
+    encoderEngine,
     estimatedMemoryBytes,
     exceedsMemoryLimit,
     format,
+    getBrowserSource,
     isExporting,
     metadata,
+    prepareFfmpegSource,
     settings,
     sourceFile,
     t,
@@ -1311,6 +1563,36 @@ export default function Mp4GifStudioPage() {
 
                   {format === 'mp4' && (
                     <div className="space-y-5 border-t pt-5">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="studio-encoder-engine">
+                          {t('common.tools.mp4GifStudio.page.engine.title')}
+                        </Label>
+                        <Select
+                          value={encoderEngine}
+                          onValueChange={(value) =>
+                            setEncoderEngine(value === 'ffmpeg' ? 'ffmpeg' : 'auto')
+                          }
+                          disabled={isExporting}
+                        >
+                          <SelectTrigger id="studio-encoder-engine">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="auto">
+                              {t('common.tools.mp4GifStudio.page.engine.auto')}
+                            </SelectItem>
+                            <SelectItem value="ffmpeg">
+                              {t('common.tools.mp4GifStudio.page.engine.ffmpeg')}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs leading-relaxed text-muted-foreground">
+                          {webCodecsAvailable
+                            ? t('common.tools.mp4GifStudio.page.engine.autoHint')
+                            : t('common.tools.mp4GifStudio.page.engine.unavailableHint')}
+                        </p>
+                      </div>
+
                       <fieldset className="space-y-3">
                         <legend className="text-sm font-medium">
                           {t('common.tools.mp4GifStudio.page.export.rateControl')}
@@ -1453,6 +1735,11 @@ export default function Mp4GifStudioPage() {
                             </SelectItem>
                           </SelectContent>
                         </Select>
+                        {canTryBrowserExport && (
+                          <p className="text-xs leading-relaxed text-muted-foreground">
+                            {t('common.tools.mp4GifStudio.page.export.presetFfmpegOnly')}
+                          </p>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-2">
@@ -1770,7 +2057,11 @@ export default function Mp4GifStudioPage() {
                     type="button"
                     className="w-full"
                     size="lg"
-                    disabled={isExporting || !outputGeometry || exceedsMemoryLimit}
+                    disabled={
+                      isExporting ||
+                      !outputGeometry ||
+                      (exceedsMemoryLimit && !canTryBrowserExport)
+                    }
                     onClick={() => void handleExport()}
                     data-testid="studio-export-button"
                   >
@@ -1790,6 +2081,11 @@ export default function Mp4GifStudioPage() {
                       {t('common.tools.mp4GifStudio.page.export.estimatedMemory')}:{' '}
                       {formatStudioBytes(estimatedMemoryBytes)} /{' '}
                       {formatStudioBytes(MAX_ESTIMATED_MEMORY_BYTES)}
+                      {exceedsMemoryLimit && canTryBrowserExport && (
+                        <span className="mt-1 block text-xs text-muted-foreground">
+                          {t('common.tools.mp4GifStudio.page.export.memoryBrowserHint')}
+                        </span>
+                      )}
                     </p>
                   )}
                 </CardContent>
@@ -1804,14 +2100,14 @@ export default function Mp4GifStudioPage() {
                 {t('common.tools.mp4GifStudio.page.result.title')}
               </CardTitle>
               <CardDescription>
-                {result.plan.geometry.width} × {result.plan.geometry.height} ·{' '}
-                {formatStudioTime(result.plan.effectiveDuration)} ·{' '}
+                {result.geometry.width} × {result.geometry.height} ·{' '}
+                {formatStudioTime(result.effectiveDuration)} ·{' '}
                 {formatStudioBytes(result.size)}
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
               <div className="overflow-hidden rounded-lg border bg-zinc-950 p-3">
-                {result.plan.format === 'mp4' ? (
+                {result.format === 'mp4' ? (
                   <video
                     src={resultUrl}
                     controls
@@ -1834,6 +2130,12 @@ export default function Mp4GifStudioPage() {
                     {t('common.tools.mp4GifStudio.page.result.outputSize')}
                   </p>
                   <p className="mt-1 text-lg font-semibold">{formatStudioBytes(result.size)}</p>
+                </div>
+                <div className="rounded-md bg-muted/50 p-3 text-sm" data-testid="studio-result-engine">
+                  <p className="text-muted-foreground">
+                    {t('common.tools.mp4GifStudio.page.engine.usedLabel')}
+                  </p>
+                  <p className="mt-1 font-medium">{t(EXPORT_ENGINE_LABEL_KEYS[result.engine])}</p>
                 </div>
                 <Button asChild className="w-full">
                   <a href={resultUrl} download={result.fileName}>

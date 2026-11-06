@@ -302,6 +302,68 @@ export function buildStudioExportPlan(
   };
 }
 
+/**
+ * Normalized, engine-neutral MP4 edit description for encoders that do not take FFmpeg arguments
+ * (for example the browser WebCodecs pipeline). It mirrors the FFmpeg filter chain:
+ * trim -> speed -> crop -> scale -> fps.
+ */
+export type StudioMp4TranscodePlan = {
+  trimStart: number;
+  trimEnd: number;
+  speed: number;
+  /** Pixel crop in display-oriented source coordinates. */
+  crop: { left: number; top: number; width: number; height: number };
+  geometry: StudioOutputGeometry;
+  /** Output frame rate; `null` keeps the source frame timing. */
+  frameRate: number | null;
+  effectiveDuration: number;
+  rateControl: StudioMp4RateControl;
+  videoBitrateKbps: number;
+  crf: number;
+  includeAudio: boolean;
+  audioBitrateKbps: number;
+};
+
+export function buildStudioMp4TranscodePlan(
+  metadata: StudioMediaMetadata,
+  settings: StudioSettings
+): StudioMp4TranscodePlan {
+  const { snapshot, crop, geometry, effectiveDuration } = buildStudioTransform(metadata, settings);
+
+  return {
+    trimStart: snapshot.trimStart,
+    trimEnd: snapshot.trimEnd,
+    speed: snapshot.speed,
+    crop: { left: crop.x, top: crop.y, width: crop.width, height: crop.height },
+    geometry,
+    frameRate: snapshot.mp4.frameRate === "source" ? null : snapshot.mp4.frameRate,
+    effectiveDuration,
+    rateControl: snapshot.mp4.rateControl,
+    videoBitrateKbps: snapshot.mp4.videoBitrateKbps,
+    crf: snapshot.mp4.crf,
+    includeAudio:
+      snapshot.mp4.includeAudio &&
+      metadata.hasAudio &&
+      readStreamIndex(metadata.audioStreamIndex) !== null,
+    audioBitrateKbps: snapshot.mp4.audioBitrateKbps,
+  };
+}
+
+/**
+ * Rough bitrate that an x264 CRF value tends to land on. Used as the fallback when an encoder
+ * cannot do constant-quantizer rate control.
+ */
+export function estimateCrfBitrateKbps(
+  geometry: StudioOutputGeometry,
+  frameRate: number,
+  crf: number
+): number {
+  const bitsPerPixel = 0.1 * 2 ** ((23 - clamp(crf, 0, 51)) / 6);
+  const fps = Number.isFinite(frameRate) && frameRate > 0 ? frameRate : 30;
+  const kbps = (geometry.width * geometry.height * fps * bitsPerPixel) / 1000;
+  return Math.round(clamp(kbps, MIN_VIDEO_BITRATE_KBPS, MAX_VIDEO_BITRATE_KBPS));
+}
+
 export function formatStudioBytes(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes <= 0) {
     return "0 B";

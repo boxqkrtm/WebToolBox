@@ -249,7 +249,9 @@
             "ready": "편집 준비 완료",
             "exporting": "내보내는 중...",
             "optimizingGif": "GIF 최적화 중...",
-            "exportComplete": "내보내기 완료"
+            "exportComplete": "내보내기 완료",
+            "exportingBrowser": "브라우저 인코더(WebCodecs)로 내보내는 중...",
+            "exportingFfmpeg": "FFmpeg로 내보내는 중..."
           },
           "errors": {
             "invalidFile": "지원되는 비디오, GIF 또는 WebP 파일을 선택해 주세요.",
@@ -346,7 +348,20 @@
             "compressionLevel": "압축 수준",
             "lossless": "무손실",
             "exportButton": "파일 내보내기",
-            "autoDownload": "내보내기 완료 후 자동으로 다운로드"
+            "autoDownload": "내보내기 완료 후 자동으로 다운로드",
+            "presetFfmpegOnly": "인코딩 프리셋은 FFmpeg를 사용할 때만 적용됩니다.",
+            "memoryBrowserHint": "이 한도는 FFmpeg로 대체될 때만 적용됩니다. 브라우저 인코더를 먼저 시도합니다."
+          },
+          "engine": {
+            "title": "인코딩 엔진",
+            "auto": "자동 (브라우저 하드웨어 가속 우선)",
+            "ffmpeg": "FFmpeg (WebAssembly)만 사용",
+            "autoHint": "자동 모드는 브라우저 내장 WebCodecs 인코더로 MP4를 만들고, 기기가 지원하면 하드웨어 가속을 사용합니다. 브라우저가 파일이나 설정을 처리할 수 없으면 FFmpeg로 대신 처리합니다. GIF와 WebP는 항상 FFmpeg를 사용합니다.",
+            "unavailableHint": "이 브라우저는 WebCodecs를 지원하지 않아 FFmpeg로 인코딩합니다.",
+            "usedLabel": "인코더",
+            "resultBrowserHardware": "브라우저 WebCodecs (하드웨어 가속)",
+            "resultBrowser": "브라우저 WebCodecs",
+            "resultFfmpeg": "FFmpeg (WebAssembly)"
           },
           "result": {
             "title": "내보내기 완료",

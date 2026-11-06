@@ -31,6 +31,21 @@ frames[0].save(${JSON.stringify(outputPath)}, format='WEBP', save_all=True, appe
   }
 }
 
+function createAnimatedGif() {
+  const directory = mkdtempSync(join(tmpdir(), 'studio-gif-'))
+  const outputPath = join(directory, 'animated-color.gif')
+  execFileSync('python3', ['-c', `
+from PIL import Image
+frames = [Image.new('RGB', (64, 48), color) for color in ('#ff3b30', '#34c759', '#007aff', '#ffcc00')]
+frames[0].save(${JSON.stringify(outputPath)}, format='GIF', save_all=True, append_images=frames[1:], duration=[100, 100, 100, 100], loop=0)
+`])
+  return {
+    name: 'animated-color.gif',
+    mimeType: 'image/gif',
+    buffer: readFileSync(outputPath),
+  }
+}
+
 test.describe('MP4, GIF Studio', () => {
   test.use({ colorScheme: 'light', locale: 'en-US' })
 
@@ -53,14 +68,40 @@ test.describe('MP4, GIF Studio', () => {
 
   test('analyzes and exports an animated WebP', async ({ page }) => {
     test.setTimeout(180_000)
+    const ffmpegCoreRequests: string[] = []
+    page.on('request', (request) => {
+      if (request.url().includes('ffmpeg-core')) ffmpegCoreRequests.push(request.url())
+    })
+
     await page.goto('/utils/mp4-gif-studio')
     await page.locator('#mp4-gif-studio-upload').setInputFiles(createAnimatedWebp())
 
     await expect(page.getByText('Ready to edit')).toBeVisible({ timeout: 150_000 })
     await expect(page.locator('main [role="alert"]')).toHaveCount(0)
+    // ImageDecoder + WebCodecs handle analysis and the preview; FFmpeg is only loaded on demand.
+    expect(ffmpegCoreRequests).toHaveLength(0)
+    await expect(page.locator('video[aria-label="Preview"]')).toBeVisible()
+
     await page.locator('#studio-auto-download').uncheck()
     await page.getByTestId('studio-export-button').click()
     await expect(page.getByTestId('studio-result')).toBeVisible({ timeout: 150_000 })
     await expect(page.getByTestId('studio-result').locator('video')).toBeVisible()
+    await expect(page.getByTestId('studio-result-engine')).toContainText(/WebCodecs|FFmpeg/)
+  })
+
+  test('exports a GIF to MP4 with the FFmpeg-only engine', async ({ page }) => {
+    test.setTimeout(180_000)
+    await page.goto('/utils/mp4-gif-studio')
+    await page.locator('#mp4-gif-studio-upload').setInputFiles(createAnimatedGif())
+
+    await expect(page.getByText('Ready to edit')).toBeVisible({ timeout: 150_000 })
+    await page.locator('#studio-auto-download').uncheck()
+    await page.locator('#studio-encoder-engine').click()
+    await page.getByRole('option', { name: 'FFmpeg (WebAssembly) only' }).click()
+    await page.getByTestId('studio-export-button').click()
+
+    await expect(page.getByTestId('studio-result')).toBeVisible({ timeout: 150_000 })
+    await expect(page.getByTestId('studio-result-engine')).toContainText('FFmpeg (WebAssembly)')
+    await expect(page.getByTestId('studio-result')).toContainText('64 × 48')
   })
 })

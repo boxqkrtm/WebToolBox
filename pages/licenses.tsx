@@ -32,6 +32,12 @@ const THIRD_PARTY_COMPONENTS: ThirdPartyComponent[] = [
     source: 'https://github.com/ffmpegwasm/ffmpeg.wasm',
   },
   {
+    name: 'Mediabunny',
+    license: 'MPL-2.0',
+    website: 'https://mediabunny.dev',
+    source: 'https://github.com/Vanilagy/mediabunny',
+  },
+  {
     name: 'Gifsicle',
     license: 'GPL v2.0',
     website: 'https://www.lcdf.org/gifsicle/',

@@ -384,7 +384,9 @@
             "ready": "Ready to edit",
             "exporting": "Exporting...",
             "optimizingGif": "Optimizing GIF...",
-            "exportComplete": "Export complete"
+            "exportComplete": "Export complete",
+            "exportingBrowser": "Exporting with the browser encoder (WebCodecs)...",
+            "exportingFfmpeg": "Exporting with FFmpeg..."
           },
           "errors": {
             "invalidFile": "Choose a supported video, GIF, or WebP file.",
@@ -481,7 +483,20 @@
             "compressionLevel": "Compression level",
             "lossless": "Lossless",
             "exportButton": "Export file",
-            "autoDownload": "Download automatically when export completes"
+            "autoDownload": "Download automatically when export completes",
+            "presetFfmpegOnly": "Encoding presets apply only when FFmpeg is used.",
+            "memoryBrowserHint": "This limit applies only if export falls back to FFmpeg. The browser encoder is tried first."
+          },
+          "engine": {
+            "title": "Encoding engine",
+            "auto": "Auto (browser hardware acceleration first)",
+            "ffmpeg": "FFmpeg (WebAssembly) only",
+            "autoHint": "Auto encodes MP4 with the browser's built-in WebCodecs encoder, using hardware acceleration when the device supports it. If the browser cannot handle the file or settings, FFmpeg is used instead. GIF and WebP always use FFmpeg.",
+            "unavailableHint": "This browser does not support WebCodecs, so FFmpeg is used for encoding.",
+            "usedLabel": "Encoder",
+            "resultBrowserHardware": "Browser WebCodecs (hardware acceleration)",
+            "resultBrowser": "Browser WebCodecs",
+            "resultFfmpeg": "FFmpeg (WebAssembly)"
           },
           "result": {
             "title": "Export complete",

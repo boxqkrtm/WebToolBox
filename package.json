@@ -35,6 +35,7 @@
     "clsx": "2.1.1",
     "jsqr": "^1.4.0",
     "lucide-react": "0.479.0",
+    "mediabunny": "^1.65.2",
     "next": "16.4.3",
     "qr": "^0.5.5",
     "qrcode.react": "^4.2.0",

@@ -249,7 +249,9 @@
             "ready": "編集の準備ができました",
             "exporting": "書き出し中...",
             "optimizingGif": "GIFを最適化中...",
-            "exportComplete": "書き出し完了"
+            "exportComplete": "書き出し完了",
+            "exportingBrowser": "ブラウザーのエンコーダー（WebCodecs）で書き出し中...",
+            "exportingFfmpeg": "FFmpeg で書き出し中..."
           },
           "errors": {
             "invalidFile": "対応している動画、GIF、または WebP ファイルを選択してください。",
@@ -346,7 +348,20 @@
             "compressionLevel": "圧縮レベル",
             "lossless": "ロスレス",
             "exportButton": "ファイルを書き出す",
-            "autoDownload": "書き出し完了後に自動でダウンロード"
+            "autoDownload": "書き出し完了後に自動でダウンロード",
+            "presetFfmpegOnly": "エンコードプリセットは FFmpeg を使用する場合のみ適用されます。",
+            "memoryBrowserHint": "この上限は FFmpeg に切り替わった場合のみ適用されます。まずブラウザーのエンコーダーを試します。"
+          },
+          "engine": {
+            "title": "エンコードエンジン",
+            "auto": "自動（ブラウザーのハードウェアアクセラレーションを優先）",
+            "ffmpeg": "FFmpeg（WebAssembly）のみ",
+            "autoHint": "自動では、ブラウザー内蔵の WebCodecs エンコーダーで MP4 を作成し、デバイスが対応していればハードウェアアクセラレーションを使用します。ブラウザーがファイルや設定を処理できない場合は FFmpeg を使用します。GIF と WebP は常に FFmpeg を使用します。",
+            "unavailableHint": "このブラウザーは WebCodecs に対応していないため、FFmpeg でエンコードします。",
+            "usedLabel": "エンコーダー",
+            "resultBrowserHardware": "ブラウザー WebCodecs（ハードウェアアクセラレーション）",
+            "resultBrowser": "ブラウザー WebCodecs",
+            "resultFfmpeg": "FFmpeg（WebAssembly）"
           },
           "result": {
             "title": "書き出し完了",
